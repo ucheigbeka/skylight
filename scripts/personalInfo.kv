@@ -1,0 +1,188 @@
+#: import basename os.path.basename
+
+<CustomLabel@Label>:
+	text_size: self.size
+	size_hint_x: None
+	width: 200
+	halign: 'center'
+
+<CustomTextInput>:
+	multiline: False
+	size_hint_x: None
+	width: 300
+	write_tab: False
+	use_bubble: True
+
+<CustomSpinner@Spinner>:
+	size_hint_x: None
+
+<PersonalInfo>:
+	orientation: 'vertical'
+	padding_x: 10
+
+	Label:
+		# canvas.before:
+		# 	Color:
+		# 		rgb: (1, 1, 0)
+		# 	Rectangle:
+		# 		pos: self.pos
+		# 		size: self.size
+
+		text: '[u]Personal Information[/u]'
+		text_size: self.size
+		font_size: 45
+		halign: 'center'
+		valign: 'middle'
+		markup: True
+		size_hint_y: .2
+
+	BoxLayout:
+		# canvas.before:
+		# 	Color:
+		# 		rgb: (1, 0, 1)
+		# 	Rectangle:
+		# 		pos: self.pos
+		# 		size: self.size
+
+		GridLayout:
+			# canvas.before:
+			# 	Color:
+			# 		rgb: (0, 1, 1)
+			# 	Rectangle:
+			# 		pos: self.pos
+			# 		size: self.size
+
+			id: grid
+			cols: 2
+			size_hint: (.4, None)
+			height: self.minimum_height
+			spacing: (10, 5)
+			row_default_height: 30
+			row_force_default: True
+			pos_hint: {'top': 1}
+
+			CustomLabel:
+				text: 'Mat number'
+			BoxLayout:
+				spacing: 20
+				CustomTextInput:
+					width: 125
+					text: 'ENG'
+					max_length: 10
+				ImageButton:
+					# canvas.before:
+					# 	Color:
+					# 		rgb: (.5, 1, 1)
+					# 	Ellipse:
+					# 		pos: self.pos
+					# 		size: self.size
+					size_hint_x: None
+					width: 50
+					source: r'.\icons\icons8-search-48.png'
+					on_press: root.search
+			CustomLabel:
+				text: 'Surname'
+			CustomTextInput:
+			CustomLabel:
+				text: 'First name'
+			CustomTextInput:
+			CustomLabel:
+				text: 'Middle name'
+			CustomTextInput:
+			CustomLabel:
+				text: 'Mode of entry'
+			CustomSpinner:
+				values: ['PUTME', 'DE (200)', 'DE (300)']
+			CustomLabel:
+				text: 'Session admitted'
+			CustomTextInput:
+				max_length: 4
+				width: 100
+			CustomLabel:
+				text: 'Current level'
+			CustomSpinner:
+				values: ['100', '200', '300', '400', '500']
+			CustomLabel:
+				text: 'Sex'
+			CustomSpinner:
+				values: 'Male', 'Female'
+			CustomLabel:
+				text: 'Date of birth'
+			CustomTextInput:
+				hint_text: '9/23/2019'
+			CustomLabel:
+				text: 'State of origin'
+			CustomTextInput:
+				width: 100
+			CustomLabel:
+				text: 'Phone number'
+			CustomTextInput:
+				width: 125
+				input_filter: 'int'
+				max_length: 11
+			CustomLabel:
+				text: 'Email Address'
+			CustomTextInput:
+			CustomLabel:
+				text: 'Sponsor\'s phone number'
+			CustomTextInput:
+				width: 125
+				input_filter: 'int'
+				max_length: 11
+			CustomLabel:
+				text: 'Sponsor\'s email'
+			CustomTextInput:
+			CustomLabel:
+				text: 'Graduated'
+			CustomSpinner:
+				values: ['Yes', 'No']
+
+
+		CustomLabel:
+			text: 'Passport'
+			size_hint: (.15, None)
+			height: grid.minimum_height
+			valign: 'top'
+			halign: 'center'
+			pos_hint: {'top': 1}
+		FloatLayout:
+			# canvas.before:
+			# 	Color:
+			# 		rgb: (0, 1, 1)
+			# 	Rectangle:
+			# 		size: self.size
+			# 		pos: self.pos
+			size_hint: (.15, None)
+			height: grid.minimum_height
+			pos_hint: {'top': 1}
+			Image:
+				# canvas.before:
+				# 	Color:
+				# 		rgb: (1, 0, 1)
+				# 	Rectangle:
+				# 		size: self.size
+				# 		pos: self.pos
+				id: passport
+				size_hint: (None, None)
+				size: (117, 160)
+				pos_hint: {'top': 1, 'x': 0}
+				on_touch_down: root.load_image(*args)
+				source: r'icons\icons8-edit-profile-480.png'
+		FloatLayout:
+			size_hint_x: .3
+
+	BoxLayout:
+		size_hint: (None, .1)
+		width: 200
+		pos_hint: {'center_x': .5}
+		spacing: 20
+		ImageButton:
+			size_hint_x: None
+			width: 50
+			source: r'.\icons\icons8-add-48.png'
+			on_press: root.add
+		ImageButton:
+			size_hint_x: None
+			width: 50
+			source: r'.\icons\icons8-cancel-48.png'
+			on_press: root.cancel
