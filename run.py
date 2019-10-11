@@ -2,7 +2,10 @@ import kivy
 kivy.require('1.7.0')
 
 from kivy.app import App
+from kivy.core.window import Window
 from sms import sm
+
+Window.maximize()
 
 
 class StudentManagementSystemApp(App):

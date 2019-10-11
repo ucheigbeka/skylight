@@ -1,0 +1,67 @@
+#: import os os
+
+<SigninWindow>:
+	BoxLayout:
+		id: main
+		orientation: "vertical"
+		spacing: 10
+		space_x: self.size[0]/3
+		canvas.before:
+			Rectangle:
+				size: self.size
+				pos: self.pos
+				source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+		BoxLayout:
+			size_hint_y: None
+			height: 50
+			canvas.before:
+				Color:
+					rgba: (0,0,0, 1)
+				Rectangle:
+					size: self.size
+					pos: self.pos	
+			Label:
+				text: "Result Manager"
+				bold: True
+				size_hint_x: .9
+			Button:
+				text: "x"
+				size_hint_x: .1
+				font_size: 16
+				canvas.before:
+					Color:
+						rgba: (0,0,0, 1)
+					Rectangle:
+						size: self.size
+						pos: self.pos
+		BoxLayout: 
+			orientation: "vertical"
+			padding: main.space_x, 10
+			BoxLayout:
+				orientation: "vertical"
+				spacing: 10
+				size_hint_y: None
+				height: 80
+				TextInput:
+					hint_text: "Username"
+					multiline: False
+					focus: True
+					on_text_validate: pwd.focus = True
+				TextInput:
+					id: pwd
+					hint_text: "Password"
+					multiline: False
+					password: True
+			Label:
+				id: sp
+				size_hint_y: None
+				height: 40
+			Button:
+				text: "Sign In"
+				size_hint_y: None
+				height: 40
+				background_color: (0,0,0, 1)
+				background_normal: ''
+			Label:
+				id: sp
+			

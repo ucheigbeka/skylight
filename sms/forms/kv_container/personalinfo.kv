@@ -48,7 +48,7 @@
 						ImageButton:
 							size_hint_x: None
 							width: 50
-							source: os.path.join(root.form_root, 'icons', 'icons8-search-48.png')
+							source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
 							on_press: root.search
 					CustomLabel:
 						text: 'Surname'
@@ -123,7 +123,7 @@
 						size: (117, 160)
 						pos_hint: {'top': 1, 'x': 0}
 						on_touch_down: root.load_image(*args)
-						source: os.path.join(root.form_root, 'icons', 'icons8-edit-profile-480.png')
+						source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
 				FloatLayout:
 					size_hint_x: .3
 
@@ -135,10 +135,10 @@
 				ImageButton:
 					size_hint_x: None
 					width: 50
-					source: os.path.join(root.form_root, 'icons', 'icons8-add-48.png')
+					source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
 					on_press: root.add
 				ImageButton:
 					size_hint_x: None
 					width: 50
-					source: os.path.join(root.form_root, 'icons', 'icons8-cancel-48.png')
+					source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
 					on_press: root.cancel

@@ -17,7 +17,6 @@ kv_path = os.path.join(form_root, 'kv_container', 'personalinfo.kv')
 Builder.load_file(kv_path)
 
 # Startup configurations
-Window.maximize()
 win_size = Window.size
 
 
