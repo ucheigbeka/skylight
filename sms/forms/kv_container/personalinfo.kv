@@ -12,22 +12,35 @@
 		size_hint: (None, None)
 		size: Window.size
 		effect_cls: 'ScrollEffect'
+		canvas.before:
+			Rectangle:
+				size: self.size
+				pos: self.pos
+				source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
 		BoxLayout:
 			orientation: 'vertical'
 			padding_x: 10
 			size_hint: (None, None)
 			size: root.win_size
 
-			Label:
-				text: '[u]Personal Information[/u]'
-				text_size: self.size
-				font_size: 45
-				halign: 'center'
-				valign: 'middle'
-				markup: True
-				size_hint_y: .2
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+                canvas.before:
+                    Color:
+                        rgba: (0,0,0,.4)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Label:
+                    text: 'Personal Information'
+                    font_size: 20
+                    halign: 'center'
+                    valign: 'middle'
+                    markup: True
 
 			BoxLayout:
+			    padding: 10
 				GridLayout:
 					id: grid
 					cols: 2
@@ -106,22 +119,23 @@
 						text: 'Graduated'
 					CustomSpinner:
 						values: ['Yes', 'No']
-				CustomLabel:
-					text: 'Passport'
-					size_hint: (.15, None)
-					height: grid.minimum_height
-					valign: 'top'
-					halign: 'center'
-					pos_hint: {'top': 1}
+
 				FloatLayout:
-					size_hint: (.15, None)
+					size_hint: (.2, None)
 					height: grid.minimum_height
 					pos_hint: {'top': 1}
+					CustomLabel:
+				    	text: 'Passport'
+					    size_hint: (None, None)
+					    height: grid.minimum_height
+					    valign: 'top'
+    					halign: 'left'
+	    				pos_hint: {'top': 1, 'x': 1}
 					Image:
 						id: passport
 						size_hint: (None, None)
 						size: (117, 160)
-						pos_hint: {'top': 1, 'x': 0}
+						pos_hint: {'top': 1, 'x': 1}
 						on_touch_down: root.load_image(*args)
 						source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
 				FloatLayout:
