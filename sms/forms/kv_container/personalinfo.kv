@@ -3,6 +3,7 @@
 #: import CustomTextInput sms.utils.textinput.CustomTextInput
 #: import ImageButton sms.utils.imagebutton.ImageButton
 #: import CustomLabel sms.utils.label.CustomLabel
+#: import DatePicker sms.utils.datepicker.DatePicker
 
 <CustomSpinner@Spinner>:
 	size_hint_x: None
@@ -78,8 +79,9 @@
 						values: 'Male', 'Female'
 					CustomLabel:
 						text: 'Date of birth'
-					CustomTextInput:
-						hint_text: '9/23/2019'
+					DatePicker:
+						size_hint_x: None
+						width: 100
 					CustomLabel:
 						text: 'State of origin'
 					CustomTextInput:
