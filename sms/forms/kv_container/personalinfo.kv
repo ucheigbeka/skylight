@@ -38,6 +38,12 @@
                     halign: 'center'
                     valign: 'middle'
                     markup: True
+                    size_hint_x: .9
+
+                ImageButton:
+                    size_hint_x: .1
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                    on_press: app.root.current = 'main_page'
 
 			BoxLayout:
 			    padding: 10
