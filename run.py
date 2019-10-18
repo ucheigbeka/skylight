@@ -7,11 +7,11 @@ from sms import sm
 
 
 class StudentManagementSystemApp(App):
-	title = 'Student Management System'
+    title = 'Student Management System'
 
-	def build(self):
-		return sm
+    def build(self):
+        return sm
 
 
 if __name__ == '__main__':
-	StudentManagementSystemApp().run()
+    StudentManagementSystemApp().run()

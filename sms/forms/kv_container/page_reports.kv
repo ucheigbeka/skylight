@@ -40,7 +40,9 @@
                     ImageButton:
                         size_hint_x: .1
                         source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                        on_press: app.root.current = 'main_page'
+                        on_press: 
+                            app.root.transition.direction = 'right'
+                            app.root.current = 'main_page'
 
                 Label:
                     text: "University of Benin, Nigeria"

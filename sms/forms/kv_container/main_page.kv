@@ -88,22 +88,30 @@
                             text: "Personal Data"
                             size_hint_y: .1
                             background_color: (0,0,0,.20)
-                            on_press: app.root.current = 'personal_info'
+                            on_press:
+                                app.root.transition.direction = 'left'
+                                app.root.current = 'personal_info'
                         Button:
                             text:"Course Registration"
                             size_hint_y: .1
                             background_color: (0,0,0,.20)
-                            on_press: app.root.current = 'course_registration'
+                            on_press:
+                                app.root.transition.direction = 'left'
+                                app.root.current = 'course_registration'
                         Button:
                             text:"Course Score Sheets"
                             size_hint_y: .1
                             background_color: (0,0,0,.20)
-                            on_press: app.root.current = 'course_score_sheets'
+                            on_press:
+                                app.root.transition.direction = 'left'
+                                app.root.current = 'course_score_sheets'
                         Button:
                             text:"Reports"
                             size_hint_y: .1
                             background_color: (0,0,0,.20)
-                            on_press: app.root.current = 'page_reports'
+                            on_press:
+                                app.root.transition.direction = 'left'
+                                app.root.current = 'page_reports'
                         Label:
                             size_hint_y: .4
 

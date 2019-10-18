@@ -20,4 +20,3 @@ sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(page_reports)
 sm.add_widget(error)
-
