@@ -1,4 +1,11 @@
+import os
+from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
+
+# Loads all the kv imports
+imports_path = os.path.join(os.path.dirname(
+    __file__), 'forms', 'kv_container', 'imports.kv')
+Builder.load_file(imports_path)
 
 # Load the forms
 from sms.forms.error import Error
