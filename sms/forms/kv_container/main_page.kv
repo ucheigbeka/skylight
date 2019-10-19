@@ -1,113 +1,108 @@
 <MainPage>:
-    ScrollView:
-		size_hint: (None, None)
-		size: Window.size
-		effect_cls: 'ScrollEffect'
-		canvas.before:
-			Rectangle:
-				size: self.size
-				pos: self.pos
-				source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+	canvas.before:
+		Rectangle:
+			size: self.size
+			pos: self.pos
+			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
 
-        FloatLayout:
-            size: root.width, root.height
+    FloatLayout:
+
+        BoxLayout:
+            pos_hint: {'top': 1}
+            size_hint_y: .2
+            height: 80
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,.20)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: "Department of Mechanical Engineering"
+                bold: True
+                halign: 'center'
+                font_size: 35
+                size_hint_y: .12
+            Label:
+                text: "University of Benin, Nigeria"
+                halign: 'center'
+                font_size: 30
+                size_hint_y: .08
+
+        BoxLayout:
+            pos_hint: {'bottom': 1}
+            size_hint_y: .8
 
             BoxLayout:
-                pos_hint: {'top': 1}
-                size_hint_y: .2
-                height: 80
+                size_hint_x: .6
                 orientation: 'vertical'
-                canvas.before:
-                    Color:
-                        rgba: (0,0,0,.20)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+
                 Label:
-                    text: "Department of Mechanical Engineering"
-                    bold: True
-                    halign: 'center'
+                    size_hint_y: .09
+
+                CustomLabel:
+                    text: "Menu"
+                    halign: 'right'
+                    valign: 'center'
+                    padding: 35,1
                     font_size: 35
-                    size_hint_y: .12
+                    size_hint_y: .11
+                    size_hint_x: .4
+                    canvas.before:
+                        Color:
+                            rgba: (0,0,0,.20)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
                 Label:
-                    text: "University of Benin, Nigeria"
-                    halign: 'center'
-                    font_size: 30
-                    size_hint_y: .08
+                    size_hint_y: 0.8
 
-            BoxLayout:
-                pos_hint: {'bottom': 1}
-                size_hint_y: .8
-
+            ScrollView:
+                do_scroll: True
+                size_hint_x: .4
                 BoxLayout:
-                    size_hint_x: .6
+                    pos_hint: {'right': 1}
                     orientation: 'vertical'
 
                     Label:
-                        size_hint_y: .09
+                        size_hint_y: .1
 
-                    CustomLabel:
-                        text: "Menu"
-                        halign: 'right'
-                        valign: 'center'
-                        padding: 35,1
-                        font_size: 35
-                        size_hint_y: .11
-                        size_hint_x: .4
-                        canvas.before:
-                            Color:
-                                rgba: (0,0,0,.20)
-                            Rectangle:
-                                size: self.size
-                                pos: self.pos
-
+                    Button:
+                        text:"Course Details"
+                        halign: 'left'
+                        background_color: (0,0,0,.20)
+                        size_hint_y: .1
+                        on_press: app.root.current = 'course_details'
+                    Button:
+                        text: "Personal Data"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'personal_info'
+                    Button:
+                        text:"Course Registration"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'course_registration'
+                    Button:
+                        text:"Course Score Sheets"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'course_score_sheets'
+                    Button:
+                        text:"Reports"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'page_reports'
                     Label:
-                        size_hint_y: 0.8
-
-                ScrollView:
-                    do_scroll: True
-                    size_hint_x: .4
-                    BoxLayout:
-                        pos_hint: {'right': 1}
-                        orientation: 'vertical'
-
-                        Label:
-                            size_hint_y: .1
-
-                        Button:
-                            text:"Course Details"
-                            halign: 'left'
-                            background_color: (0,0,0,.20)
-                            size_hint_y: .1
-                            on_press: app.root.current = 'course_details'
-                        Button:
-                            text: "Personal Data"
-                            size_hint_y: .1
-                            background_color: (0,0,0,.20)
-                            on_press:
-                                app.root.transition.direction = 'left'
-                                app.root.current = 'personal_info'
-                        Button:
-                            text:"Course Registration"
-                            size_hint_y: .1
-                            background_color: (0,0,0,.20)
-                            on_press:
-                                app.root.transition.direction = 'left'
-                                app.root.current = 'course_registration'
-                        Button:
-                            text:"Course Score Sheets"
-                            size_hint_y: .1
-                            background_color: (0,0,0,.20)
-                            on_press:
-                                app.root.transition.direction = 'left'
-                                app.root.current = 'course_score_sheets'
-                        Button:
-                            text:"Reports"
-                            size_hint_y: .1
-                            background_color: (0,0,0,.20)
-                            on_press:
-                                app.root.transition.direction = 'left'
-                                app.root.current = 'page_reports'
-                        Label:
-                            size_hint_y: .4
+                        size_hint_y: .4
 

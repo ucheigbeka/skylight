@@ -1,7 +1,6 @@
+import os
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
-import os
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'signin.kv')

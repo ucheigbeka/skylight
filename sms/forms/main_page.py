@@ -1,19 +1,14 @@
 import os
 from kivy.lang import Builder
-from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'main_page.kv')
 Builder.load_file(kv_path)
 
-# Startup configurations
-win_size = Window.size
-
 
 class MainPage(Screen):
     form_root = form_root
-    win_size = win_size
 
 
 if __name__ == '__main__':
