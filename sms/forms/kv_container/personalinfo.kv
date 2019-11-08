@@ -1,4 +1,5 @@
 <PersonalInfo>:
+    mat_no: mat_no.text
 	canvas.before:
 		Rectangle:
 			size: self.size
@@ -54,6 +55,7 @@
                     BoxLayout:
                         spacing: 20
                         CustomTextInput:
+                            id: mat_no
                             width: 125
                             text: 'ENG'
                             max_length: 10
@@ -61,56 +63,71 @@
                             size_hint_x: None
                             width: 50
                             source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
-                            on_press: root.search
+                            on_press: root.search()
+                        ImageButton:
+                            size_hint_x: None
+                            width: 50
+                            source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                            on_press: root.clear_fields()
                     CustomLabel:
                         text: 'Surname'
                         halign: 'left'
                     CustomTextInput:
+                        id: surname
                     CustomLabel:
                         text: 'First name'
                         halign: 'left'
                         pos_hint: {'x': 1}
                     CustomTextInput:
+                        id: fname
                     CustomLabel:
                         text: 'Middle name'
                         halign: 'left'
                     CustomTextInput:
+                        id: mname
                     CustomLabel:
                         text: 'Mode of entry'
                         halign: 'left'
                     CustomSpinner:
+                        id: mode_of_entry
                         values: ['PUTME', 'DE (200)', 'DE (300)']
                     CustomLabel:
                         text: 'Session admitted'
                         halign: 'left'
                     CustomTextInput:
+                        id: session_admit
                         max_length: 4
                         width: 100
                     CustomLabel:
                         text: 'Current level'
                         halign: 'left'
                     CustomSpinner:
+                        id: cur_level
                         values: ['100', '200', '300', '400', '500']
                     CustomLabel:
                         text: 'Sex'
                         halign: 'left'
                     CustomSpinner:
+                        id: sex
                         values: 'Male', 'Female'
                     CustomLabel:
                         text: 'Date of birth'
                         halign: 'left'
                     DatePicker:
+                        id: dob
 						size_hint_x: None
 						width: 100
                     CustomLabel:
                         text: 'State of origin'
                         halign: 'left'
                     CustomTextInput:
+                        id: state_of_origin
                         width: 100
                     CustomLabel:
                         text: 'Phone number'
                         halign: 'left'
                     CustomTextInput:
+                        id: phone_no
                         width: 125
                         input_filter: 'int'
                         max_length: 11
@@ -118,10 +135,12 @@
                         text: 'Email Address'
                         halign: 'left'
                     CustomTextInput:
+                        id: email
                     CustomLabel:
                         text: 'Sponsor\'s phone number'
                         halign: 'left'
                     CustomTextInput:
+                        id: s_phone_no
                         width: 125
                         input_filter: 'int'
                         max_length: 11
@@ -129,28 +148,30 @@
                         text: 'Sponsor\'s email'
                         halign: 'left'
                     CustomTextInput:
+                        id: s_email
                     CustomLabel:
                         text: 'Graduated'
                         halign: 'left'
                     CustomSpinner:
+                        id: grad
                         values: ['Yes', 'No']
 
-			FloatLayout:
-				size_hint: (.2, None)
-				height: grid.minimum_height
+			CustomLabel:
+		    	text: 'Passport'
+			    size_hint: (None, None)
+			    height: grid.minimum_height
+			    valign: 'top'
+				halign: 'center'
 				pos_hint: {'top': 1}
-				CustomLabel:
-			    	text: 'Passport'
-				    size_hint: (None, None)
-				    height: grid.minimum_height
-				    valign: 'top'
-					halign: 'left'
-    				pos_hint: {'top': 1, 'x': 1}
+            FloatLayout:
+                size_hint: (.2, None)
+                height: grid.minimum_height
+                pos_hint: {'top': 1}
 				Image:
 					id: passport
 					size_hint: (None, None)
 					size: (117, 160)
-					pos_hint: {'top': 1, 'x': 1}
+					pos_hint: {'top': 1, 'x': 0}
 					on_touch_down: root.load_image(*args)
 					source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
 			FloatLayout:
@@ -165,9 +186,9 @@
 				size_hint_x: None
 				width: 50
 				source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
-				on_press: root.add
+				on_press: root.add()
 			ImageButton:
 				size_hint_x: None
 				width: 50
 				source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
-				on_press: root.cancel
+				on_press: root.cancel()
