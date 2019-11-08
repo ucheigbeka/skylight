@@ -3,6 +3,24 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
+# Backend config
+base_url = 'http://127.0.0.1:1807/api/'
+API_KEY = ''
+
+
+def urlTo(path):
+    return base_url + path
+
+
+def get_api_key():
+    return API_KEY
+
+
+def store_api_key(api_key):
+    global API_KEY
+    API_KEY = api_key
+
+
 # Loads all the kv imports
 imports_path = os.path.join(os.path.dirname(
     __file__), 'forms', 'kv_container', 'imports.kv')
@@ -19,12 +37,14 @@ from sms.forms.error import Error
 from sms.forms.signin import SigninWindow
 from sms.forms.main_page import MainPage
 from sms.forms.personalinfo import PersonalInfo
+from sms.forms.course_details import CourseDetails
 from sms.forms.page_reports import Reports
 
 sm = ScreenManager()
 sign_in = SigninWindow(name='signin')
 main_page = MainPage(name='main_page')
 personal_info = PersonalInfo(name='personal_info')
+course_details = CourseDetails(name='course_details')
 page_reports = Reports(name='page_reports')
 error = Error(name='error')
 
@@ -32,5 +52,6 @@ error = Error(name='error')
 sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
+sm.add_widget(course_details)
 sm.add_widget(page_reports)
 sm.add_widget(error)
