@@ -1,4 +1,6 @@
 <SigninWindow>:
+	username: username.text
+	password: pwd.text
 	BoxLayout:
 		id: main
 		orientation: "vertical"
@@ -41,6 +43,7 @@
 				size_hint_y: None
 				height: 80
 				TextInput:
+					id: username
 					hint_text: "Username"
 					multiline: False
 					focus: True
@@ -60,9 +63,7 @@
 				height: 40
 				background_color: (0,0,0,1)
 				background_normal: ''
-				on_press:
-					app.root.transition.direction = 'left'
-					app.root.current = 'main_page'
+				on_press: root.signin()
 			Label:
 				id: sp
 			
