@@ -1,0 +1,67 @@
+<CourseDetails>:
+	canvas.before:
+		Rectangle:
+			size: self.size
+			pos: self.pos
+			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+
+	BoxLayout:
+		orientation: 'vertical'
+		Label:
+			text: 'Course Details'
+			halign: 'center'
+			valign: 'middle'
+			size_hint_y: .12
+		BoxLayout:
+			GridLayout:
+				cols: 2
+				padding: 20
+				size_hint: (.4, None)
+				height: self.minimum_height
+				spacing: (10, 5)
+				row_default_height: 30
+                row_force_default: True
+                pos_hint: {'top': 1}
+				CustomLabel:
+					text: 'Course code'
+				BoxLayout:
+					CustomTextInput:
+						id: course_code
+						max_length: 3
+						width: 50
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+						source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+						on_press: root.search()
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+	                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+	                    on_press: root.clear_fields()
+				CustomLabel:
+					text: 'Course title'
+				CustomTextInput:
+					id: course_title
+				CustomLabel:
+					text: 'Course credit'
+				CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 50
+				CustomLabel:
+					text: 'Course semester'
+				CustomSpinner:
+					id: course_semester
+					values: ['1', '2']
+				CustomLabel:
+					text: 'Course level'
+				CustomSpinner:
+					id: course_level
+					values: ['100', '200', '300', '400', '500']
+				CustomLabel:
+					text: 'Teaching department'
+				CustomSpinner:
+					id: teaching_dept
+					values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+			FloatLayout
