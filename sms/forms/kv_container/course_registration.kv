@@ -1,0 +1,217 @@
+<RegistrationGrid>:
+	orientation: 'vertical'
+	Label:
+		text: root.heading
+		font_size: 20
+	    size_hint_y: None
+		height: 50
+	GridLayout:
+		id: grid
+		cols: 4
+		spacing: (2, 2)
+		padding: [(self.width - self.minimum_width) / 2, 0, 0, 0]
+		size_hint_y: None
+		height: self.minimum_height
+		row_default_height: 30
+		row_force_default: True
+		CustomLabel:
+			text: 'Course Code'
+			width: root.col_widths[0]
+		CustomLabel:
+			text: 'Course Title'
+			width: root.col_widths[1]
+		CustomLabel:
+			text: 'Credit'
+			width: root.col_widths[2]
+		CustomLabel:
+			text: 'Registered'
+			width: root.col_widths[3]
+	BoxLayout:
+		CustomLabel:
+			text: 'Total credits registered'
+		CustomTextInput:
+			input_filter: 'int'
+
+
+<CourseRegistration>:
+	canvas.before:
+		Rectangle:
+			size: self.size
+			pos: self.pos
+			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+
+	BoxLayout:
+		orientation: 'vertical'
+
+		BoxLayout:
+			canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+			size_hint_y: None
+			height: 50
+			Label:
+                text: 'COURSE REGISTRATION FORM'
+                font_size: 20
+                halign: 'center'
+                valign: 'middle'
+                size_hint_x: .9
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'main_page'
+
+        BoxLayout:
+        	size_hint_y: None
+        	height: grid.height
+        	GridLayout:
+        		id: grid
+        		cols: 2
+        		padding: 20
+        		spacing: (10, 5)
+        		size_hint: (.5, None)
+        		height: self.minimum_height
+        		row_default_height: 30
+        		row_force_default: True
+        		CustomLabel:
+                    text: 'Session'
+                    halign: 'left'
+                CustomTextInput:
+                	max_length: 4
+                	input_filter: 'int'
+                    width: 100
+        		CustomLabel:
+                    text: 'Mat number'
+                    halign: 'left'
+                BoxLayout:
+                    spacing: 20
+                    CustomTextInput:
+                        id: mat_no
+                        width: 125
+                        text: 'ENG'
+                        max_length: 10
+                    ImageButton:
+                        size_hint_x: None
+                        width: 50
+                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                        on_press: pass
+                    ImageButton:
+                        size_hint_x: None
+                        width: 50
+                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                        on_press: pass
+                CustomLabel:
+                    text: 'Surname'
+                    halign: 'left'
+                CustomTextInput:
+                CustomLabel:
+                    text: 'Othernames'
+                    halign: 'left'
+                CustomTextInput:
+                CustomLabel:
+                    text: 'Current level'
+                    halign: 'left'
+                CustomSpinner:
+                    values: ['100', '200', '300', '400', '500']
+                CustomLabel:
+                    text: 'Phone number'
+                    halign: 'left'
+                CustomTextInput:
+                	input_filter: 'int'
+                    max_length: 11
+                CustomLabel:
+                    text: 'Probation status'
+                    halign: 'left'
+                CustomSpinner:
+                CustomLabel:
+                    text: 'Fees status'
+                    halign: 'left'
+                CustomSpinner:
+        	CustomLabel:
+		    	text: 'Passport'
+			    size_hint: (None, None)
+			    height: grid.height
+			    valign: 'top'
+				halign: 'center'
+				pos_hint: {'top': 1}
+            FloatLayout:
+                size_hint: (.2, None)
+                height: grid.height
+                pos_hint: {'top': 1}
+				Image:
+					id: passport
+					size_hint: (None, None)
+					size: (117, 160)
+					pos_hint: {'top': 1, 'x': 0}
+					on_touch_down: pass
+					source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
+			FloatLayout:
+				size_hint_x: .3
+
+        ScrollView:
+        	do_scroll_x: False
+        	BoxLayout:
+        		id: box
+        		size_hint: (None, None)
+        		height: 500 + 200
+        		width: Window.width
+        		# BoxLayout:
+        		# 	orientation: 'vertical'
+		        #     Label:
+		        #     	text: '1ST SEMESTER'
+		        #     	font_size: 20
+		        #     	size_hint_y: None
+		        #     	height: 50
+		        #     GridLayout:
+		        #     	id: first_sem_grid
+		        #     	cols: 4
+		        # 		spacing: (2, 2)
+		        # 		padding: [(self.width - self.minimum_width) / 2, 0, 0, 0]
+		        # 		size_hint_y: None
+		        # 		height: self.minimum_height
+		        # 		row_default_height: 30
+		        # 		row_force_default: True
+		        #     BoxLayout:
+		        #     	CustomLabel:
+		        #     		text: 'Total credits registered'
+		        #     	CustomTextInput:
+		        #     		input_filter: 'int'
+        		# BoxLayout:
+        		# 	orientation: 'vertical'
+        		# 	Label:
+        		# 		text: '2ND SEMESTER'
+		        #     	font_size: 20
+		        #         size_hint_y: None
+		        #     	height: 50
+		        #     GridLayout:
+		        #     	id: second_sem_grid
+		        #     	cols: 4
+		        #     	padding: 20
+		        # 		spacing: (2, 2)
+		        # 		padding: [(self.width - self.minimum_width) / 2, 0, 0, 0]
+		        # 		size_hint_y: None
+		        # 		height: self.minimum_height
+		        # 		row_default_height: 30
+		        # 		row_force_default: True
+		        # 		CustomLabel:
+		        # 			text: 'Course Code'
+		        # 			text_size: self.width, None
+		        # 			width: 80
+		        # 		CustomLabel:
+		        # 			text: 'Course Title'
+		        # 			width: 300
+		        # 		CustomLabel:
+		        # 			text: 'Credit'
+		        # 			width: 100
+		        # 		CustomLabel:
+		        # 			text: 'Registered'
+		        # 			width: 50
+		        #     BoxLayout:
+		        #     	CustomLabel:
+		        #     		text: 'Total credits registered'
+		        #     	CustomTextInput:
+		        #     		input_filter: 'int'
