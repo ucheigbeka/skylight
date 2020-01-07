@@ -1,15 +1,20 @@
+from kivy.lang import Builder
 from kivy.uix.textinput import TextInput
+
+Builder.load_string('''
+<CustomTextInput>:
+	size_hint_x: None
+	width: 300
+	multiline: False
+	write_tab: False
+	use_bubble: True
+''')
 
 
 class CustomTextInput(TextInput):
 	def __init__(self, **kwargs):
 		super(CustomTextInput, self).__init__(**kwargs)
 		self.max_length = None
-		self.multiline = False
-		self.size_hint_x = None
-		self.width = 300
-		self.write_tab = False
-		self.use_bubble = True
 
 	def insert_text(self, substring, *args):
 		if self.max_length and (len(self.text) == self.max_length):
