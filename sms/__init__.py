@@ -39,12 +39,14 @@ from sms.forms.main_page import MainPage
 from sms.forms.personalinfo import PersonalInfo
 from sms.forms.course_details import CourseDetails
 from sms.forms.page_reports import Reports
+from sms.forms.course_registration import CourseRegistration
 
 sm = ScreenManager()
 sign_in = SigninWindow(name='signin')
 main_page = MainPage(name='main_page')
 personal_info = PersonalInfo(name='personal_info')
 course_details = CourseDetails(name='course_details')
+course_reg = CourseRegistration(name='course_registration')
 page_reports = Reports(name='page_reports')
 error = Error(name='error')
 
@@ -53,5 +55,6 @@ sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(course_details)
+sm.add_widget(course_reg)
 sm.add_widget(page_reports)
 sm.add_widget(error)
