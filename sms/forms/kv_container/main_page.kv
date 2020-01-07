@@ -74,7 +74,9 @@
                         halign: 'left'
                         background_color: (0,0,0,.20)
                         size_hint_y: .1
-                        on_press: app.root.current = 'course_details'
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'course_details'
                     Button:
                         text: "Personal Data"
                         size_hint_y: .1
