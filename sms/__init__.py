@@ -5,20 +5,20 @@ from kivy.uix.screenmanager import ScreenManager
 
 # Backend config
 base_url = 'http://127.0.0.1:1807/api/'
-API_KEY = ''
+token = ''
 
 
 def urlTo(path):
     return base_url + path
 
 
-def get_api_key():
-    return API_KEY
+def get_token():
+    return token
 
 
-def store_api_key(api_key):
-    global API_KEY
-    API_KEY = api_key
+def store_token(_token):
+    global token
+    token = _token
 
 
 # Loads all the kv imports
@@ -46,7 +46,7 @@ sign_in = SigninWindow(name='signin')
 main_page = MainPage(name='main_page')
 personal_info = PersonalInfo(name='personal_info')
 course_details = CourseDetails(name='course_details')
-course_reg = CourseRegistration(name='course_registration')
+#course_reg = CourseRegistration(name='course_registration')
 page_reports = Reports(name='page_reports')
 error = Error(name='error')
 
@@ -55,6 +55,6 @@ sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(course_details)
-sm.add_widget(course_reg)
+#sm.add_widget(course_reg)
 sm.add_widget(page_reports)
 sm.add_widget(error)
