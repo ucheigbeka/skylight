@@ -23,7 +23,7 @@ class PersonalInfo(Screen):
 		data = dict()
 		data['mat_no'] = self.ids.mat_no.text
 		data['surname'] = self.ids.surname.text
-		data['othernames'] = ''.join([self.ids.fname.text, self.ids.mname.text])
+		data['othernames'] = ' '.join([self.ids.fname.text, self.ids.mname.text])
 		data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
 		data['session_admitted'] = int(self.ids.session_admit.text)
 		data['current_level'] = int(self.ids.cur_level.text)
