@@ -23,13 +23,14 @@ class PersonalInfo(Screen):
 		data = dict()
 		data['mat_no'] = self.ids.mat_no.text
 		data['surname'] = self.ids.surname.text
-		data['othernames'] = ''.join([self.ids.fname.text, self.ids.mname.text])
+		data['othernames'] = ' '.join([self.ids.fname.text, self.ids.mname.text])
 		data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
 		data['session_admitted'] = int(self.ids.session_admit.text)
 		data['current_level'] = int(self.ids.cur_level.text)
 		data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
 		data['date_of_birth'] = self.ids.dob.text
 		data['state_of_origin'] = self.ids.state_of_origin.text
+		data['lga'] = self.ids.lga_of_origin.text
 		data['phone_no'] = self.ids.phone_no.text
 		data['email_address'] = self.ids.email.text
 		data['sponsor_phone_no'] = self.ids.s_phone_no.text
@@ -61,6 +62,7 @@ class PersonalInfo(Screen):
 		self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
 		self.ids.dob.text = str(data['date_of_birth'])
 		self.ids.state_of_origin.text = str(data['state_of_origin'])
+		self.ids.lga_of_origin.text = str(data['lga'])
 		self.ids.phone_no.text = str(data['phone_no'])
 		self.ids.email.text = str(data['email_address'])
 		self.ids.s_phone_no.text = str(data['sponsor_phone_no'])
