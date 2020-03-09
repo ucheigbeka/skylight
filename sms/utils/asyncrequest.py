@@ -13,6 +13,7 @@ method arguement definies the type of http request to make
 
 import requests
 from threading import Thread
+from sms import get_token
 from sms.utils.popups import ErrorPopup
 
 
@@ -29,7 +30,7 @@ class AsyncRequest(Thread):
         self.method = method
 
         self.headers = {
-            'Content-type': 'application/json', 'API_KEY': ''
+            'Content-type': 'application/json', 'token': get_token()
         } if not headers else headers
 
         self.start()
