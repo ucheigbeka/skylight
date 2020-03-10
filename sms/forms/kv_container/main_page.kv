@@ -99,12 +99,28 @@
                             app.root.transition.direction = 'left'
                             app.root.current = 'course_score_sheets'
                     Button:
+                        text:"Administrator"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'admin'
+                    Button:
                         text:"Reports"
                         size_hint_y: .1
                         background_color: (0,0,0,.20)
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'page_reports'
+
+                    Button:
+                        text:"Logs"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'logs'
+
                     Label:
                         size_hint_y: .4
 

@@ -40,6 +40,8 @@ from sms.forms.personalinfo import PersonalInfo
 from sms.forms.course_details import CourseDetails
 from sms.forms.page_reports import Reports
 from sms.forms.course_registration import CourseRegistration
+from sms.forms.admin import Administrator
+from sms.forms.logs import Logs
 
 sm = ScreenManager()
 sign_in = SigninWindow(name='signin')
@@ -49,12 +51,16 @@ course_details = CourseDetails(name='course_details')
 course_reg = CourseRegistration(name='course_registration')
 page_reports = Reports(name='page_reports')
 error = Error(name='error')
+admin = Administrator(name="admin")
+logs = Logs(name="logs")
 
 # Adds the screens in the order that they would appear
-sm.add_widget(sign_in)
+#sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(course_details)
 sm.add_widget(course_reg)
 sm.add_widget(page_reports)
 sm.add_widget(error)
+sm.add_widget(admin)
+sm.add_widget(logs)

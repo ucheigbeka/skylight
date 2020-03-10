@@ -1,0 +1,101 @@
+
+<Administrator>:
+	canvas.before:
+		Rectangle:
+			size: self.size
+			pos: self.pos
+			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+
+	BoxLayout:
+		orientation: 'vertical'
+
+		BoxLayout:
+			canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+			size_hint_y: None
+			height: 50
+			Label:
+                text: 'ADMINISTRATOR'
+                font_size: 25
+                halign: 'center'
+                valign: 'middle'
+                size_hint_x: .9
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'main_page'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 10
+
+            BoxLayout:
+                #size_hint_y: 1, 9
+                #height: layoutGrid.height
+                orientation: "vertical"
+
+                CustomLabel:
+                    text: "USER LOGS"
+                    font_size: 25
+                    #text_size: root.width, None
+                    #halign: 'center'
+                    #valign: 'top'
+                    size_hint_y: .1
+
+                Label:
+                    size_hint_y: .1
+
+                BoxLayout
+                    orientation: 'horizontal'
+                    size_hint_y: .06
+
+                    Spinner:
+                        text: "Users"
+                        values: "100L_course_adviser", "200L_course_adviser", "300L_course_adviser", "400L_course_adviser", '500L_course_adviser', 'Admin'
+                        size_hint_x: .5
+                        #size: (40, 40)
+
+                    Label:
+                        size_hint_x: .5
+                CustomLabel:
+                    text: 'Log message'
+                    #halign: 'center'
+                    #spacing: (10, 5)
+                    size_hint_y: .1
+
+                CustomTextInput:
+                    size_hint_y: None
+                    height:300
+                    width: 700
+                    size_hint_y: .7
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                Label:
+                    size_hint_y: .2
+
+                Button:
+                    text:"CREATE NEW SESSION"
+                    halign: 'right'
+                    font_size: 25
+                    background_color: (0.2,0,0,.20)
+                    size_hint_y: .1
+
+                Label:
+                    size_hint_y: .1
+                Button:
+                    text:"OPEN RESULT ACCESS"
+                    font_size: 25
+                    halign: 'right'
+                    background_color: (0.2,0,0,.20)
+                    size_hint_y: .1
+
+                Label:
+                    size_hint_y: .5
