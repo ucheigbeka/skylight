@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty, ListProperty
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'course_registration.kv')
@@ -10,18 +11,18 @@ Builder.load_file(kv_path)
 
 
 class RegistrationGrid(BoxLayout):
-	col_widths = [0, 0, 0, 0]
-	heading = ''
+	col_widths = ListProperty([100, 300, 100])
+	# col_widths = ListProperty([80, 300, 100, 50])
+	heading = StringProperty('')
 	def __init__(self, heading, **kwargs):
 		super(RegistrationGrid, self).__init__(**kwargs)
 		self.heading = heading.upper()
-		self.col_widths = [80, 300, 100, 50]
 		self.wid_list = []
 		for row in range(10):
-			fields = [Factory.CustomSpinner(values=[], width=self.col_widths[0])]
+			fields = [Factory.CustomTextInput(width=self.col_widths[0])]
 			fields.append(Factory.CustomTextInput(width=self.col_widths[1]))
-			fields.append(Factory.CustomTextInput(size_hint_x=None, width=self.col_widths[2]))
-			fields.append(Factory.CustomSpinner(values=['Yes', 'No'], width=self.col_widths[3]))
+			fields.append(Factory.CustomTextInput(width=self.col_widths[2]))
+			# fields.append(Factory.CustomSpinner(values=['Yes', 'No'], width=self.col_widths[3]))
 			for field in fields:
 				self.ids['grid'].__self__.add_widget(field)
 			self.wid_list.append(fields)

@@ -8,7 +8,7 @@
 		height: 50
 	GridLayout:
 		id: grid
-		cols: 4
+		cols: 3
 		spacing: (2, 2)
 		padding: [(self.width - self.minimum_width) / 2, 0, 0, 0]
 		size_hint_y: None
@@ -24,14 +24,16 @@
 		CustomLabel:
 			text: 'Credit'
 			width: root.col_widths[2]
-		CustomLabel:
-			text: 'Registered'
-			width: root.col_widths[3]
+		# CustomLabel:
+		# 	text: 'Registered'
+		# 	width: root.col_widths[3]
 	BoxLayout:
 		CustomLabel:
 			text: 'Total credits registered'
 		CustomTextInput:
 			input_filter: 'int'
+			size_hint_y: None
+			height: 100
 
 
 <CourseRegistration>:
@@ -67,6 +69,12 @@
                     app.root.current = 'main_page'
 
         BoxLayout:
+        	canvas.before:
+        		Color:
+        			rgba: 1, 0, 0, 1
+        		Rectangle:
+        			pos: self.pos
+        			size: self.size
         	size_hint_y: None
         	height: grid.height
         	GridLayout:
