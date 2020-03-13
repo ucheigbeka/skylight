@@ -35,48 +35,94 @@
             orientation: 'horizontal'
             padding: 10
 
-            BoxLayout:
-                #size_hint_y: 1, 9
-                #height: layoutGrid.height
-                orientation: "vertical"
+            GridLayout:
+				cols: 2
+				padding: 20
+				size_hint: (.5, None)
+				height: self.minimum_height
+				spacing: (10, 5)
+				row_default_height: 30
+                row_force_default: True
+                pos_hint: {'top': 1}
+                size_hint_x: .5
+
+
+				CustomLabel:
+					text: 'Course code'
+
+				BoxLayout:
+					CustomTextInput:
+						id: course_code
+						max_length: 6
+						width: 100
+
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+						source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+						on_press: root.search()
+
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+	                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+	                    on_press: root.clear_fields()
+
+				CustomLabel:
+					text: 'Course title'
+
+				CustomTextInput:
+					id: course_title
+
+				CustomLabel:
+					text: 'Course credit'
+
+				CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 100
+
+				CustomLabel:
+					text: 'Course semester'
+
+				CustomSpinner:
+					id: course_semester
+					values: ['1', '2']
+
+				CustomLabel:
+					text: 'Course level'
+
+				CustomSpinner:
+					id: course_level
+					values: ['100', '200', '300', '400', '500']
+
+				CustomLabel:
+					text: 'Teaching department'
+
+				CustomSpinner:
+					id: teaching_dept
+					values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
 
                 CustomLabel:
-                    text: "USER LOGS"
-                    font_size: 25
-                    #text_size: root.width, None
-                    #halign: 'center'
-                    #valign: 'top'
-                    size_hint_y: .1
-
-                Label:
-                    size_hint_y: .1
-
-                BoxLayout
-                    orientation: 'horizontal'
-                    size_hint_y: .06
-
-                    Spinner:
-                        text: "Users"
-                        values: "100L_course_adviser", "200L_course_adviser", "300L_course_adviser", "400L_course_adviser", '500L_course_adviser', 'Admin'
-                        size_hint_x: .5
-                        #size: (40, 40)
-
-                    Label:
-                        size_hint_x: .5
-                CustomLabel:
-                    text: 'Log message'
-                    #halign: 'center'
-                    #spacing: (10, 5)
-                    size_hint_y: .1
+                    text: 'Start Session'
 
                 CustomTextInput:
-                    size_hint_y: None
-                    height:300
-                    width: 700
-                    size_hint_y: .7
+					id: course_credit
+					max_length: 1
+					width: 100
+
+                CustomLabel:
+                    text: 'End Session'
+
+                CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 100
 
             BoxLayout:
                 orientation: 'vertical'
+                size_hint_x: .5
+                halign: 'right'
 
                 Label:
                     size_hint_y: .2
@@ -85,16 +131,17 @@
                     text:"CREATE NEW SESSION"
                     halign: 'right'
                     font_size: 25
-                    background_color: (0.2,0,0,.20)
+                    background_color: (100,0,0,1)
                     size_hint_y: .1
 
                 Label:
                     size_hint_y: .1
+
                 Button:
-                    text:"OPEN RESULT ACCESS"
+                    text:"OPEN RESULT EDITS"
                     font_size: 25
                     halign: 'right'
-                    background_color: (0.2,0,0,.20)
+                    background_color: (100,0,0,1)
                     size_hint_y: .1
 
                 Label:
