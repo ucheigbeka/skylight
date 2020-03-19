@@ -99,6 +99,13 @@
                             app.root.transition.direction = 'left'
                             app.root.current = 'error' #'course_score_sheets'
                     Button:
+                        text:"Results"
+                        size_hint_y: .1
+                        background_color: (0,0,0,.20)
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'result_entry'
+                    Button:
                         text:"Administrator"
                         size_hint_y: .1
                         background_color: (0,0,0,.20)

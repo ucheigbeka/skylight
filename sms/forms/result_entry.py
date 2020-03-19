@@ -2,16 +2,12 @@ import os
 import json
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen
 from kivy.uix.popup import Popup
 from kivy.factory import Factory
 
-from sms import urlTo, get_api_key
-from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import ErrorPopup, SuccessPopup
-from sms.utils.dialog import OpenFileDialog
+from sms import urlTo, get_token
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'result_entry.kv')
