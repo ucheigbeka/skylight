@@ -13,6 +13,7 @@ method arguement definies the type of http request to make
 
 import requests
 from threading import Thread
+from kivy.core.window import Window
 from sms import get_token
 from sms.utils.popups import ErrorPopup
 
@@ -29,13 +30,15 @@ class AsyncRequest(Thread):
         self.data = data
         self.method = method
 
-        self.headers = {
-            'Content-type': 'application/json', 'token': get_token()
-        } if not headers else headers
+        # self.headers = {
+        #     'Content-type': 'application/json', 'token': get_token()
+        # } if not headers else headers
+        self.headers = {}
 
         self.start()
 
     def run(self):
+        Window.set_system_cursor('wait')
         try:
             if self.method == 'GET':
                 self.resp = requests.get(
@@ -68,3 +71,4 @@ class AsyncRequest(Thread):
                     msg = r'[b]{}[/b]'.format(err_resp['title'].capitalize()
                                               ) + ' : ' + err_resp['detail']
                     ErrorPopup(msg)
+        Window.set_system_cursor('arrow')
