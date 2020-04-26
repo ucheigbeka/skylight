@@ -1,0 +1,68 @@
+<LoadPopupContent>:
+    orientation: 'vertical'
+    Label:
+    Button:
+        text: 'Load'
+
+<Result_Entry>:
+    edv: edv
+    canvas.before:
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+    FloatLayout:
+
+        BoxLayout:
+            pos_hint: {'top': 1}
+            size_hint_y: None
+            height: 50
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: "Students' Result Entry"
+                font_size: 30
+                size_hint_x: .9
+                text_size: Window.width, self.height
+                halign: 'center'
+                valign: 'middle'
+                bold: True
+
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'menu-button.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'main_page'
+
+        BoxLayout:
+            pos_hint: {'bottom': 1}
+            size_hint_y: .9
+            ExtendableDataViewer2:
+                id: edv
+                cols: 4
+                widths: [200] * self.cols
+                headers: ['Course code', 'Session', 'Matno', 'Score']
+                size_hint_x: None
+                width: self.dv.width + 50
+            FloatLayout:
+                BoxLayout:
+                    orientation: 'vertical'
+                    top: 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    size_hint: None, None
+                    size: dp(400), dp(200)
+                    MenuButton:
+                        text:"Load"
+                        on_press:
+                            root.show_load()
+                    MenuButton:
+                        text:"Upload"
+                        on_press:
+                            root.upload()
+
+           
