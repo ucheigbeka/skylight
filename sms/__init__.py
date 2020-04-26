@@ -12,7 +12,7 @@ def urlTo(path):
     return base_url + path
 
 def get_current_session():
-	return 2019
+    return 2019
 
 
 def get_token():
@@ -64,7 +64,7 @@ result_entry = Result_Entry(name='result_entry')
 logs = Logs(name="logs")
 
 # Adds the screens in the order that they would appear
-#sm.add_widget(sign_in)
+sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(course_details)
