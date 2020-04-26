@@ -1,3 +1,5 @@
+#: import StudentUpdatePopup sms.forms.student_update.StudentUpdatePopup
+
 <Reports>:
 	canvas.before:
 		Rectangle:
@@ -80,46 +82,29 @@
                     Label:
                         size_hint_y: .1
 
-                    Button:
+                    MenuButton:
                         text:"Raw Score Broad Sheet"
-                        halign: 'left'
-                        background_color: (0,0,0,.20)
-                        size_hint_y: .1
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text: "Letter Grade Broad Sheet"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text:"Senate Version"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text:"Summary of Failed Courses"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text:"Summary of Absent Cases"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text: "Students\' Update"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
-                        on_press: app.root.current = 'error'
-                    Button:
+                        on_press: app.root.current = StudentUpdatePopup().open()
+                    MenuButton:
                         text:"Level GPA Cards"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
-                    Button:
+                    MenuButton:
                         text:"Summary of Course Registration"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press: app.root.current = 'error'
                     Label:
                         size_hint_y: .1
