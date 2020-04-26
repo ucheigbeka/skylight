@@ -69,39 +69,28 @@
                     Label:
                         size_hint_y: .1
 
-                    Button:
+                    MenuButton:
                         text:"Course Details"
-                        halign: 'left'
-                        background_color: (0,0,0,.20)
-                        size_hint_y: .1
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'course_details'
-                    Button:
+                    MenuButton:
                         text: "Personal Data"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'personal_info'
-                    Button:
+                    MenuButton:
                         text:"Course Registration"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'course_registration'
-                    Button:
-                        text:"Course Score Sheets"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
+                    MenuButton:
+                        text:"Result Entry"
                         on_press:
                             app.root.transition.direction = 'left'
-                            app.root.current = 'error' #'course_score_sheets'
-                    Button:
+                            app.root.current = 'result_entry'
+                    MenuButton:
                         text:"Reports"
-                        size_hint_y: .1
-                        background_color: (0,0,0,.20)
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'page_reports'
