@@ -94,6 +94,18 @@
                         on_press:
                             app.root.transition.direction = 'left'
                             app.root.current = 'page_reports'
+                    MenuButton:
+                        text:"Administrator"
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'admin'
+
+                    MenuButton:
+                        text:"Logs"
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'logs'
+
                     Label:
                         size_hint_y: .4
 

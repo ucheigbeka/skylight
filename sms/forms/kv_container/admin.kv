@@ -1,0 +1,148 @@
+
+<Administrator>:
+	canvas.before:
+		Rectangle:
+			size: self.size
+			pos: self.pos
+			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+
+	BoxLayout:
+		orientation: 'vertical'
+
+		BoxLayout:
+			canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+			size_hint_y: None
+			height: 50
+			Label:
+                text: 'ADMINISTRATOR'
+                font_size: 25
+                halign: 'center'
+                valign: 'middle'
+                size_hint_x: .9
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'main_page'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 10
+
+            GridLayout:
+				cols: 2
+				padding: 20
+				size_hint: (.5, None)
+				height: self.minimum_height
+				spacing: (10, 5)
+				row_default_height: 30
+                row_force_default: True
+                pos_hint: {'top': 1}
+                size_hint_x: .5
+
+
+				CustomLabel:
+					text: 'Course code'
+
+				BoxLayout:
+					CustomTextInput:
+						id: course_code
+						max_length: 6
+						width: 100
+
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+						source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+						on_press: root.search()
+
+					ImageButton:
+						size_hint_x: None
+	                    width: 50
+	                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+	                    on_press: root.clear_fields()
+
+				CustomLabel:
+					text: 'Course title'
+
+				CustomTextInput:
+					id: course_title
+
+				CustomLabel:
+					text: 'Course credit'
+
+				CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 100
+
+				CustomLabel:
+					text: 'Course semester'
+
+				CustomSpinner:
+					id: course_semester
+					values: ['1', '2']
+
+				CustomLabel:
+					text: 'Course level'
+
+				CustomSpinner:
+					id: course_level
+					values: ['100', '200', '300', '400', '500']
+
+				CustomLabel:
+					text: 'Teaching department'
+
+				CustomSpinner:
+					id: teaching_dept
+					values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+
+                CustomLabel:
+                    text: 'Start Session'
+
+                CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 100
+
+                CustomLabel:
+                    text: 'End Session'
+
+                CustomTextInput:
+					id: course_credit
+					max_length: 1
+					width: 100
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .5
+                halign: 'right'
+
+                Label:
+                    size_hint_y: .2
+
+                Button:
+                    text:"CREATE NEW SESSION"
+                    halign: 'right'
+                    font_size: 25
+                    background_color: (100,0,0,1)
+                    size_hint_y: .1
+
+                Label:
+                    size_hint_y: .1
+
+                Button:
+                    text:"OPEN RESULT EDITS"
+                    font_size: 25
+                    halign: 'right'
+                    background_color: (100,0,0,1)
+                    size_hint_y: .1
+
+                Label:
+                    size_hint_y: .5
