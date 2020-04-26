@@ -1,5 +1,4 @@
 import os
-import requests
 from base64 import b64encode
 from hashlib import md5
 from kivy.lang import Builder
@@ -19,20 +18,9 @@ kv_path = os.path.join(form_root, 'kv_container', 'signin.kv')
 Builder.load_file(kv_path)
 
 
-def set_session_key(resp):
-    global SESSION_KEY
-    SESSION_KEY = resp.json()
-
-
-def get_session_key():
-    url = urlTo('session_key')
-    #AsyncRequest(url, on_success=set_session_key)
-    resp = requests.get(url)
-    set_session_key(resp)
-
-
 def hash_key():
-    session_key_sum = str(sum([int(x) for x in SESSION_KEY if x in "0123456789"]))
+    session_key_sum = str(
+        sum([int(x) for x in SESSION_KEY if x in "0123456789"]))
     session_bytes = bytes(session_key_sum, "utf-8")
     return b64encode(md5(session_bytes).digest()).decode("utf-8").strip("=")
 
@@ -47,13 +35,22 @@ class SigninWindow(Screen):
     username = StringProperty()
     password = StringProperty()
 
-    def signin(self, *args):
+    def signin(self):
         url = urlTo('login')
-        get_session_key()
         token = tokenize(self.username + ':' + self.password)
         data = {'token': token}
         AsyncRequest(url, on_success=self.grant_access,
                      on_failure=self.auth_error, data=data, method='POST')
+
+    def get_session_key(self, *args):
+        url = urlTo('session_key')
+        AsyncRequest(url, on_success=self.set_token_key,
+                     on_failure=self.server_error)
+
+    def set_token_key(self, resp):
+        global SESSION_KEY
+        SESSION_KEY = resp.json()
+        self.signin()
 
     def grant_access(self, resp):
         token = resp.json()['token']
@@ -63,6 +60,9 @@ class SigninWindow(Screen):
 
     def auth_error(self, resp):
         ErrorPopup('Invalid username or password')
+
+    def server_error(self, resp):
+        ErrorPopup('Server down')
 
 
 if __name__ == "__main__":
