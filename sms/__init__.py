@@ -11,6 +11,7 @@ token = ''
 def urlTo(path):
     return base_url + path
 
+
 def get_current_session():
     return 2019
 
@@ -22,6 +23,14 @@ def get_token():
 def store_token(_token):
     global token
     token = _token
+
+
+from sms.utils.asyncrequest import AsyncRequest
+
+
+def get_log(func, limit=20, offset=0):
+    url = urlTo('logs')
+    AsyncRequest(url, params={'limit': limit, 'offset': offset}, on_success=func)
 
 
 # Loads all the kv imports
