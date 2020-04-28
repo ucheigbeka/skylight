@@ -1,16 +1,42 @@
 import os
 from kivy.lang import Builder
+from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, ListProperty,\
     AliasProperty, ObjectProperty, DictProperty, StringProperty
 from kivy.core.clipboard import Clipboard
 
+try:
+    from sms.utils.popups import ErrorPopup
+except ImportError:
+    from popups import ErrorPopup
+
 Builder.load_string('''
 <DataViewerInput>:
     height: 50
     multiline: False
     write_tab: False
+
+<DataViewerLabel>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, .8
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            points: self.pos[0], self.pos[1], self.pos[0], self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1] + self.height, self.pos[0] + self.width, self.pos[1]
+            width: 1
+            cap: 'square'
+            joint: 'miter'
+            close: True
+    text_size: self.size
+    valign: 'middle'
+    halign: 'center'
+    color: 0, 0, 0, 1
 
 <DataViewer>:
     rv: rv
@@ -133,6 +159,10 @@ Builder.load_string('''
 
 
 class DataViewerInput(TextInput):
+    """
+        Viewclass for the recycleview widget that's
+        intended for accepting and displaying data
+    """
     root = ObjectProperty(None)
     index = NumericProperty(0)
     col_num = NumericProperty(0)
@@ -143,6 +173,16 @@ class DataViewerInput(TextInput):
                 self.root._data[self.index][self.col_num] = self.text
             except IndexError as err:
                 print(err)
+
+
+class DataViewerLabel(Label):
+    """
+        Viewclass for the recycleview widget that's
+        intended for only displaying data
+    """
+    root = ObjectProperty(None)
+    index = NumericProperty(0)
+    col_num = NumericProperty(0)
 
 
 class DataViewer(BoxLayout):
@@ -167,7 +207,7 @@ class DataViewer(BoxLayout):
         data_for_widget = []
         for index, row in enumerate(self._data):
             if len(row) != self.cols:
-                raise ValueError
+                ErrorPopup('Error parsing data')
             for col_num, col in enumerate(row):
                 prop = {'index': index, 'col_num': col_num, 'text': str(
                     col), 'width': self.widths[col_num], 'root': self}
