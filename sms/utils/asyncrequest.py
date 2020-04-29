@@ -12,6 +12,7 @@ method arguement definies the type of http request to make
 '''
 
 import requests
+import json
 from threading import Thread
 from kivy.core.window import Window
 from sms import get_token
@@ -30,6 +31,7 @@ class AsyncRequest(Thread):
         self.data = data
         self.method = method
 
+        # Reverse comment for this section during PROD
         # self.headers = {
         #     'Content-type': 'application/json', 'token': get_token()
         # } if not headers else headers
@@ -54,21 +56,25 @@ class AsyncRequest(Thread):
             else:
                 raise ValueError(
                     '"method" arguement must be one of "GET", "POST", "PUT" or "DELETE"')
-        except requests.ConnectionError:
+            self.resp.raise_for_status()
+        except requests.exceptions.ConnectionError:
             msg = 'Server down'
             ErrorPopup(msg)
             # Restart server
-        else:
-            status_code = self.resp.status_code // 100
-            if status_code in (1, 2):
-                if callable(self.on_success):
-                    self.on_success(self.resp)
-            elif status_code in (4, 5):
-                if callable(self.on_failure):
-                    self.on_failure(self.resp)
-                else:
+        except requests.exceptions.HTTPError as err:
+            if callable(self.on_failure):
+                self.on_failure(self.resp)
+            else:
+                try:
                     err_resp = self.resp.json()
-                    msg = r'[b]{}[/b]'.format(err_resp['title'].capitalize()
-                                              ) + ' : ' + err_resp['detail']
-                    ErrorPopup(msg)
+                    title = err_resp['title']
+                    msg = err_resp['detail']
+                except json.decoder.JSONDecodeError:
+                    title = err[:err.find(":")]
+                    msg = err[err.find(":") + 1:].strip()
+                ErrorPopup(msg, title=title)
+        else:
+            if callable(self.on_success):
+                self.on_success(self.resp)
+
         Window.set_system_cursor('arrow')
