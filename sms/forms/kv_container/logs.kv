@@ -1,24 +1,17 @@
-
 <Logs>:
-	canvas.before:
-		Rectangle:
-			size: self.size
-			pos: self.pos
-			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
-
-	BoxLayout:
-		orientation: 'vertical'
-
-		BoxLayout:
-			canvas.before:
+    dv: dv
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            canvas.before:
                 Color:
                     rgba: (0,0,0,1)
                 Rectangle:
                     size: self.size
                     pos: self.pos
-			size_hint_y: None
-			height: 50
-			Label:
+            size_hint_y: None
+            height: 50
+            Label:
                 text: 'LOGS'
                 font_size: 25
                 halign: 'center'
@@ -30,98 +23,64 @@
                 on_press:
                     app.root.transition.direction = 'right'
                     app.root.current = 'main_page'
-
-
         BoxLayout:
-            orientation: "vertical"
-
-            Label:
-                size_hint_y: .1
-
             BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: .1
-
-                Label:
-                    size_hint_x: .5
-
-                Spinner:
-                    text: "Users"
-                    values: "100L_course_adviser", "200L_course_adviser", "300L_course_adviser", "400L_course_adviser", '500L_course_adviser', 'Admin'
-                    size_hint_x: .5
-                    #size: (40, 40)
-                    halign: 'center'
-                    background_color: (0,0,0,1)
-
-                Label:
-                    size_hint_x: .5
-            Label:
-                text: 'Log message'
-                halign: 'center'
-                #spacing: (10, 5)
-                size_hint_y: .1
-                font_size: 20
-
+                orientation: 'vertical'
+                size_hint_x: None
+                width: dv.width
+                DataViewer2:
+                    id: dv
+                    cols: 3
+                    widths: [150, 300, 150]
+                    headers: ['User', 'Action', 'Time']
+                    _data: root.displayed_logs
+                    size_hint_x: None
+                    width: self.dv.rv.width + dp(100)
+                BoxLayout
+                    size_hint_y: None
+                    height: dp(35)
+                    Button:
+                        text: '<<'
+                        on_press: root.pan_up()
+                    Label:
+                        text: "{} - {} of {}".format(root.view_start, root.view_stop, len(root.ufmt_displayed_logs))
+                    Button:
+                        text: '>>'
+                        on_press: root.pan_down()
             BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: .7
-
-                Label:
-                    size_hint_x: .1
-
+                orientation: 'vertical'
+                RelativeLayout:
+                    GridLayout:
+                        cols: 1
+                        pos_hint: {'center_x': 1, 'center_y': .5}
+                        size_hint_y: None
+                        row_default_height: 50
+                        col_default_width: 200
+                        row_force_default: True
+                        col_force_default: True
+                        size: self.minimum_size
+                        padding: [10, 0]
+                        Button:
+                            text: 'Refresh'
+                            on_press: root.refresh()
+                        Label
+                        Label:
+                            text: 'Filter'
+                            texture_size: self.size
+                            halign: 'center'
+                            valign: 'middle'
+                            font_size: sp(30)
+                        CustomSpinner:
+                            id: time_spinner
+                            text: 'Time'
+                            values: ['All', 'Last 7 days', 'This month', 'This session']
+                            on_text: root.filter_by_time(*args)
+                            width: 200
+                        CustomSpinner:
+                            text: 'Users'
+                            values: ['All', '100L course adviser', '200L course adviser', '300L course adviser', '400L course adviser', '500L course adviser']
+                            width: 200
                 TextInput:
-                    #height:300
-                    #width: 700
-                    halign: 'center'
-                    size_hint_x: .8
-
-                Label:
-                    size_hint_x: .1
-
-            Label:
-                size_hint_y: .02
-
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: .06
-                halign: 'center'
-
-                Label:
-                    size_hint_x: .1
-
-                Button:
-                    text:"Filter"
-                    #halign: 'right'
-                    background_color: (0,0,0,1)
-                    size_hint_x: .2
-
-                Label:
-                    size_hint_x: .1
-
-                Button:
-                    text:"Next page"
-                    #halign: 'right'
-                    background_color: (0,0,0,1)
-                    size_hint_x: .2
-
-                Label:
-                    size_hint_x: .02
-
-                CustomTextInput:
-                    #halign: 'right'
-                    size_hint_x: .06
-
-                Label:
-                    size_hint_x: .02
-
-                Button:
-                    text:"Previous page"
-                    #halign: 'right'
-                    background_color: (0,0,0,1)
-                    size_hint_x: .2
-
-                Label:
-                    size_hint_x: .1
-
-            Label:
-                size_hint_y: .1
+                    id: textview
+                    size_hint_y: None
+                    height: 400
