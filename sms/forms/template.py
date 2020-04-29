@@ -10,6 +10,12 @@ Builder.load_file(kv_path)
 class FormTemplate(Screen):
     form_root = form_root
 
+    def clear_fields(self):
+        pass
+
+    def on_leave(self):
+        self.clear_fields()
+
 
 if __name__ == '__main__':
     from kivy.app import runTouchApp
