@@ -1,11 +1,11 @@
 import os
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-from kivy.uix.screenmanager import Screen
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo
+from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
 from sms.utils.dialog import OpenFileDialog
@@ -55,8 +55,7 @@ class LoadPopup(Popup):
         self.open()
 
 
-class Result_Entry(Screen):
-    form_root = form_root
+class Result_Entry(FormTemplate):
     edv = ObjectProperty(None)
 
     def __init__(self, **kwargs):
@@ -76,8 +75,10 @@ class Result_Entry(Screen):
         self._popup.dismiss()
 
     def show_load(self):
-        filter_dict = {'Excel Files (*.xls, *.xlsx)': ['*.xls', '*.xlsx'],
-                    'Text Document (*.txt)': ['*.txt'], 'All Files': ['*']}
+        filter_dict = {
+            'Excel Files (*.xls, *.xlsx)': ['*.xls', '*.xlsx'],
+            'Text Document (*.txt)': ['*.txt'], 'All Files': ['*']
+        }
         dialog = OpenFileDialog(filter_dict=filter_dict)
         dialog.bind(on_dismiss=self.update_dataview)
         dialog.open()
@@ -137,11 +138,3 @@ class Result_Entry(Screen):
                          on_success=self.clear_dataview)
         else:
             ErrorPopup('Error parsing results. Check your input')
-
-
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
-    from kivy.core.window import Window
-
-    Window.maximize()
-    runTouchApp(Result_Entry())

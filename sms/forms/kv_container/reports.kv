@@ -1,8 +1,8 @@
 <Reports>:
-	tabbed_panel: tabbed_panel
-	BoxLayout:
-		orientation: 'vertical'
-		BoxLayout:
+    tabbed_panel: tabbed_panel
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
             size_hint_y: None
             height: 50
             canvas.before:
@@ -25,5 +25,5 @@
                 on_press:
                     app.root.transition.direction = 'right'
                     app.root.current = 'main_page'
-		TabbedPanel:
-			id: tabbed_panel
+        TabbedPanel:
+            id: tabbed_panel

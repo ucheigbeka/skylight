@@ -2,9 +2,9 @@ import os
 import json
 from kivy.lang import Builder
 from kivy.properties import StringProperty
-from kivy.uix.screenmanager import Screen
 
 from sms import urlTo
+from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, SuccessPopup
 from sms.utils.dialog import OpenFileDialog
@@ -14,8 +14,7 @@ kv_path = os.path.join(form_root, 'kv_container', 'personalinfo.kv')
 Builder.load_file(kv_path)
 
 
-class PersonalInfo(Screen):
-    form_root = form_root
+class PersonalInfo(FormTemplate):
     mat_no = StringProperty()
 
     def add(self, *args):
@@ -103,9 +102,3 @@ class PersonalInfo(Screen):
 
     def on_leave(self):
         self.clear_fields()
-
-
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
-
-    runTouchApp(PersonalInfo())

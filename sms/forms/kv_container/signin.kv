@@ -1,16 +1,12 @@
 <SigninWindow>:
-	username: username.text
-	password: pwd.text
-	BoxLayout:
-		id: main
-		orientation: "vertical"
-		spacing: 10
-		space_x: self.size[0]/3
-		canvas.before:
-			Rectangle:
-				size: self.size
-				pos: self.pos
-				source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
+    username: username.text
+    password: pwd.text
+
+    BoxLayout:
+        id: main
+        orientation: "vertical"
+        spacing: 10
+        space_x: self.size[0]/3
 
         BoxLayout:
             pos_hint: {'top': 1}
@@ -24,7 +20,7 @@
                     size: self.size
                     pos: self.pos
 
-		    BoxLayout:
+            BoxLayout:
                 size_hint_y: .12
 
                 Label:
@@ -53,44 +49,43 @@
                 size_hint_y: .08
 
 
-		BoxLayout:
-		    pos_hint: {'bottom': 1}
+        BoxLayout:
+            pos_hint: {'bottom': 1}
             size_hint_y: .8
-			orientation: "vertical"
-			padding: main.space_x, 10
-			BoxLayout:
-				orientation: "vertical"
-				spacing: 10
-				size_hint_y: None
-				height: 150
+            orientation: "vertical"
+            padding: main.space_x, 10
+            BoxLayout:
+                orientation: "vertical"
+                spacing: 10
+                size_hint_y: None
+                height: 150
 
-				Label:
+                Label:
                     id: sp
                     size_hint_y: None
                     height: 60
 
-				TextInput:
-					id: username
-					hint_text: "Username"
-					multiline: False
-					focus: True
-					on_text_validate: pwd.focus = True
-				TextInput:
-					id: pwd
-					hint_text: "Password"
-					multiline: False
-					password: True
-			Label:
-				id: sp
-				size_hint_y: None
-				height: 40
-			Button:
-				text: "Sign In"
-				size_hint_y: None
-				height: 40
-				background_color: (0,0,0,.80)
-				background_normal: ''
-				on_press: root.get_session_key()
-			Label:
-				id: sp
-			
+                TextInput:
+                    id: username
+                    hint_text: "Username"
+                    multiline: False
+                    focus: True
+                    on_text_validate: pwd.focus = True
+                TextInput:
+                    id: pwd
+                    hint_text: "Password"
+                    multiline: False
+                    password: True
+            Label:
+                id: sp
+                size_hint_y: None
+                height: 40
+            Button:
+                text: "Sign In"
+                size_hint_y: None
+                height: 40
+                background_color: (0,0,0,.80)
+                background_normal: ''
+                on_press: root.get_session_key()
+            Label:
+                id: sp

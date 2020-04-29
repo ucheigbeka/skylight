@@ -1,9 +1,9 @@
 import os
 import json
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
 
 from sms import urlTo
+from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
 
@@ -12,9 +12,7 @@ kv_path = os.path.join(form_root, 'kv_container', 'course_details.kv')
 Builder.load_file(kv_path)
 
 
-class CourseDetails(Screen):
-    form_root = form_root
-
+class CourseDetails(FormTemplate):
     def search(self, *args):
         course_code = self.ids['course_code'].text
         params = {'course_code': course_code}
@@ -32,10 +30,3 @@ class CourseDetails(Screen):
     def clear_fields(self, *args):
         for field in self.ids.keys():
             self.ids[field].text = ''
-
-
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
-    from kivy.core.window import Window
-
-    Window.maximize()

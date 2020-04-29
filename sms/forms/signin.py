@@ -3,9 +3,9 @@ from base64 import b64encode
 from hashlib import md5
 from kivy.lang import Builder
 from kivy.properties import StringProperty
-from kivy.uix.screenmanager import Screen
 
 from sms import urlTo, store_token
+from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
 
@@ -30,8 +30,7 @@ def tokenize(text):
     return serializer.dumps(text).decode('utf-8')
 
 
-class SigninWindow(Screen):
-    form_root = form_root
+class SigninWindow(FormTemplate):
     username = StringProperty()
     password = StringProperty()
 
@@ -63,9 +62,3 @@ class SigninWindow(Screen):
 
     def server_error(self, resp):
         ErrorPopup('Server down')
-
-
-if __name__ == "__main__":
-    from kivy.app import runTouchApp
-
-    runTouchApp(SigninWindow())

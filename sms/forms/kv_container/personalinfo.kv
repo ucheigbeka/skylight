@@ -1,13 +1,8 @@
 <PersonalInfo>:
     mat_no: mat_no.text
-	canvas.before:
-		Rectangle:
-			size: self.size
-			pos: self.pos
-			source: os.path.join(root.form_root, 'resc', 'images', 'unibengate.jpg')
-	BoxLayout:
-		orientation: 'vertical'
-		padding_x: 10
+    BoxLayout:
+        orientation: 'vertical'
+        padding_x: 10
 
         BoxLayout:
             size_hint_y: None
@@ -33,10 +28,10 @@
                     app.root.transition.direction = 'right'
                     app.root.current = 'main_page'
 
-		BoxLayout:
-		    padding: 10
+        BoxLayout:
+            padding: 10
 
-		    ScrollView:
+            ScrollView:
                 do_scroll: True
 
                 GridLayout:
@@ -116,8 +111,8 @@
                         halign: 'left'
                     DatePicker:
                         id: dob
-						size_hint_x: None
-						width: 100
+                        size_hint_x: None
+                        width: 100
                     CustomLabel:
                         text: 'State of origin'
                         halign: 'left'
@@ -161,39 +156,39 @@
                         id: grad
                         values: ['Yes', 'No']
 
-			CustomLabel:
-		    	text: 'Passport'
-			    size_hint: (None, None)
-			    height: grid.minimum_height
-			    valign: 'top'
-				halign: 'center'
-				pos_hint: {'top': 1}
+            CustomLabel:
+                text: 'Passport'
+                size_hint: (None, None)
+                height: grid.minimum_height
+                valign: 'top'
+                halign: 'center'
+                pos_hint: {'top': 1}
             FloatLayout:
                 size_hint: (.2, None)
                 height: grid.minimum_height
                 pos_hint: {'top': 1}
-				Image:
-					id: passport
-					size_hint: (None, None)
-					size: (117, 160)
-					pos_hint: {'top': 1, 'x': 0}
-					on_touch_down: root.load_image(*args)
-					source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
-			FloatLayout:
-				size_hint_x: .3
+                Image:
+                    id: passport
+                    size_hint: (None, None)
+                    size: (117, 160)
+                    pos_hint: {'top': 1, 'x': 0}
+                    on_touch_down: root.load_image(*args)
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
+            FloatLayout:
+                size_hint_x: .3
 
-		BoxLayout:
-			size_hint: (None, .1)
-			width: 200
-			pos_hint: {'center_x': .5}
-			spacing: 20
-			ImageButton:
-				size_hint_x: None
-				width: 50
-				source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
-				on_press: root.add()
-			ImageButton:
-				size_hint_x: None
-				width: 50
-				source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
-				on_press: root.cancel()
+        BoxLayout:
+            size_hint: (None, .1)
+            width: 200
+            pos_hint: {'center_x': .5}
+            spacing: 20
+            ImageButton:
+                size_hint_x: None
+                width: 50
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
+                on_press: root.add()
+            ImageButton:
+                size_hint_x: None
+                width: 50
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
+                on_press: root.cancel()

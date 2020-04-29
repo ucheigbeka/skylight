@@ -25,11 +25,3 @@ class Reports(FormTemplate):
         for screen in screens:
             tab_header.add_screen(screen)
         self.tabbed_panel.add_widget(tab_header)
-
-
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
-    from kivy.core.window import Window
-
-    Window.maximize()
-    runTouchApp(Reports())
