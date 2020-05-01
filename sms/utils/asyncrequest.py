@@ -5,10 +5,10 @@ AsyncRequest
 Class for making ascynchronous request to the api server. The
 method arguement definies the type of http request to make
 
-	method = 'GET' - for querying the database
-	method = 'POST' - for adding new items to the database
-	method = 'PUT' - for updating a record in the database
-	method = 'DELETE' - for deleting a record from the database
+    method = 'GET' - for querying the database
+    method = 'POST' - for adding new items to the database
+    method = 'PUT' - for updating a record in the database
+    method = 'DELETE' - for deleting a record from the database
 '''
 
 import requests
@@ -70,6 +70,7 @@ class AsyncRequest(Thread):
                     title = err_resp['title']
                     msg = err_resp['detail']
                 except json.decoder.JSONDecodeError:
+                    err = str(err)
                     title = err[:err.find(":")]
                     msg = err[err.find(":") + 1:].strip()
                 ErrorPopup(msg, title=title)
