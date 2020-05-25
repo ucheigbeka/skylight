@@ -9,20 +9,20 @@ from kivy.graphics import Color, Rectangle
 
 Builder.load_string('''
 <MenuItem>:
-	canvas.before:
-		Color:
-			rgba: 1, 1, 1, .8
-		Rectangle:
-			pos: self.pos
-			size: self.size
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, .8
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 <MenuButton>:
-	text_size: self.size
-	halign: 'left'
-	valign: 'center'
-	size_hint_y: None
-	height: 25
-	''')
+    text_size: self.size
+    halign: 'left'
+    valign: 'center'
+    size_hint_y: None
+    height: 25
+    ''')
 
 
 class Menu(FocusBehavior, CompoundSelectionBehavior, StackLayout):
@@ -32,9 +32,9 @@ class Menu(FocusBehavior, CompoundSelectionBehavior, StackLayout):
 
     def keyboard_on_key_up(self, window, keycode):
         if super(Menu, self).keyboard_on_key_up(window, keycode):
-        	return True
+            return True
         if super(Menu, self).select_with_key_up(window, keycode):
-        	return True
+            return True
         return False
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
