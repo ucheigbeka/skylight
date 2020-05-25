@@ -102,7 +102,7 @@ class CustomTabbedPanelHeader(TabbedPanelHeader):
                 tabs = self.parent.tabbed_panel.tab_list
                 if len(tabs) == 1:
                     # exit out of reports screen
-                    pass
+                    self.parent.tabbed_panel.clear_widgets()
                 else:
                     index = tabs.index(self)
                     index = index - 1 if index > 0 else index + 1
