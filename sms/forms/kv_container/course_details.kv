@@ -75,19 +75,19 @@
                 CustomSpinner:
                     id: teaching_dept
                     values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+                CustomLabel:
+                    text: 'Start date'
+                CustomTextInput:
+                    id: start_date
+                    width: 100
+                CustomLabel:
+                    text: 'End date'
+                CustomTextInput:
+                    id: end_date
+                    width: 100
+                CustomLabel:
+                    text: 'Optional'
+                CustomTextInput:
+                    id: options
+                    width: 50
             FloatLayout
-
-        BoxLayout:
-            size_hint: (None, .2)
-            width: 200
-            pos_hint: {'center_x': .5}
-            ImageButton:
-                size_hint_x: None
-                width: 50
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
-                on_press: pass
-            ImageButton:
-                size_hint_x: None
-                width: 50
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
-                on_press: pass
