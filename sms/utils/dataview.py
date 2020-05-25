@@ -8,11 +8,21 @@ from kivy.properties import NumericProperty, ListProperty,\
 from kivy.core.clipboard import Clipboard
 
 try:
+    from sms.utils.label import CustomLabel
     from sms.utils.popups import ErrorPopup
 except ImportError:
+    from label import CustomLabel
     from popups import ErrorPopup
 
 Builder.load_string('''
+<HeaderLabel>:
+    canvas.before:
+        Color:
+            rgba: 0, .4, .4, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
 <DataViewerInput>:
     height: 50
     multiline: False
@@ -42,7 +52,7 @@ Builder.load_string('''
     rv: rv
     orientation: 'vertical'
     RecycleView:
-        viewclass: 'CustomLabel'
+        viewclass: 'HeaderLabel'
         data: root.viewer_header
         size_hint_y: None
         height: header_layout.height
@@ -76,12 +86,12 @@ Builder.load_string('''
         orientation: 'vertical'
         size_hint_x: None
         width: sp(50)
-        Label:
+        HeaderLabel:
             text: 'S/N'
             size_hint_y: None
             height: dp(35)
         RecycleView:
-            viewclass: 'CustomLabel'
+            viewclass: 'HeaderLabel'
             data: [{'text': str(i), 'valign': 'middle'} for i in range(int(len(root._data)))]
             scroll_y: dv.rv.scroll_y
             do_scroll_y: False
@@ -156,6 +166,10 @@ Builder.load_string('''
             text: 'clear'
             on_press: dv.dv.clear()
 ''')
+
+
+class HeaderLabel(CustomLabel):
+    pass
 
 
 class DataViewerInput(TextInput):
@@ -292,7 +306,7 @@ if __name__ == '__main__':
     # runTouchApp(ExtendableDataViewer2(cols=3, data=[[x, x + 1, x + 2] for x in range(0, 200, 3)], headers=[
     #             'Column #1', 'Column #2', 'Column #3'], widths=[100, 200, 300], prop={'disabled': True}))
 
-    # runTouchApp(ExtendableDataViewer2(cols=3, headers=[
-    #             'Column #1', 'Column #2', 'Column #3'], widths=[100, 200, 300], prop={'disabled': True}))
+    runTouchApp(ExtendableDataViewer2(cols=3, headers=[
+                'Column #1', 'Column #2', 'Column #3'], widths=[100, 200, 300], prop={'disabled': True}))
 
-    runTouchApp(DataViewer(cols=3, widths=[100, 200, 300], prop={'disabled': True}, _data=[[1,2,3]]))
+    # runTouchApp(DataViewer(cols=3, widths=[100, 200, 300], prop={'disabled': True}, _data=[[1,2,3]]))
