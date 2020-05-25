@@ -32,10 +32,10 @@ class AsyncRequest(Thread):
         self.method = method
 
         # Reverse comment for this section during PROD
-        # self.headers = {
-        #     'Content-type': 'application/json', 'token': get_token()
-        # } if not headers else headers
-        self.headers = {}
+        self.headers = {
+            'Content-type': 'application/json', 'token': get_token()
+        } if not headers else headers
+        # self.headers = {}
 
         self.start()
 
@@ -52,7 +52,8 @@ class AsyncRequest(Thread):
                 self.resp = requests.put(
                     self.url, headers=self.headers, json=self.data)
             elif self.method == 'DELETE':
-                self.resp = requests.delete(self.url, headers=self.headers)
+                self.resp = requests.delete(
+                    self.url, headers=self.headers, params=self.params)
             else:
                 raise ValueError(
                     '"method" arguement must be one of "GET", "POST", "PUT" or "DELETE"')
