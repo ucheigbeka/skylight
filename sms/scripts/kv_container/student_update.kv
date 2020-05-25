@@ -1,0 +1,30 @@
+<StudentUpdatePopup>:
+    size_hint: (.4, .8)
+    title: 'Student Update'
+    BoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            cols: 2
+            padding: 20
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: 30
+            row_force_default: True
+            CustomLabel:
+                text: 'Mat number'
+            CustomTextInput:
+                id: mat_no
+                text: 'ENG'
+                width: 125
+            CustomLabel:
+                text: 'Raw score'
+            CustomSpinner:
+                id: raw_score
+                values: ['Yes', 'No']
+        Button:
+            size_hint_y: None
+            height: 30
+            text: 'Search'
+            on_press: root.search()
+        FloatLayout
