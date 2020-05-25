@@ -1,6 +1,4 @@
-#: import StudentUpdatePopup sms.forms.student_update.StudentUpdatePopup
-
-<Reports>:
+<PageReports>:
     FloatLayout:
 
         BoxLayout:
@@ -93,7 +91,7 @@
                         on_press: app.root.current = 'error'
                     MenuButton:
                         text: "Students\' Update"
-                        on_press: app.root.current = StudentUpdatePopup().open()
+                        on_press: root.open_student_update_popup()
                     MenuButton:
                         text:"Level GPA Cards"
                         on_press: app.root.current = 'error'
