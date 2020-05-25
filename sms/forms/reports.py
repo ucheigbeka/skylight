@@ -1,10 +1,8 @@
 import os
-from threading import Thread
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 
 from sms.forms.template import FormTemplate
-from sms.forms.result_update import generate_result_update_preview
 from sms.utils.tabbedview import CustomTabbedPanelHeader
 
 form_root = os.path.dirname(__file__)
@@ -15,10 +13,12 @@ Builder.load_file(kv_path)
 class Reports(FormTemplate):
     tabbed_panel = ObjectProperty(None)
 
-    def generate_report(self, data, tab_title, report_type):
-        if report_type == 'result_update':
-            screens = generate_result_update_preview(data)
-        Thread(target=self.add_screens, args=(tab_title, screens)).start()
+    def on_enter(self, *args):
+        tabs = self.tabbed_panel.tab_list
+        self.tabbed_panel.switch_to(tabs[0])
+
+    def generate_report(self, screens, tab_title):
+        self.add_screens(tab_title, screens)
 
     def add_screens(self, tab_title, screens):
         tab_header = CustomTabbedPanelHeader(text=tab_title)
