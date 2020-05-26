@@ -1,8 +1,12 @@
 import kivy
 kivy.require('1.7.0')
 
+from kivy.config import Config
+
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+Config.set('kivy', 'exit_on_escape', '0')
+
 from kivy.app import App
-from kivy.core.window import Window
 from sms import sm
 
 
