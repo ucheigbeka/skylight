@@ -132,8 +132,8 @@ class Result_Entry(FormTemplate):
 
     def upload(self, *args):
         url = urlTo('results')
-        data = self.edv.data
-        if data:
+        data = self.edv.data if self.edv.data else self.edv.dv._data
+        if data and data != [['','','','']]:
             AsyncRequest(url, data=data, method='POST',
                          on_success=self.clear_dataview)
         else:
