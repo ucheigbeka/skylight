@@ -1,10 +1,16 @@
 import os
+import shutil
 from io import BytesIO
 from zipfile import ZipFile
 
 from sms.utils.preview import Preview
 
-cache_dir = os.path.join(os.path.expanduser('~'), 'sms')
+cache_dir = os.path.join(os.path.expanduser('~'), 'sms', 'cache')
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
+else:
+    shutil.rmtree(cache_dir)
+    os.makedirs(cache_dir)
 
 
 def generate_preview_screens(resp):
