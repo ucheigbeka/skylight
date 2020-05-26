@@ -1,0 +1,194 @@
+<NewCoursePopup>:
+    title: 'New Course'
+    size_hint: (.5, None)
+    height: self.content.height + dp(50)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: 10
+        GridLayout:
+            cols: 2
+            padding: 20
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: 30
+            row_force_default: True
+            CustomLabel:
+                text: 'Course code'
+            CustomTextInput:
+                id: course_code
+                width: 100
+            CustomLabel:
+                text: 'Course title'
+            CustomTextInput:
+                id: course_title
+            CustomLabel:
+                text: 'Course credit'
+            CustomTextInput:
+                id: course_credit
+                width: 50
+                input_filter: 'int'
+            CustomLabel:
+                text: 'Course semester'
+            CustomSpinner:
+                id: course_semester
+                width: 100
+                values: ['1', '2']
+            CustomLabel:
+                text: 'Course level'
+            CustomTextInput:
+                id: course_level
+                width: 100
+                disabled: True
+            CustomLabel:
+                text: 'Teaching Department'
+            CustomSpinner:
+                id: teaching_dept
+                values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+            CustomLabel:
+                text: 'Optional'
+            BoxLayout:
+                size_hint_x: None
+                width: 150
+                CustomLabel:
+                    text: 'Yes'
+                    valign: 'middle'
+                    width: 50
+                CheckBox:
+                    id: opt_yes
+                    group: 'options'
+                CustomLabel:
+                    text: 'No'
+                    valign: 'middle'
+                    width: 50
+                CheckBox:
+                    group: 'options'
+                    active: True
+        Button:
+            size_hint: .3, None
+            height: 30
+            pos_hint: {'center_x': .5}
+            text: 'Add course'
+            on_press: root.add()
+
+<RemoveCoursePopup>:
+    title: 'Remove Course'
+    size_hint: (.5, None)
+    height: self.content.height + dp(70)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: 10
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            CustomLabel:
+                text: 'Course code'
+            CustomTextInput:
+                id: course_code
+                width: 100
+        Button:
+            size_hint: .3, None
+            height: 30
+            pos_hint: {'center_x': .5}
+            text: 'Remove'
+            on_press: root.remove()
+
+<CourseManagement>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Course Management'
+                font_size: 20
+                halign: 'center'
+                valign: 'middle'
+                markup: True
+                size_hint_x: .9
+
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'admin'
+
+        BoxLayout:
+            padding: [10, 10]
+            DataViewer2:
+                id: dv2
+                cols: 8
+                widths: [100, 350, 70, 70, 100, 100, 100, 70]
+                headers: ['Course code', 'Course title', 'Course credit', 'Semester', 'Teaching dept', 'Start date', 'End date', 'Optional']
+                _data: root._data
+                size_hint_x: None
+                width: self.dv.rv.width + 50
+            BoxLayout:
+                orientation: 'vertical'
+                RelativeLayout:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint: None, None
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        size: self.minimum_size
+                        CustomSpinner:
+                            id: lvl_spinner
+                            values: ['100 level courses', '200 level courses', '300 level courses', '400 level courses', '500 level courses']
+                            on_text: root.get_course_details()
+                            size_hint_y: None
+                            size: 200, 60
+                        CustomSpinner:
+                            id: session_spinner
+                            text: 'Current session'
+                            values: ['Current session', 'All sessions']
+                            on_text: root.get_course_details()
+                            size_hint_y: None
+                            size: 200, 60
+                RelativeLayout:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(200)
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        MenuButton:
+                            text: 'Update'
+                            disabled: not(cbox.active)
+                            on_press: root.update_courses()
+                        MenuButton:
+                            text: 'Add course'
+                            on_press: root.add_course()
+                        MenuButton:
+                            text: 'Remove course'
+                            on_press: root.remove_course()
+                RelativeLayout:
+                    BoxLayout:
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, .2
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        size_hint: None, None
+                        size: self.minimum_size
+                        CustomLabel:
+                            text: 'Edit'
+                            valign: 'middle'
+                            size_hint_y: None
+                            height: 100
+                        CheckBox:
+                            id: cbox
+                            size_hint: None, None
+                            size: 70, 100

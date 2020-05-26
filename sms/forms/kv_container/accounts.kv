@@ -1,0 +1,195 @@
+<NewAccountPopup>:
+    title: 'New Account'
+    size_hint: (.5, None)
+    height: self.content.height + dp(50)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: 10
+        GridLayout:
+            cols: 2
+            padding: 20
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: 30
+            row_force_default: True
+            CustomLabel:
+                text: 'Firstname'
+            CustomTextInput:
+                id: fname
+            CustomLabel:
+                text: 'Lastname'
+            CustomTextInput:
+                id: lname
+            CustomLabel:
+                text: 'Email'
+            CustomTextInput:
+                id: email
+            CustomLabel:
+                text: 'Title'
+            CustomSpinner:
+                id: title
+                width: 300
+                values: root.available_titles
+            CustomLabel:
+                text: 'Username'
+            CustomTextInput:
+                id: username
+            CustomLabel:
+                text: 'Password'
+            CustomTextInput:
+                id: pwd
+                password: 'True'
+                disabled: cbox.active
+            CustomLabel:
+                text: 'Repeat Password'
+            CustomTextInput:
+                id: rpwd
+                password: 'True'
+                disabled: cbox.active
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            CustomLabel:
+                text: 'Auto generate password'
+            CheckBox:
+                id: cbox
+                active: True
+        Button:
+            size_hint: .3, None
+            height: 30
+            pos_hint: {'center_x': .5}
+            text: 'Create new account'
+            on_press: root.create()
+
+<RemoveAccountPopup>:
+    title: 'Remove Account'
+    size_hint: (.5, None)
+    height: self.content.height + dp(70)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: 10
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            CustomLabel:
+                text: 'User_id'
+            CustomTextInput:
+                id: uid
+                input_filter: 'int'
+                width: 100
+        Button:
+            size_hint: .3, None
+            height: 30
+            pos_hint: {'center_x': .5}
+            text: 'Remove'
+            on_press: root.remove()
+
+<ResetAccountPopup>:
+    title: 'Reset Account'
+    size_hint: (.5, None)
+    height: self.content.height + dp(50)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: 10
+        GridLayout:
+            cols: 2
+            padding: 20
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: 30
+            row_force_default: True
+            CustomLabel:
+                text: 'User_id'
+            CustomTextInput:
+                id: uid
+                input_filter: 'int'
+                width: 100
+            CustomLabel:
+                text: 'New Password'
+            CustomTextInput:
+                id: pwd
+                password: True
+                disabled: cbox.active
+            CustomLabel:
+                text: 'Repeat Password'
+            CustomTextInput:
+                id: rpwd
+                password: True
+                disabled: cbox.active
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            CustomLabel:
+                text: 'Auto generate password'
+            CheckBox:
+                id: cbox
+                active: True
+        Button:
+            size_hint: .3, None
+            height: 30
+            pos_hint: {'center_x': .5}
+            text: 'Reset'
+            on_press: root.reset()
+
+<Accounts>:
+    dv: dv
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,.4)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Accounts'
+                font_size: 20
+                halign: 'center'
+                valign: 'middle'
+                markup: True
+                size_hint_x: .9
+
+            ImageButton:
+                size_hint_x: .1
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'admin'
+
+        BoxLayout:
+            padding: [10, 10]
+            DataViewer:
+                id: dv
+                cols: 6
+                widths: [50, 200, 200, 200, 200, 200]
+                headers: ['User_id', 'Username', 'Firstname', 'Lastname', 'Title', 'Email']
+                _data: root._data
+                size_hint_x: None
+                width: self.rv.width
+            RelativeLayout:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(200)
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    MenuButton:
+                        text: 'New account'
+                        on_press: root.new_account()
+                    MenuButton:
+                        text: 'Remove account'
+                        on_press: root.remove_account()
+                    MenuButton:
+                        text: 'Reset account'
+                        on_press: root.reset_account()
