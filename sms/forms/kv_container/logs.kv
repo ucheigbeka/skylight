@@ -5,7 +5,7 @@
         BoxLayout:
             canvas.before:
                 Color:
-                    rgba: (0,0,0,1)
+                    rgba: (0,0,0,.2)
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -74,12 +74,13 @@
                             id: time_spinner
                             text: 'Time'
                             values: ['All', 'Last 7 days', 'This month', 'This session']
-                            on_text: root.filter_by_time(*args)
+                            on_text: root.filter_log()
                             width: 200
                         CustomSpinner:
+                            id: users_spinner
                             text: 'Users'
-                            values: ['All', '100L course adviser', '200L course adviser', '300L course adviser', '400L course adviser', '500L course adviser']
                             width: 200
+                            on_text: root.filter_log()
                 TextInput:
                     id: textview
                     size_hint_y: None
