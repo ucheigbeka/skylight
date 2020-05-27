@@ -32,7 +32,7 @@ class NewCoursePopup(Popup):
         for key in keys[:-3]:
             data[key] = self.ids[key].text
         data['course_credit'] = int(data['course_credit'])
-        data['course_semester'] = int(data['course_semester'])
+        data['course_semester'] = [1, 2][data['course_semester'] == 'Second']
         data['course_level'] = int(self.ids['course_level'].text)
         data['start_date'] = get_current_session() + 1
         data['end_date'] = 2999
@@ -143,7 +143,7 @@ class CourseManagement(FormTemplate):
             for idx in range(len(row) - 3):
                 course[keys[idx]] = row[idx]
             course['course_credit'] = int(course['course_credit'])
-            course['course_semester'] = int(course['course_semester'])
+            course['course_semester'] = [1, 2][course['course_semester'] == 'Second']
             course['course_level'] = int(self.ids['lvl_spinner'].text[:3])
             course['start_date'] = row[keys.index('start_date')]
             course['end_date'] = 2999 if not row[keys.index('end_date')] else row[keys.index('end_date')]
