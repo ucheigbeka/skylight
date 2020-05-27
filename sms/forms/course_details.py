@@ -24,6 +24,7 @@ class CourseDetails(FormTemplate):
             self.ids[field].text = str(data[field])
         self.ids['end_date'].text = '' if data['end_date'] == 2999 else str(data['end_date'])
         self.ids['options'].text = ['Yes', 'No'][data['options'] == 0]
+        self.ids['course_semester'].text = self.ids['course_semester'].values[data['course_semester'] - 1]
 
     def show_error(self, resp):
         ErrorPopup('Course not found')

@@ -106,6 +106,9 @@ class CourseManagement(FormTemplate):
         for row in data:
             dv_row = []
             for key in keys[:-2]:
+                if key == 'course_semester':
+                    dv_row.append(['First', 'Second'][row[key] - 1])
+                    continue
                 dv_row.append(row[key])
             dv_row.append([row['end_date'], ''][row['end_date'] == 2999])
             dv_row.append(['Yes', 'No'][row['options'] == 0])
