@@ -7,8 +7,7 @@ Builder.load_string('''
 <Preview>:
     FloatLayout:
         AsyncImage:
-            a: bool(print(os.path.join(root.base_dir, 'icons', 'print.png')))
-            source: os.path.join(root.base_dir, 'icons', 'print.png')
+            source: root.print_icon_dir
             size_hint: None, None
             pos_hint: {'right': 1, 'top': 1}
             width: 50
@@ -31,7 +30,10 @@ Builder.load_string('''
                         size: self.size
 ''')
 
+base_dir = os.path.dirname(__file__)
+
 
 class Preview(Screen):
     source = StringProperty()
-    base_dir = StringProperty(os.path.dirname(__file__))
+    print_icon_dir = StringProperty(
+        os.path.join(base_dir, 'icons', 'print.png'))
