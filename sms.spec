@@ -31,7 +31,7 @@ add_paths.append(('skylight.png', '.'))
 add_paths.append(('next_release.txt', '.'))
 
 
-a = Analysis(['run.py'],
+a = Analysis(['main.py'],
              pathex=['C:\\Users\\uche\\Documents\\GitHub\\skylight'],
              binaries=[],
              datas=[*add_paths],
@@ -54,7 +54,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True,
+          console=False,
           icon='icon.ico')
 coll = COLLECT(exe, Tree('sms', excludes=['*.py', '__pycache__'], prefix='sms'),
                a.binaries,
