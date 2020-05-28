@@ -60,6 +60,7 @@ class Result_Entry(FormTemplate):
 
     def __init__(self, **kwargs):
         super(Result_Entry, self).__init__(**kwargs)
+        self.edv.data = [[''] * 4]
 
     def strip_data(self):
         text = self.text_input.text.strip().split('\n')
@@ -129,12 +130,27 @@ class Result_Entry(FormTemplate):
             err_msg = '\n'.join(resp)
             ErrorPopup(err_msg, title='Alert')
         self.edv.data = [[''] * 4]
+        # Refreshs the dataview
+        self.edv.data.append([''] * 4)
+        self.edv.data = [[''] * 4]
+
+    def validate_data(self, data):
+        if not data:
+            return '', False
+        for idx in range(len(data)):
+            if not data[idx][1].isnumeric() or not data[idx][3].isnumeric():
+                return idx, False
+        return '', True
 
     def upload(self, *args):
         url = urlTo('results')
-        data = self.edv.data if self.edv.data else self.edv.dv._data
-        if data and data != [['','','','']]:
+        data = self.edv.data
+        idx, is_valid = self.validate_data(data)
+        if is_valid:
             AsyncRequest(url, data=data, method='POST',
                          on_success=self.clear_dataview)
         else:
-            ErrorPopup('Error parsing results. Check your input')
+            if idx != '':
+                ErrorPopup('Error parsing results at index ' + str(idx))
+            else:
+                ErrorPopup('Error parsing results. Check your input')

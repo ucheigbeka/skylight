@@ -111,6 +111,7 @@ Builder.load_string('''
 
 <ExtendableDataViewer>:
     orientation: 'vertical'
+    data: dv._data
     DataViewer:
         id: dv
         cols: root.cols
@@ -140,6 +141,7 @@ Builder.load_string('''
 <ExtendableDataViewer2>:
     dv: dv
     orientation: 'vertical'
+    data: dv._data
     DataViewer2:
         id: dv
         cols: root.cols
@@ -181,12 +183,18 @@ class DataViewerInput(TextInput):
     index = NumericProperty(0)
     col_num = NumericProperty(0)
 
-    def on_focus(self, instance, value):
-        if not value:
-            try:
-                self.root._data[self.index][self.col_num] = self.text
-            except IndexError as err:
-                print(err)
+    # Reverse comment of this section if experiencing performance issues.
+    # on_focus, more efficient, but doesn't capture user inputs in
+    # certain scenarios
+    def on_text(self, instance, value):
+        self.root._data[self.index][self.col_num] = value
+
+    # def on_focus(self, instance, value):
+    #     if not value:
+    #         try:
+    #             self.root._data[self.index][self.col_num] = self.text
+    #         except IndexError as err:
+    #             print(err)
 
 
 class DataViewerLabel(Label):
