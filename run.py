@@ -12,6 +12,7 @@ from sms import sm
 
 class StudentManagementSystemApp(App):
     title = 'Student Management System'
+    icon = 'skylight.png'
 
     def build(self):
         return sm
