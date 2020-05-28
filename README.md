@@ -9,13 +9,13 @@ This project represents the client side of the **Student Management System** for
 
 * [UPX](https://upx.github.io/) is also recommended but not required. It is a free utility that significantly compresses the executable. You can download the latest version for your os [here](https://github.com/upx/upx/releases/). After installation, make sure that `upx.exe` is [available in your `$PATH` environment variable](https://www.java.com/en/download/help/path.xml).
 
-* Execute the specs file iin your terminal
+* Execute the spec file in your terminal
 ```
-    pyinstaller sms.specs
+    pyinstaller sms.spec
 ```
-or to avoid the prompt for modifying the dist folder if it already exists, execute the specs file with the `--noconfirm` flag.
+or to avoid the prompt for modifying the dist folder if it already exists, execute the spec file with the `--noconfirm` flag.
 ```
-    pyinstaller --noconfirm sms.specs
+    pyinstaller --noconfirm sms.spec
 ```
 
-* Pyinstaller creates 2 folders, a build and dist folder. The bundled file can be found in the dist folder.
+* Pyinstaller creates 2 folders, a build and dist folder. The bundled app can be found in the dist folder.
