@@ -187,7 +187,10 @@ class DataViewerInput(TextInput):
     # on_focus, more efficient, but doesn't capture user inputs in
     # certain scenarios
     def on_text(self, instance, value):
-        self.root._data[self.index][self.col_num] = value
+        try:
+            self.root._data[self.index][self.col_num] = value
+        except AttributeError:
+            pass
 
     # def on_focus(self, instance, value):
     #     if not value:
