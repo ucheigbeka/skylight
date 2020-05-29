@@ -162,9 +162,8 @@ class Logs(FormTemplate):
         funcs[index](args[index])
 
     def get_user(self, title):
-        # Assuming a title maps to only one user
         user = list(filter(lambda user: user[1] == title, self.users))
-        return None if not user else user[0][0]
+        return None if not user else [x[0] for x in user]
 
     def filter_by_user(self, value):
         if value == 'Users' or value == 'All':
@@ -179,7 +178,7 @@ class Logs(FormTemplate):
             return
 
         filtered_log = list(
-            filter(lambda row: row[0] == user, self.ufmt_displayed_logs))
+            filter(lambda row: row[0] in user, self.ufmt_displayed_logs))
 
         if filtered_log:
             self.ufmt_displayed_logs = filtered_log
