@@ -95,7 +95,7 @@ class Logs(FormTemplate):
             self.ufmt_displayed_logs.append([action[: action.find(' ')], action, timestamp])
         self.log_offset += 10
         if self.ids.time_spinner.text == 'Time':
-            self.filter_by_time(self.ids.time_spinner, 'All')
+            self.filter_by_time('All')  # (self.ids.time_spinner, 'All')
         else:
             self.filter_log()
         self.dv.dv.rv.scroll_y = 1 - old_disp_log_len / len(self.ufmt_displayed_logs)
@@ -163,7 +163,7 @@ class Logs(FormTemplate):
 
     def get_user(self, title):
         user = list(filter(lambda user: user[1] == title, self.users))
-        return None if not user else [x[0] for x in user]
+        return None if not user else list(set(x[0] for x in user))
 
     def filter_by_user(self, value):
         if value == 'Users' or value == 'All':
