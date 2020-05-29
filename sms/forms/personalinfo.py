@@ -22,7 +22,11 @@ class PersonalInfo(FormTemplate):
         data['mat_no'] = self.ids.mat_no.text
         data['surname'] = self.ids.surname.text
         data['othernames'] = ' '.join([self.ids.fname.text, self.ids.mname.text])
-        data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
+        try:
+            data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
+        except ValueError:
+            self.show_input_error()
+            return
         data['session_admitted'] = int(self.ids.session_admit.text)
         data['current_level'] = int(self.ids.cur_level.text)
         data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
@@ -71,6 +75,9 @@ class PersonalInfo(FormTemplate):
 
     def show_add_error(self, resp):
         ErrorPopup('Record could not be added')
+
+    def show_input_error(self):
+        ErrorPopup('Some input fields are missing')
 
     def record_added(self, resp):
         SuccessPopup('Record added')
