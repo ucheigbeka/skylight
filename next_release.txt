@@ -11,8 +11,6 @@
 11, Restructure the sms\forms\main_page.py module and it's corresponding kv rules to account for (4)
 12, Add color effects to some selected widgets like the buttons. For example, an hover of the cursor over a button would animate a color progression across it. The kivy.uix.effectwidget.EffectWidget class would mostly likely be able to introduce such functionality.
 13, Include an easter egg.
-
-14, Show success or failure message on entry
-15, A way to copy password to clipboard after auto-generation
-16, add on_key_press() for enter key in password element ==> should map to submit,  also switch form elements on tab key press
-17,
+14, A way to copy password to clipboard after auto-generation
+15, add on_key_press() for enter key in password element ==> should map to submit,  also switch form elements on tab key press
+16, Add zoom and pan functionality to reports view

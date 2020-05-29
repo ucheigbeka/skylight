@@ -37,7 +37,11 @@ class NewAccountPopup(PopupBase):
     available_titles = ListProperty(titles)
 
     def on_open(self, *args):
+        hods = 1
         for acct in self.accounts:
+            if acct['title'] == 'Head of department' and hods > 0:
+                hods -= 1
+                continue
             self.available_titles.remove(acct['title'])
 
     def create(self):
