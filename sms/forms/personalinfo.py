@@ -20,8 +20,8 @@ class PersonalInfo(FormTemplate):
     def add(self, *args):
         data = dict()
         data['mat_no'] = self.ids.mat_no.text
-        data['surname'] = self.ids.surname.text
-        data['othernames'] = ' '.join([self.ids.fname.text, self.ids.mname.text])
+        data['surname'] = self.ids.surname.text.upper()
+        data['othernames'] = ' '.join([self.ids.fname.text.capitalize(), self.ids.mname.text.capitalize()])
         try:
             data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
         except ValueError:
