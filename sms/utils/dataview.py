@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.properties import NumericProperty, ListProperty,\
     AliasProperty, ObjectProperty, DictProperty, StringProperty
 from kivy.core.clipboard import Clipboard
@@ -15,13 +16,8 @@ except ImportError:
     from popups import ErrorPopup
 
 Builder.load_string('''
-<HeaderLabel>:
-    canvas.before:
-        Color:
-            rgba: 0, .4, .4, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
+#:set DEFAULT_SIZE (dp(100), dp(35))
+#:set DEFAULT_SIZE_HEADER (dp(50), dp(35))
 
 <DataViewerInput>:
     height: 50
@@ -54,15 +50,14 @@ Builder.load_string('''
     RecycleView:
         viewclass: 'HeaderLabel'
         data: root.viewer_header
-        size_hint_y: None
+        size_hint: None, None
         height: header_layout.height
-        size_hint_x: None
         width: content_layout.minimum_width
         RecycleGridLayout:
             id: header_layout
             cols: root.cols
             size_hint_y: None
-            default_size: dp(100), dp(35)
+            default_size: DEFAULT_SIZE
             default_size_hint: None, None
             height: self.minimum_height
     RecycleView:
@@ -75,35 +70,36 @@ Builder.load_string('''
             id: content_layout
             cols: root.cols
             size_hint_y: None
-            default_size: dp(100), dp(35)
+            default_size: DEFAULT_SIZE
             default_size_hint: None, None
             height: self.minimum_height
 
 <DataViewer2>:
     dv: dv
-    _data: dv._data
     BoxLayout:
         orientation: 'vertical'
-        size_hint_x: None
-        width: sp(50)
+        size_hint_x: None if not dv.weightings else .06
+        width: DEFAULT_SIZE_HEADER[0]
         HeaderLabel:
             text: 'S/N'
-            size_hint_y: None
-            height: dp(35)
+            size_hint: None, None
+            width: self.parent.width
+            height: DEFAULT_SIZE_HEADER[1]
         RecycleView:
             viewclass: 'HeaderLabel'
-            data: [{'text': str(i), 'valign': 'middle'} for i in range(int(len(root._data)))]
+            data: [{'text': str(i), 'valign': 'middle'} for i in range(int(len(dv._data)))]
             scroll_y: dv.rv.scroll_y
             do_scroll_y: False
             RecycleGridLayout:
                 cols: 1
                 size_hint_y: None
-                default_size: sp(50), dp(35)
-                default_size_hint: None, None
+                default_size: DEFAULT_SIZE_HEADER
+                default_size_hint: (None, None) if not dv.weightings else (1, None)
                 height: self.minimum_height
     DataViewer:
         id: dv
         cols: root.cols
+        weightings: root.weightings
         widths: root.widths
         prop: root.prop
         headers: root.headers
@@ -111,18 +107,16 @@ Builder.load_string('''
 
 <ExtendableDataViewer>:
     orientation: 'vertical'
-    data: dv._data
     DataViewer:
         id: dv
         cols: root.cols
+        weightings: root.weightings
         widths: root.widths if root.widths else [100] * self.cols
         prop: root.prop
         headers: root.headers
         _data: root.data if root.data else [[''] * self.cols]
-        size_hint_x: None
-        width: self.rv.width
     BoxLayout:
-        size_hint: None, None
+        size_hint: (None, None) if not dv.weightings else (1, None)
         width: dv.rv.width if dv.rv.width else root.width
         height: dp(50)
         Button:
@@ -141,18 +135,16 @@ Builder.load_string('''
 <ExtendableDataViewer2>:
     dv: dv
     orientation: 'vertical'
-    data: dv._data
     DataViewer2:
         id: dv
         cols: root.cols
+        weightings: root.weightings
         widths: root.widths if root.widths else [100] * self.cols
         prop: root.prop
         headers: root.headers
         _data: root.data if root.data else [[''] * self.cols]
-        size_hint_x: None
-        width: self.dv.rv.width
     BoxLayout:
-        size_hint: None, None
+        size_hint: (None, None) if not dv.weightings else (1, None)
         width: dv.dv.rv.width + 50 if dv.dv.rv.width else root.width
         height: dp(50)
         Button:
@@ -168,10 +160,6 @@ Builder.load_string('''
             text: 'clear'
             on_press: dv.dv.clear()
 ''')
-
-
-class HeaderLabel(CustomLabel):
-    pass
 
 
 class DataViewerInput(TextInput):
@@ -200,7 +188,7 @@ class DataViewerInput(TextInput):
     #             print(err)
 
 
-class DataViewerLabel(Label):
+class DataViewerLabel(RecycleDataViewBehavior, Label):
     """
         Viewclass for the recycleview widget that's
         intended for only displaying data
@@ -215,6 +203,7 @@ class DataViewer(BoxLayout):
     _data = ListProperty()
     headers = ListProperty()
     widths = ListProperty()
+    weightings = ListProperty()
     prop = DictProperty()
     rv = ObjectProperty(None)
 
@@ -224,8 +213,12 @@ class DataViewer(BoxLayout):
             #raise ValueError
             pass
         for i in range(len(self.headers)):
+            if bool(self.weightings):
+                width = self.width * self.weightings[i]
+            else:
+                width = self.widths[i]
             viewer_header.append(
-                {'text': self.headers[i], 'width': self.widths[i], 'valign': 'middle'})
+                {'text': self.headers[i], 'width': width, 'valign': 'middle'})
         return viewer_header
 
     def load_data(self):
@@ -234,14 +227,24 @@ class DataViewer(BoxLayout):
             if len(row) != self.cols:
                 ErrorPopup('Error parsing data')
             for col_num, col in enumerate(row):
+                if bool(self.weightings):
+                    width = self.width * self.weightings[col_num]
+                else:
+                    width = self.widths[col_num]
                 prop = {'index': index, 'col_num': col_num, 'text': str(
-                    col), 'width': self.widths[col_num], 'root': self}
+                    col), 'width': width, 'root': self}
                 prop.update(self.prop)
                 data_for_widget.append(prop)
         return data_for_widget
 
-    viewer_header = AliasProperty(load_header, bind=['headers'])
-    data_for_widget = AliasProperty(load_data, bind=['_data'])
+    viewer_header = AliasProperty(load_header, bind=['headers', 'width'])
+    data_for_widget = AliasProperty(load_data, bind=['_data', 'width'])
+
+    def get_data(self):
+        return self._data
+
+    def set_viewclass(self, viewclass):
+        self.rv.viewclass = viewclass
 
     def add_data(self, data, pos=-1):
         if pos != -1:
@@ -275,6 +278,7 @@ class DataViewer2(BoxLayout):
     cols = NumericProperty(1)
     _data = ListProperty()
     headers = ListProperty()
+    weightings = ListProperty()
     widths = ListProperty()
     prop = DictProperty()
     dv = ObjectProperty(None)
@@ -285,11 +289,12 @@ class ExtendableDataViewer(BoxLayout):
     data = ListProperty()
     headers = ListProperty()
     widths = ListProperty()
+    weightings = ListProperty()
     prop = DictProperty()
     base_dir = StringProperty(os.path.dirname(__file__))
 
-    def __init__(self, **kwargs):
-        super(ExtendableDataViewer, self).__init__(**kwargs)
+    def get_dataviewer(self):
+        return self.ids['dv']
 
 
 class ExtendableDataViewer2(BoxLayout):
@@ -297,12 +302,13 @@ class ExtendableDataViewer2(BoxLayout):
     data = ListProperty()
     headers = ListProperty([''])
     widths = ListProperty()
+    weightings = ListProperty()
     prop = DictProperty()
     base_dir = StringProperty(os.path.dirname(__file__))
     dv = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
-        super(ExtendableDataViewer2, self).__init__(**kwargs)
+    def get_dataviewer(self):
+        return self.ids['dv'].dv
 
 
 if __name__ == '__main__':
@@ -317,7 +323,10 @@ if __name__ == '__main__':
     # runTouchApp(ExtendableDataViewer2(cols=3, data=[[x, x + 1, x + 2] for x in range(0, 200, 3)], headers=[
     #             'Column #1', 'Column #2', 'Column #3'], widths=[100, 200, 300], prop={'disabled': True}))
 
-    runTouchApp(ExtendableDataViewer2(cols=3, headers=[
-                'Column #1', 'Column #2', 'Column #3'], widths=[100, 200, 300], prop={'disabled': True}))
-
-    # runTouchApp(DataViewer(cols=3, widths=[100, 200, 300], prop={'disabled': True}, _data=[[1,2,3]]))
+    runTouchApp(ExtendableDataViewer2(
+        cols=3,
+        widths=[100, 200, 300],
+        weightings=[.2, .2, .6],
+        headers=['Column #1', 'Column #2', 'Column #3'],
+        # data=[[1, 2, 3], [4, 5, 6]]
+    ))
