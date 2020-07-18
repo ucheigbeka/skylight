@@ -5,7 +5,7 @@
         BoxLayout:
             pos_hint: {'top': 1}
             size_hint_y: .2
-            height: 80
+            height: dp(80)
             orientation: 'vertical'
             canvas.before:
                 Color:
@@ -17,12 +17,12 @@
                 text: "Department of Mechanical Engineering"
                 bold: True
                 halign: 'center'
-                font_size: 35
+                font_size: sp(35)
                 size_hint_y: .12
             Label:
                 text: "University of Benin, Nigeria"
                 halign: 'center'
-                font_size: 30
+                font_size: sp(30)
                 size_hint_y: .08
 
         BoxLayout:
@@ -40,13 +40,12 @@
                     text: "Menu"
                     halign: 'right'
                     valign: 'center'
-                    padding: 35,1
-                    font_size: 35
-                    size_hint_y: .11
-                    size_hint_x: .4
+                    padding: dp(35), dp(1)
+                    font_size: sp(35)
+                    size_hint: .4, .11
                     canvas.before:
                         Color:
-                            rgba: (0,0,0,.20)
+                            rgba: (0, 0, 0, .20)
                         Rectangle:
                             size: self.size
                             pos: self.pos
@@ -57,7 +56,7 @@
                 DataViewer2:
                     id: dv
                     cols: 3
-                    widths: [123, 495, 123]
+                    weightings: [.2, .4, .2]
                     headers: ['User', 'Action', 'Time']
                     _data: root.logs
 
@@ -86,9 +85,9 @@
                             app.root.current = 'personal_info'
                     MenuButton:
                         text:"Course Registration"
-                        # on_press:
-                        #     app.root.transition.direction = 'left'
-                        #     app.root.current = 'course_registration'
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'course_registration'
                     MenuButton:
                         text:"Result Entry"
                         on_press:
