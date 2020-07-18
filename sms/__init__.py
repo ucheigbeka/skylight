@@ -4,8 +4,8 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
 # Backend config
-# base_url = 'http://127.0.0.1:1807/api/'
-base_url = 'http://ucheigbeka.pythonanywhere.com/api/'
+base_url = 'http://127.0.0.1:1807/api/'
+# base_url = 'http://ucheigbeka.pythonanywhere.com/api/'
 token = ''
 
 
@@ -66,7 +66,7 @@ sign_in = SigninWindow(name='signin')
 main_page = MainPage(name='main_page')
 personal_info = PersonalInfo(name='personal_info')
 course_details = CourseDetails(name='course_details')
-#course_reg = CourseRegistration(name='course_registration')
+course_reg = CourseRegistration(name='course_registration')
 reports = Reports(name='reports')
 page_reports = PageReports(name='page_reports')
 error = Error(name='error')
@@ -81,7 +81,7 @@ sm.add_widget(sign_in)
 sm.add_widget(main_page)
 sm.add_widget(personal_info)
 sm.add_widget(course_details)
-#sm.add_widget(course_reg)
+sm.add_widget(course_reg)
 sm.add_widget(result_entry)
 sm.add_widget(page_reports)
 sm.add_widget(error)

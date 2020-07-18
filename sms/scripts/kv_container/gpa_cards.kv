@@ -1,0 +1,32 @@
+<GpaCardsView>:
+    DataViewer2:
+        id: dv
+        cols: 8
+        padding_x: dp(10)
+        weightings: [.1, .3, .1, .1, .1, .1, .1, .1]
+        headers: ['Matno', 'Full Names (Surname Last)', '100 Level', '200 Level', '300 Level', '400 Level', '500 Level', 'Cummulative GPA']
+        _data: root.data
+
+<GpaCardsPopup>:
+    title: 'Gpa Cards'
+    size_hint: .3, .2
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        BoxLayout:
+            size_hint_y: None
+            height: dp(35)
+            CustomLabel:
+                text: 'level'
+            CustomTextInput:
+                id: level
+                size_hint_x: 1
+                max_length: 3
+                input_filter: 'int'
+        Button:
+            text: 'Search'
+            on_press: root.get()
+            size_hint: .5, None
+            pos_hint: {'center_x': .5}
+            height: dp(35)
