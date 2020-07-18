@@ -1,9 +1,9 @@
-1, Complete the course_registration.py form
+1, Complete the course_registration.py form         >>>>> Done
 2, Create a menu bar for quick navigation
 3, Use a unified icon pakage for all the icons
 4, Restructure the directory system so that it would be easier to load selected forms based on the user's login details. This ensures that the same program can be used for all types of users
 5, Agree on a common style for each type of widgets used. Styles include graphical and regular widget properties like color, sizes, size_hints, etc. This also applies to layouts. For example, the spacing between widgets in a boxlayout or gridlayout, padding, etc.
-6, Make all widgets to grow, dynamically, with the window size, especially all the widgets in the utils/dataview.py module.
+6, Make all widgets to grow, dynamically, with the window size, especially all the widgets in the utils/dataview.py module.                                             >>>>> Done
 7, Replace the default settings pannel.
 8, Extend the dataview widget so that it can be selectable and more easy to interact with.
 9, Add drag and drop fuctionality for excel files in the sms/forms/result_update.py module
