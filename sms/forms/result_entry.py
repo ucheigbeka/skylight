@@ -60,7 +60,7 @@ class Result_Entry(FormTemplate):
 
     def __init__(self, **kwargs):
         super(Result_Entry, self).__init__(**kwargs)
-        self.edv.data = [[''] * 4]
+        pass
 
     def strip_data(self):
         text = self.text_input.text.strip().split('\n')
@@ -144,7 +144,8 @@ class Result_Entry(FormTemplate):
 
     def upload(self, *args):
         url = urlTo('results')
-        data = self.edv.data
+        dv = self.edv.get_dataviewer()
+        data = dv.get_data()
         idx, is_valid = self.validate_data(data)
         if is_valid:
             AsyncRequest(url, data=data, method='POST',
