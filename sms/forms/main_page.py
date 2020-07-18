@@ -18,7 +18,7 @@ class MainPage(FormTemplate):
 
     def __init__(self, **kwargs):
         super(MainPage, self).__init__(**kwargs)
-        self.dv.dv.rv.viewclass = 'DataViewerLabel'
+        self.dv.dv.set_viewclass('DataViewerLabel')
 
     def on_enter(self):
         self.query_logs(0)
