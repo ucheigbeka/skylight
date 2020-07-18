@@ -1,72 +1,51 @@
-<CourseRegViewBase>:
-    dv: dv
-    _data: dv._data
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: None
-        width: spinner_layout.minimum_width
-        RecycleView:
-            viewclass: 'CustomLabel'
-            data: [] if not root.headers else [{'text': root.headers[0]}]
-            size_hint_y: None
-            height: header_layout.height
-            size_hint_x: None
-            width: dv.ids.content_layout.minimum_width
-            RecycleGridLayout:
-                id: header_layout
-                cols: 1
-                size_hint_y: None
-                default_size: dp(100), dp(35)
-                default_size_hint: None, None
-                height: self.minimum_height
-        RecycleView:
-            viewclass: 'CSpinner'
-            data: root.data_for_spinner
-            scroll_y: dv.rv.scroll_y
-            do_scroll_y: False
-            RecycleGridLayout:
-                id: spinner_layout
-                cols: 1
-                size_hint_y: None
-                default_size: sp(50), dp(35)
-                default_size_hint: None, None
-                height: self.minimum_height
-    DataViewer:
-        id: dv
-        cols: 2
-        widths: [300, 50]
-        prop: root.prop
-        headers: root.headers[1:]
-        _data: root._data
-        size_hint_y: None
-        height: self.ids.rv.height + dp(35)
-
 <CourseRegView>:
-    compulsory_course_reg_view: compulsory_course_reg_view
-    regular_course_reg_view: regular_course_reg_view
-    regular_course_code_data: regular_course_reg_view.course_code_data
+    grid: grid
     orientation: 'vertical'
-    CourseRegViewBase:
-        id: compulsory_course_reg_view
-        headers: ['Course Code', 'Course Title', 'Credits']
-        course_code_data: root.compulsory_course_code_data
-        _data: root.compulsory_course_reg_data
-        prop: {'disabled': True}
+    ScrollView:
+        do_scroll_x: False
         size_hint_y: None
-        height: self.dv.height
-    CourseRegViewBase:
-        id: regular_course_reg_view
-        headers: ['', '', '']
-        course_code_data: root.regular_course_code_data
-        _data: root.regular_course_reg_data
-        prop: {'disabled': True}
-        size_hint_y: None
-        height: self.dv.height
+        height: root.height - btn.height
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            BoxLayout:
+                size_hint_y: None
+                height: dp(35)
+                HeaderLabel:
+                    text: 'Course Code'
+                    size_hint_x: root.size_hints[0]
+                HeaderLabel:
+                    text: 'Course Title'
+                    size_hint_x: root.size_hints[1]
+                HeaderLabel:
+                    text: 'Credit'
+                    size_hint_x: root.size_hints[2]
+            GridLayout:
+                id: grid
+                cols: 3
+                size_hint_y: None
+                height: self.minimum_height
+                row_default_height: dp(35)
+                row_force_default: True
+            BoxLayout:
+                size_hint_y: None
+                height: dp(35)
+                Label:
+                    size_hint_x: root.size_hints[0]
+                HeaderLabel:
+                    text: 'Total Credits'
+                    size_hint_x: root.size_hints[1]
+                CustomTextInput:
+                    disabled: True
+                    text: str(root.total_credits)
+                    size_hint_x: root.size_hints[2]
     Button:
-        text: '-'
+        id: btn
         size_hint_y: None
-        height: 30
-        on_press: root.remove_data()
+        height: dp(35)
+        text: '-'
+        on_press: root.remove_field()
 
 <CourseRegistration>:
     first_sem_view: first_sem_view
@@ -76,15 +55,15 @@
         BoxLayout:
             canvas.before:
                 Color:
-                    rgba: (0,0,0,.4)
+                    rgba: (0, 0, 0, .4)
                 Rectangle:
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 50
+            height: dp(50)
             Label:
                 text: 'COURSE REGISTRATION FORM'
-                font_size: 20
+                font_size: sp(20)
                 halign: 'center'
                 valign: 'middle'
                 size_hint_x: .9
@@ -96,22 +75,16 @@
                     app.root.current = 'main_page'
 
         BoxLayout:
-            canvas.before:
-                Color:
-                    rgba: 1, 0, 0, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
             size_hint_y: None
             height: grid.height
             GridLayout:
                 id: grid
                 cols: 2
-                padding: 20
-                spacing: (10, 5)
+                padding: dp(20)
+                spacing: [dp(10), dp(5)]
                 size_hint: (.5, None)
                 height: self.minimum_height
-                row_default_height: 30
+                row_default_height: dp(30)
                 row_force_default: True
                 CustomLabel:
                     text: 'Session'
@@ -120,27 +93,27 @@
                     id: reg_session
                     max_length: 4
                     input_filter: 'int'
-                    width: 100
+                    width: dp(100)
                     disabled: root.disable_entries
                 CustomLabel:
                     text: 'Mat number'
                     halign: 'left'
                 BoxLayout:
-                    spacing: 20
+                    spacing: dp(20)
                     CustomTextInput:
                         id: mat_no
-                        width: 125
+                        width: dp(125)
                         text: 'ENG'
                         max_length: 10
                         disabled: root.disable_entries
                     ImageButton:
                         size_hint_x: None
-                        width: 50
+                        width: dp(50)
                         source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
                         on_press: root.search()
                     ImageButton:
                         size_hint_x: None
-                        width: 50
+                        width: dp(50)
                         source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
                         on_press: root.clear()
                 CustomLabel:
@@ -196,43 +169,39 @@
                 Image:
                     id: passport
                     size_hint: (None, None)
-                    size: (117, 160)
+                    size: [dp(117), dp(160)]
                     pos_hint: {'top': 1, 'x': 0}
                     on_touch_down: pass
                     source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
             FloatLayout:
                 size_hint_x: .3
 
-        ScrollView:
-            do_scroll_x: False
+        BoxLayout:
             BoxLayout:
-                size_hint_y: None
-                height: first_sem_view.height + dp(35) if first_sem_view.height >= second_sem_view.height else second_sem_view.height + dp(35)
-                BoxLayout:
-                    orientation: 'vertical'
-                    Label:
-                        text: 'FIRST SEMESTER'
-                        size_hint_y: None
-                        height: dp(35)
-                        texture_size: self.text_size
-                        halign: 'center'
-                    CourseRegView:
-                        id: first_sem_view
-                        size_hint_y: None
-                        height: self.compulsory_course_reg_view.height + self.regular_course_reg_view.height + dp(30)
-                        regular_course_reg_data: [['', '']]
-                        regular_course_code_data: [['']]
-                BoxLayout:
-                    orientation: 'vertical'
-                    Label:
-                        text: 'SECOND SEMESTER'
-                        size_hint_y: None
-                        height: dp(35)
-                        texture_size: self.text_size
-                        halign: 'center'
-                    CourseRegView:
-                        id: second_sem_view
-                        size_hint_y: None
-                        height: self.compulsory_course_reg_view.height + self.regular_course_reg_view.height + dp(30)
-                        regular_course_reg_data: [['', '']]
-                        regular_course_code_data: [['']]
+                orientation: 'vertical'
+                padding: [dp(10), dp(0)]
+                Label:
+                    text: 'FIRST SEMESTER'
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'middle'
+                    size_hint_y: .1
+                CourseRegView:
+                    id: first_sem_view
+            BoxLayout:
+                orientation: 'vertical'
+                padding: [dp(10), dp(0)]
+                Label:
+                    text: 'SECOND SEMESTER'
+                    text_size: self.size
+                    halign: 'center'
+                    valign: 'middle'
+                    size_hint_y: .1
+                CourseRegView:
+                    id: second_sem_view
+        Button:
+            size_hint: .1, .1
+            pos_hint: {'center_x': .5}
+            disabled: root.max_credits < root.credits_to_register
+            text: 'Register'
+            on_press: root.register_courses()
