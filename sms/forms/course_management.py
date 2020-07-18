@@ -80,16 +80,16 @@ class CourseManagement(FormTemplate):
     def __init__(self, **kwargs):
         super(CourseManagement, self).__init__(**kwargs)
         self.ids['cbox'].bind(active=self.enable_dv_edit)
-        self.ids['dv2'].dv.rv.viewclass = 'DataViewerLabel'
+        self.ids['dv2'].dv.set_viewclass('DataViewerLabel')
 
     def on_enter(self, *args):
         self._data = [[''] * 8]
 
     def enable_dv_edit(self, instance, value):
         if value:
-            self.ids['dv2'].dv.rv.viewclass = 'DataViewerInput'
+            self.ids['dv2'].dv.set_viewclass('DataViewerInput')
         else:
-            self.ids['dv2'].dv.rv.viewclass = 'DataViewerLabel'
+            self.ids['dv2'].dv.set_viewclass('DataViewerLabel')
 
     def get_course_details(self):
         if not self.ids['lvl_spinner'].text:
@@ -163,9 +163,10 @@ class CourseManagement(FormTemplate):
 
     def compute_diff(self):
         diff = []
-        for idx in range(len(self._data)):
-            if self._data[idx] != self.original__data[idx]:
-                diff.append(self._data[idx])
+        data = self.ids['dv2'].dv.get_data()
+        for idx in range(len(data)):
+            if data[idx] != self.original__data[idx]:
+                diff.append(data[idx])
         return diff
 
     def refresh(self, *args):
