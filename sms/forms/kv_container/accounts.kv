@@ -6,14 +6,14 @@
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
-        spacing: 10
+        spacing: dp(10)
         GridLayout:
             cols: 2
-            padding: 20
+            padding: dp(20)
             spacing: (10, 5)
             size_hint_y: None
             height: self.minimum_height
-            row_default_height: 30
+            row_default_height: dp(30)
             row_force_default: True
             CustomLabel:
                 text: 'Firstname'
@@ -31,7 +31,7 @@
                 text: 'Title'
             CustomSpinner:
                 id: title
-                width: 300
+                width: dp(300)
                 values: root.available_titles
             CustomLabel:
                 text: 'Username'
@@ -51,7 +51,7 @@
                 disabled: cbox.active
         BoxLayout:
             size_hint_y: None
-            height: 30
+            height: dp(30)
             CustomLabel:
                 text: 'Auto generate password'
             CheckBox:
@@ -59,7 +59,7 @@
                 active: True
         Button:
             size_hint: .3, None
-            height: 30
+            height: dp(30)
             pos_hint: {'center_x': .5}
             text: 'Create new account'
             on_press: root.create()
@@ -75,16 +75,16 @@
         spacing: 10
         BoxLayout:
             size_hint_y: None
-            height: 30
+            height: dp(30)
             CustomLabel:
                 text: 'User_id'
             CustomTextInput:
                 id: uid
                 input_filter: 'int'
-                width: 100
+                width: dp(100)
         Button:
             size_hint: .3, None
-            height: 30
+            height: dp(30)
             pos_hint: {'center_x': .5}
             text: 'Remove'
             on_press: root.remove()
@@ -97,21 +97,21 @@
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
-        spacing: 10
+        spacing: dp(10)
         GridLayout:
             cols: 2
-            padding: 20
+            padding: dp(20)
             spacing: (10, 5)
             size_hint_y: None
             height: self.minimum_height
-            row_default_height: 30
+            row_default_height: dp(30)
             row_force_default: True
             CustomLabel:
                 text: 'User_id'
             CustomTextInput:
                 id: uid
                 input_filter: 'int'
-                width: 100
+                width: dp(100)
             CustomLabel:
                 text: 'New Password'
             CustomTextInput:
@@ -126,7 +126,7 @@
                 disabled: cbox.active
         BoxLayout:
             size_hint_y: None
-            height: 30
+            height: dp(30)
             CustomLabel:
                 text: 'Auto generate password'
             CheckBox:
@@ -134,7 +134,7 @@
                 active: True
         Button:
             size_hint: .3, None
-            height: 30
+            height: dp(30)
             pos_hint: {'center_x': .5}
             text: 'Reset'
             on_press: root.reset()
@@ -146,16 +146,16 @@
 
         BoxLayout:
             size_hint_y: None
-            height: 50
+            height: dp(50)
             canvas.before:
                 Color:
-                    rgba: (0,0,0,.4)
+                    rgba: (0, 0, 0,.4)
                 Rectangle:
                     size: self.size
                     pos: self.pos
             Label:
                 text: 'Accounts'
-                font_size: 20
+                font_size: sp(20)
                 halign: 'center'
                 valign: 'middle'
                 markup: True
@@ -169,16 +169,15 @@
                     app.root.current = 'admin'
 
         BoxLayout:
-            padding: [10, 10]
+            padding: [dp(10), dp(10)]
             DataViewer:
                 id: dv
                 cols: 6
-                widths: [50, 200, 200, 200, 200, 200]
+                weightings: [1/21, 4/21, 4/21, 4/21, 4/21, 4/21]
                 headers: ['User_id', 'Username', 'Firstname', 'Lastname', 'Title', 'Email']
                 _data: root._data
-                size_hint_x: None
-                width: self.rv.width
             RelativeLayout:
+                size_hint_x: .2
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
