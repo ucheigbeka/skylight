@@ -40,10 +40,9 @@
             ExtendableDataViewer2:
                 id: edv
                 cols: 4
+                weightings: [1 / self.cols] * self.cols
                 widths: [200] * self.cols
                 headers: ['Course code', 'Session', 'Matno', 'Score']
-                size_hint_x: None
-                width: self.dv.width + 50
             FloatLayout:
                 BoxLayout:
                     orientation: 'vertical'
