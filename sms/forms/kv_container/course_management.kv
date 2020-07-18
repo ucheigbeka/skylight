@@ -6,20 +6,20 @@
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
-        spacing: 10
+        spacing: dp(10)
         GridLayout:
             cols: 2
-            padding: 20
-            spacing: (10, 5)
+            padding: dp(20)
+            spacing: [dp(10), dp(5)]
             size_hint_y: None
             height: self.minimum_height
-            row_default_height: 30
+            row_default_height: dp(30)
             row_force_default: True
             CustomLabel:
                 text: 'Course code'
             CustomTextInput:
                 id: course_code
-                width: 100
+                width: dp(100)
             CustomLabel:
                 text: 'Course title'
             CustomTextInput:
@@ -28,19 +28,19 @@
                 text: 'Course credit'
             CustomTextInput:
                 id: course_credit
-                width: 50
+                width: dp(50)
                 input_filter: 'int'
             CustomLabel:
                 text: 'Course semester'
             CustomSpinner:
                 id: course_semester
-                width: 100
+                width: dp(100)
                 values: ['First', 'Second']
             CustomLabel:
                 text: 'Course level'
             CustomTextInput:
                 id: course_level
-                width: 100
+                width: dp(100)
                 disabled: True
             CustomLabel:
                 text: 'Teaching Department'
@@ -51,24 +51,24 @@
                 text: 'Optional'
             BoxLayout:
                 size_hint_x: None
-                width: 150
+                width: dp(150)
                 CustomLabel:
                     text: 'Yes'
                     valign: 'middle'
-                    width: 50
+                    width: dp(50)
                 CheckBox:
                     id: opt_yes
                     group: 'options'
                 CustomLabel:
                     text: 'No'
                     valign: 'middle'
-                    width: 50
+                    width: dp(50)
                 CheckBox:
                     group: 'options'
                     active: True
         Button:
             size_hint: .3, None
-            height: 30
+            height: dp(30)
             pos_hint: {'center_x': .5}
             text: 'Add course'
             on_press: root.add()
@@ -81,18 +81,18 @@
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
-        spacing: 10
+        spacing: dp(10)
         BoxLayout:
             size_hint_y: None
-            height: 30
+            height: dp(30)
             CustomLabel:
                 text: 'Course code'
             CustomTextInput:
                 id: course_code
-                width: 100
+                width: dp(100)
         Button:
             size_hint: .3, None
-            height: 30
+            height: dp(30)
             pos_hint: {'center_x': .5}
             text: 'Remove'
             on_press: root.remove()
@@ -103,16 +103,16 @@
 
         BoxLayout:
             size_hint_y: None
-            height: 50
+            height: dp(50)
             canvas.before:
                 Color:
-                    rgba: (0,0,0,.4)
+                    rgba: (0, 0, 0, .4)
                 Rectangle:
                     size: self.size
                     pos: self.pos
             Label:
                 text: 'Course Management'
-                font_size: 20
+                font_size: sp(20)
                 halign: 'center'
                 valign: 'middle'
                 markup: True
@@ -126,17 +126,16 @@
                     app.root.current = 'admin'
 
         BoxLayout:
-            padding: [10, 10]
+            padding: [dp(10), dp(10)]
             DataViewer2:
                 id: dv2
                 cols: 8
-                widths: [100, 350, 70, 70, 100, 100, 100, 70]
+                weightings: [.1, .36, .07, .07, .1, .1, .1, .07]
                 headers: ['Course code', 'Course title', 'Course credit', 'Semester', 'Teaching dept', 'Start date', 'End date', 'Optional']
                 _data: root._data
-                size_hint_x: None
-                width: self.dv.rv.width + 50
             BoxLayout:
                 orientation: 'vertical'
+                size_hint_x: .25
                 RelativeLayout:
                     BoxLayout:
                         orientation: 'vertical'
@@ -148,14 +147,14 @@
                             values: ['100 level courses', '200 level courses', '300 level courses', '400 level courses', '500 level courses']
                             on_text: root.get_course_details()
                             size_hint_y: None
-                            size: 200, 60
+                            size: dp(200), dp(60)
                         CustomSpinner:
                             id: session_spinner
                             text: 'Current session'
                             values: ['Current session', 'All sessions']
                             on_text: root.get_course_details()
                             size_hint_y: None
-                            size: 200, 60
+                            size: dp(200), dp(60)
                 RelativeLayout:
                     BoxLayout:
                         orientation: 'vertical'
@@ -187,8 +186,8 @@
                             text: 'Edit'
                             valign: 'middle'
                             size_hint_y: None
-                            height: 100
+                            height: dp(100)
                         CheckBox:
                             id: cbox
                             size_hint: None, None
-                            size: 70, 100
+                            size: dp(70), dp(100)
