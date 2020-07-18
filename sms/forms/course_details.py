@@ -14,6 +14,7 @@ Builder.load_file(kv_path)
 class CourseDetails(FormTemplate):
     def search(self, *args):
         course_code = self.ids['course_code'].text
+        course_code = course_code[:3].upper() + course_code[3:]
         params = {'course_code': course_code}
         url = urlTo('course_details')
         AsyncRequest(url, params=params, on_success=self.populate_fields, on_failure=self.show_error)
