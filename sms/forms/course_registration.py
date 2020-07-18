@@ -4,12 +4,13 @@ from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
-    DictProperty, BooleanProperty, AliasProperty, ObjectProperty
+    ObjectProperty, BooleanProperty
 
 from sms import urlTo, get_current_session
 from sms.forms.template import FormTemplate
 from sms.utils.popups import ErrorPopup
 from sms.utils.asyncrequest import AsyncRequest
+# from sms.utils.asynctask import  run_in_background
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'course_registration.kv')
@@ -19,85 +20,125 @@ Builder.load_file(kv_path)
 FIRST_SEM_COURSES = {}
 SECOND_SEM_COURSES = {}
 
-Clock.max_iteration = 4
-print(Clock.max_iteration)
-
-
-class CSpinner(Factory.CustomSpinner):
-    root = ObjectProperty(None)
-    index = NumericProperty(0)
-
-    # def on_text(self, instance, value):
-    #     rv = self.root.dv.ids.rv
-
-    #     if value in FIRST_SEM_COURSES:
-    #         course_title, credit = FIRST_SEM_COURSES[value]
-    #         del FIRST_SEM_COURSES[value]
-    #         course_codes = FIRST_SEM_COURSES.keys()
-    #     else:
-    #         course_title, credit = SECOND_SEM_COURSES[value]
-    #         del SECOND_SEM_COURSES[value]
-    #         course_codes = SECOND_SEM_COURSES.keys()
-
-    #     rv._data[self.index][0] = course_title
-    #     rv._data[self.index][1] = credit
-
-    #     self.root.course_code_data.append(course_codes)
-    #     rv._data.append(['', ''])
-
-    #     self.disabled = True
-
-
-class CourseRegViewBase(BoxLayout):
-    _data = ListProperty()
-    course_code_data = ListProperty()
-    headers = ListProperty()
-    widths = ListProperty()
-    prop = DictProperty()
-    dv = ObjectProperty(None)
-
-    def generate_course_codes(self):
-        data_for_spinner = []
-        for index, course_code in enumerate(self.course_code_data):
-            prop = {'root': self, 'index': index, 'width': 100}
-            if isinstance(self.course_code_data[0], str):
-                prop.update(self.prop)
-                prop.update({'text': course_code})
-            else:
-                prop.update({'values': course_code})
-            data_for_spinner.append(prop)
-
-        print(data_for_spinner)
-        return data_for_spinner
-
-    data_for_spinner = AliasProperty(generate_course_codes, bind=['course_code_data'])
-
 
 class CourseRegView(BoxLayout):
-    compulsory_course_reg_view = ObjectProperty(None)
-    compulsory_course_reg_data = ListProperty()
-    compulsory_course_code_data = ListProperty()
+    grid = ObjectProperty()
+    fields = ListProperty()
+    num_compulsory_courses = NumericProperty()
+    course_codes = ListProperty()
+    course_details = ListProperty()
+    max_sememster_credits = NumericProperty(30)
+    total_credits = NumericProperty()
+    size_hints = [.35, .5, .15]
 
-    regular_course_reg_view = ObjectProperty(None)
-    regular_course_reg_data = ListProperty()
-    regular_course_code_data = ListProperty()
+    def __init__(self, **kwargs):
+        super(CourseRegView, self).__init__(**kwargs)
+        self.course_code_options = self.course_codes[:]
 
-    def remove_data(self):
-        self.regular_course_reg_view.dv.remove_data()
-        if len(self.regular_course_code_data) > 1:
-            self.regular_course_code_data.pop()
-        elif len(self.regular_course_code_data) == 1:
-            self.regular_course_code_data = ['']
+    def add_field(self, bind_spinner=True):
+        if self.total_credits != self.max_sememster_credits:
+            course_code_spinner = Factory.CustomSpinner(
+                disabled=True,
+                size_hint_x=self.size_hints[0])
+            if bind_spinner:
+                course_code_spinner.disabled = False
+                course_code_spinner.values = self.course_code_options
+                course_code_spinner.bind(text=self.set_course_details)
+            course_title_textinput = Factory.CustomTextInput(
+                disabled=True,
+                size_hint_x=self.size_hints[1])
+            course_credit_textinput = Factory.CustomTextInput(
+                disabled=True,
+                size_hint_x=self.size_hints[2])
+
+            self.grid.add_widget(course_code_spinner)
+            self.grid.add_widget(course_title_textinput)
+            self.grid.add_widget(course_credit_textinput)
+
+            self.fields.append([
+                course_code_spinner,
+                course_title_textinput,
+                course_credit_textinput
+            ])
+
+    def remove_field(self):
+        if len(self.fields) - 1 > self.num_compulsory_courses:
+            empty_field = self.fields.pop()
+            for wid in empty_field:
+                self.grid.remove_widget(wid)
+
+            widgets = self.fields.pop()
+            course_code = widgets[0].text
+            credit = int(widgets[2].text)
+            for wid in widgets:
+                self.grid.remove_widget(wid)
+
+            idx = self.course_codes.index(course_code)
+            self.course_code_options.insert(idx, course_code)
+            self.total_credits -= credit
+            self.add_field()
+
+    def clear(self):
+        self.total_credits = 0
+        self.num_compulsory_courses = 0
+        self.fields = []
+        self.grid.clear_widgets()
+
+    def set_course_details(self, instance, value):
+        instance.disabled = True
+        course_title_textinput = self.fields[-1][1]
+        course_credit_textinput = self.fields[-1][2]
+
+        idx = self.course_codes.index(value)
+        title, credit = self.course_details[idx]
+        course_title_textinput.text = title if title else ''
+        course_credit_textinput.text = str(credit)
+        self.total_credits += credit
+
+        self.course_code_options.remove(value)
+        self.add_field()
+
+    def get_courses_for_reg(self):
+        courses = [[code_wid.text] for code_wid, _, _ in self.fields[:-1]]
+        return courses
+
+    def insert_compulsory_courses(self, compulsory_courses):
+        self.clear()
+        self.num_compulsory_courses = len(compulsory_courses)
+        for code, title, credit in compulsory_courses:
+            self.add_field(bind_spinner=False)
+
+            course_code_spinner = self.fields[-1][0]
+            course_title_textinput = self.fields[-1][1]
+            course_credit_textinput = self.fields[-1][2]
+
+            course_code_spinner.text = code
+            course_title_textinput.text = title if title else ''
+            course_credit_textinput.text = str(credit)
+
+            self.total_credits += credit
+        self.add_field()
+
+    def on_course_codes(self, instance, value):
+        self.course_code_options = self.course_codes[:]
 
 
 class CourseRegistration(FormTemplate):
     disable_entries = BooleanProperty(False)
     first_sem_view = ObjectProperty(None)
     second_sem_view = ObjectProperty(None)
+    credits_to_register = NumericProperty()
+    max_credits = NumericProperty()
 
     def __init__(self, **kwargs):
         super(CourseRegistration, self).__init__(**kwargs)
         self.ids.reg_session.text = str(get_current_session())
+        self.first_sem_view.bind(total_credits=self.set_credits_to_register)
+        self.second_sem_view.bind(total_credits=self.set_credits_to_register)
+        self.data = dict()
+
+    def set_credits_to_register(self, *args):
+        self.credits_to_register = self.first_sem_view.total_credits + self.second_sem_view.total_credits
 
     def search(self):
         url = urlTo('course_reg')
@@ -109,27 +150,15 @@ class CourseRegistration(FormTemplate):
         data = resp.json()
 
         # populate personal info fields
-        personal_info = data['personal_info']
+        personal_info = data.pop('personal_info')
         self.ids.surname.text = personal_info['surname']
         self.ids.othernames.text = personal_info['othernames']
         self.ids.cur_level.text = personal_info['current_level']
         self.ids.phone_no.text = personal_info['phone_no']
         self.ids.prob_stat.text = self.ids.prob_stat.values[data['probation_status']]
 
-        # populate compulsory courses field
-        courses = data['courses']
-        comp_first_sem_courses = courses['first_sem']
-        comp_second_sem_courses = courses['second_sem']
-
-        for code, title, credit in comp_first_sem_courses:
-            self.first_sem_view.compulsory_course_code_data.append(code)
-            self.first_sem_view.compulsory_course_reg_data.append([title, credit])
-        for code, title, credit in comp_second_sem_courses:
-            self.second_sem_view.compulsory_course_code_data.append(code)
-            self.second_sem_view.compulsory_course_reg_data.append([title, credit])
-
         # queues regular courses
-        choices = data['choices']
+        choices = data.pop('choices')
         first_sem_courses = choices['first_sem']
         second_sem_courses = choices['second_sem']
 
@@ -138,10 +167,37 @@ class CourseRegistration(FormTemplate):
         for code, title, credit in second_sem_courses:
             SECOND_SEM_COURSES[code] = [title, credit]
 
-        self.first_sem_view.regular_course_reg_data = [['', '']]
-        self.first_sem_view.regular_course_code_data = [FIRST_SEM_COURSES.keys()]
-        self.second_sem_view.regular_course_reg_data = [['', '']]
-        self.second_sem_view.regular_course_code_data = [SECOND_SEM_COURSES.keys()]
+        self.first_sem_view.course_codes = FIRST_SEM_COURSES.keys()
+        self.first_sem_view.course_details = FIRST_SEM_COURSES.values()
+        self.second_sem_view.course_codes = SECOND_SEM_COURSES.keys()
+        self.second_sem_view.course_details = SECOND_SEM_COURSES.values()
+
+        self.max_credits = data['max_credits']
+
+        # populate compulsory courses field
+        courses = data.pop('courses')
+        comp_first_sem_courses = courses['first_sem']
+        comp_second_sem_courses = courses['second_sem']
+
+        Clock.schedule_once(lambda dt: self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses))
+        Clock.schedule_once(lambda dt: self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses))
+
+        # self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses)
+        # self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses)
+
+        data.pop('error')
+        data['mat_no'] = self.ids['mat_no'].text
+        self.data = data
+
+    def register_courses(self):
+        self.data['fees_status'] = self.ids['fees_stat'].text
+        courses = {
+            'first_sem': self.first_sem_view.get_courses_for_reg(),
+            'second_sem': self.second_sem_view.get_courses_for_reg()
+        }
+        self.data['courses'] = courses
+        url = urlTo('course_reg')
+        AsyncRequest(url, data=self.data, method='POST', on_failure=self.show_reg_error, on_success=self.clear)
 
     def clear(self):
         global FIRST_SEM_COURSES, SECOND_SEM_COURSES
@@ -156,21 +212,20 @@ class CourseRegistration(FormTemplate):
         self.ids.reg_session.text = str(get_current_session())
         self.ids.mat_no.text = 'ENG'
 
-        self.first_sem_view.compulsory_course_code_data = []
-        self.first_sem_view.compulsory_course_reg_data = []
-        self.second_sem_view.compulsory_course_code_data = []
-        self.second_sem_view.compulsory_course_reg_data = []
-
-        self.first_sem_view.regular_course_reg_data = [['', '']]
-        self.first_sem_view.regular_course_code_data = ['']
-        self.second_sem_view.regular_course_reg_data = [['', '']]
-        self.second_sem_view.regular_course_code_data = ['']
+        self.first_sem_view.clear()
+        self.second_sem_view.clear()
+        self.max_credits = 0
+        self.data = dict()
 
         FIRST_SEM_COURSES = {}
         SECOND_SEM_COURSES = {}
 
     def show_error(self, resp):
         ErrorPopup('Record not found')
+
+    def show_reg_error(self, resp):
+        # Should probably be more explicit
+        ErrorPopup('Error registering courses')
 
 
 if __name__ == '__main__':
