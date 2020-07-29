@@ -14,3 +14,4 @@
 14, A way to copy password to clipboard after auto-generation
 15, add on_key_press() for enter key in password element ==> should map to submit,  also switch form elements on tab key press
 16, Add zoom and pan functionality to reports view
+17, If course reg for current session already exists, it should be editable in front end when called with get
