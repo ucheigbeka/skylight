@@ -25,7 +25,8 @@ class StudentUpdatePopup(Popup):
         Thread(target=self._generate_result_update, args=(resp,)).start()
 
     def _generate_result_update(self, resp):
-        from sms import reports
+        from sms import sm
+        reports = sm.get_screen('reports')
         screens = generate_preview_screens(resp)
         tab_title = self.ids['mat_no'].text
         reports.generate_report(screens, tab_title)
