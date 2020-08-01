@@ -77,10 +77,9 @@
             size_hint_y: None
             height: dp(30)
             CustomLabel:
-                text: 'User_id'
+                text: 'Username'
             CustomTextInput:
-                id: uid
-                input_filter: 'int'
+                id: username
                 width: dp(100)
         Button:
             size_hint: .3, None
@@ -107,9 +106,9 @@
             row_default_height: dp(30)
             row_force_default: True
             CustomLabel:
-                text: 'User_id'
+                text: 'Username'
             CustomTextInput:
-                id: uid
+                id: username
                 input_filter: 'int'
                 width: dp(100)
             CustomLabel:
@@ -170,12 +169,13 @@
 
         BoxLayout:
             padding: [dp(10), dp(10)]
-            DataViewer:
+            DataViewer2:
                 id: dv
-                cols: 6
-                weightings: [1/21, 4/21, 4/21, 4/21, 4/21, 4/21]
-                headers: ['User_id', 'Username', 'Firstname', 'Lastname', 'Title', 'Email']
+                cols: 4
+                weightings: [.2, .4, .2, .2]
+                headers: ['Username', 'Fullname', 'Title', 'Email']
                 _data: root._data
+                selectable: True
             RelativeLayout:
                 size_hint_x: .2
                 BoxLayout:
