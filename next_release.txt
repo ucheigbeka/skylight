@@ -1,16 +1,16 @@
 1, Complete the course_registration.py form         >>>>> Done
 2, Create a menu bar for quick navigation
 3, Use a unified icon pakage for all the icons
-4, Restructure the directory system so that it would be easier to load selected forms based on the user's login details. This ensures that the same program can be used for all types of users
+4, Restructure the directory system so that it would be easier to load selected forms based on the user's login details. This ensures that the same program can be used for all types of users          >>>>> Done
 5, Agree on a common style for each type of widgets used. Styles include graphical and regular widget properties like color, sizes, size_hints, etc. This also applies to layouts. For example, the spacing between widgets in a boxlayout or gridlayout, padding, etc.
 6, Make all widgets to grow, dynamically, with the window size, especially all the widgets in the utils/dataview.py module.                                             >>>>> Done
 7, Replace the default settings pannel.
-8, Extend the dataview widget so that it can be selectable and more easy to interact with.
+8, Extend the dataview widget so that it can be selectable and more easy to interact with.          >>>>> Done
 9, Add drag and drop fuctionality for excel files in the sms/forms/result_update.py module
 10, Handle passports (Probably a backend problem)
 11, Restructure the sms\forms\main_page.py module and it's corresponding kv rules to account for (4)
 12, Add color effects to some selected widgets like the buttons. For example, an hover of the cursor over a button would animate a color progression across it. The kivy.uix.effectwidget.EffectWidget class would mostly likely be able to introduce such functionality.
 13, Include an easter egg.
 14, A way to copy password to clipboard after auto-generation
-15, add on_key_press() for enter key in password element ==> should map to submit,  also switch form elements on tab key press
+15, add on_key_press() for enter key in password element ==> should map to submit,  also switch form elements on tab key press          >>>>> Done
 16, Add zoom and pan functionality to reports view
