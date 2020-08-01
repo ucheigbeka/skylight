@@ -129,6 +129,7 @@ class CourseRegistration(FormTemplate):
     second_sem_view = ObjectProperty(None)
     credits_to_register = NumericProperty()
     max_credits = NumericProperty()
+    is_old_course_reg = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super(CourseRegistration, self).__init__(**kwargs)
@@ -141,9 +142,21 @@ class CourseRegistration(FormTemplate):
         self.credits_to_register = self.first_sem_view.total_credits + self.second_sem_view.total_credits
 
     def search(self):
-        url = urlTo('course_reg')
-        param = {'mat_no': self.ids.mat_no.text, 'acad_session': self.ids.reg_session.text}
-        AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
+        acad_session = int(self.ids.reg_session.text)
+        if acad_session == get_current_session():
+            url = urlTo('course_reg_new')
+            param = {
+                'mat_no': self.ids.mat_no.text,
+                'acad_session': acad_session
+            }
+            AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
+        else:
+            url = urlTo('course_reg')
+            param = {
+                'mat_no': self.ids.mat_no.text,
+                'acad_session': acad_session
+            }
+            AsyncRequest(url, on_success=self.populate_fields_for_old_reg, on_failure=self.show_error, params=param)    
 
     def populate_fields(self, resp):
         self.disable_entries = True
@@ -153,7 +166,7 @@ class CourseRegistration(FormTemplate):
         personal_info = data.pop('personal_info')
         self.ids.surname.text = personal_info['surname']
         self.ids.othernames.text = personal_info['othernames']
-        self.ids.cur_level.text = personal_info['current_level']
+        self.ids.cur_level.text = str(personal_info['level'])
         self.ids.phone_no.text = personal_info['phone_no']
         self.ids.prob_stat.text = self.ids.prob_stat.values[data['probation_status']]
 
@@ -185,9 +198,12 @@ class CourseRegistration(FormTemplate):
         # self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses)
         # self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses)
 
-        data.pop('error')
         data['mat_no'] = self.ids['mat_no'].text
         self.data = data
+
+    def populate_fields_for_old_reg(self, resp):
+        self.populate_fields(resp)
+        self.is_old_course_reg = True
 
     def register_courses(self):
         self.data['fees_status'] = self.ids['fees_stat'].text
@@ -216,6 +232,7 @@ class CourseRegistration(FormTemplate):
         self.second_sem_view.clear()
         self.max_credits = 0
         self.data = dict()
+        self.is_old_course_reg = False
 
         FIRST_SEM_COURSES = {}
         SECOND_SEM_COURSES = {}
