@@ -28,7 +28,7 @@ class PersonalInfo(FormTemplate):
             self.show_input_error()
             return
         data['session_admitted'] = int(self.ids.session_admit.text)
-        data['current_level'] = int(self.ids.cur_level.text)
+        data['level'] = int(self.ids.level.text)
         data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
         data['date_of_birth'] = self.ids.dob.text
         data['state_of_origin'] = self.ids.state_of_origin.text
@@ -59,7 +59,7 @@ class PersonalInfo(FormTemplate):
             self.ids.fname.text, self.ids.mname.text = str(data['othernames']), ''
         self.ids.mode_of_entry.text = self.ids.mode_of_entry.values[data['mode_of_entry'] - 1]
         self.ids.session_admit.text = str(data['session_admitted'])
-        self.ids.cur_level.text = str(data['current_level'])
+        self.ids.level.text = str(data['level'])
         self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
         self.ids.dob.text = str(data['date_of_birth'])
         self.ids.state_of_origin.text = str(data['state_of_origin'])
