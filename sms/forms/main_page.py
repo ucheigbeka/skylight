@@ -1,14 +1,12 @@
-import os
 from time import localtime, asctime
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import ListProperty, ObjectProperty
 
-from sms import get_log
+from sms import get_log, get_kv_path
 from sms.forms.template import FormTemplate
 
-form_root = os.path.dirname(__file__)
-kv_path = os.path.join(form_root, 'kv_container', 'main_page.kv')
+kv_path = get_kv_path('main_page')
 Builder.load_file(kv_path)
 
 
