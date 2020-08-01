@@ -74,6 +74,9 @@ class AsyncRequest(Thread):
                     err = str(err)
                     title = err[:err.find(":")]
                     msg = err[err.find(":") + 1:].strip()
+                except TypeError:
+                    title = 'Error'
+                    msg = self.resp.json()
                 ErrorPopup(msg, title=title)
         else:
             if callable(self.on_success):
