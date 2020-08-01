@@ -70,7 +70,7 @@ class Logs(FormTemplate):
 
     def on_enter(self):
         get_log(self.populate_dv, limit=100)
-        self.dv.dv.rv.viewclass = 'CustomDataViewerLabel'
+        self.dv.dv.set_viewclass('CustomDataViewerLabel')
         self.query_users()
 
     def populate_dv(self, resp):
