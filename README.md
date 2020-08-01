@@ -1,6 +1,16 @@
 # Skylight
 This project represents the client side of the **Student Management System** for the Department of Mechanical Engineering, University of Benin.
 
+## To run on linux
+Check out the [official kivy documentations](https://kivy.org/doc/stable/installation/installation-linux.html) to install kivy on Linux 
+
++ Then install dependencies with 
+
+  ```pip3 install -r requirements-linux.txt```
++ Run the app with 
+  
+  `python3 run.py`
+
 ## Instructions For Compilation
 * **Pyinstaller 3.1+** is required for compiling the source code into an executable file (.exe for Windows). The same instructions apply to bundling for Windows, Mac OS X and GNU/Linux. Pyinstaller should be installed using pip:
 ```
