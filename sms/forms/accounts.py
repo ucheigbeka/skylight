@@ -74,8 +74,6 @@ class NewAccountPopup(PopupBase):
         data['title'] = self.ids['title'].text
         data['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
-        from pprint import pprint
-        pprint(data)
         AsyncRequest(url, method='POST', data=data, on_success=self.success)
 
     def success(self, resp):
