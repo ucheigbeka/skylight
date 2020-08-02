@@ -128,7 +128,7 @@ class ResetAccountPopup(PopupBase):
             self.ids['pwd'].text = ''.join(choices(list(alphanumeric_chars), k=10))
         username = self.ids['username'].text
         self.selected_acct = self.get_user(username)
-        self.selected_acct['password'] = self.ids['pwd'].text
+        self.selected_acct['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
         AsyncRequest(url, method='PUT', data=self.selected_acct, on_success=self.success)
 
