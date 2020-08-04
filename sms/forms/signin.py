@@ -4,7 +4,7 @@ from hashlib import md5
 from kivy.lang import Builder
 from kivy.properties import StringProperty
 
-from sms import urlTo, store_token
+from sms import urlTo, store_token, set_title
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -52,8 +52,11 @@ class SigninWindow(FormTemplate):
         self.signin()
 
     def grant_access(self, resp):
-        token = resp.json()['token']
+        data = resp.json()
+        token, title = data['token'], data['title']
         store_token(token)
+        set_title(title)
+        self.manager.title = title
         self.manager.transition.direction = 'left'
         self.manager.current = 'main_page'
 

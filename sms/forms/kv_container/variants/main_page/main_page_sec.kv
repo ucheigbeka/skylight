@@ -1,0 +1,94 @@
+<MainPage>:
+    dv: dv
+    FloatLayout:
+
+        BoxLayout:
+            pos_hint: {'top': 1}
+            size_hint_y: .2
+            height: dp(80)
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: (0,0,0,.20)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: "Department of Mechanical Engineering"
+                bold: True
+                halign: 'center'
+                font_size: sp(35)
+                size_hint_y: .12
+            Label:
+                text: "University of Benin, Nigeria"
+                halign: 'center'
+                font_size: sp(30)
+                size_hint_y: .08
+
+        BoxLayout:
+            pos_hint: {'bottom': 1}
+            size_hint_y: .8
+
+            BoxLayout:
+                size_hint_x: .6
+                orientation: 'vertical'
+
+                Label:
+                    size_hint_y: .09
+
+                CustomLabel:
+                    text: "Menu"
+                    halign: 'right'
+                    valign: 'center'
+                    padding: dp(35), dp(1)
+                    font_size: sp(35)
+                    size_hint: .4, .11
+                    canvas.before:
+                        Color:
+                            rgba: (0, 0, 0, .20)
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                Label:
+                    size_hint_y: .09
+
+                DataViewer2:
+                    id: dv
+                    cols: 3
+                    weightings: [.2, .4, .2]
+                    headers: ['User', 'Action', 'Time']
+                    _data: root.logs
+
+                Label:
+                    size_hint_y: .09
+
+            ScrollView:
+                do_scroll: True
+                size_hint_x: .4
+                BoxLayout:
+                    pos_hint: {'right': 1}
+                    orientation: 'vertical'
+
+                    Label:
+                        size_hint_y: .1
+
+                    MenuButton:
+                        text:"Course Details"
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'course_details'
+                    MenuButton:
+                        text: "Personal Data"
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'personal_info'
+                    MenuButton:
+                        text:"Reports"
+                        on_press:
+                            app.root.transition.direction = 'left'
+                            app.root.current = 'page_reports'
+
+                    Label:
+                        size_hint_y: .4
+

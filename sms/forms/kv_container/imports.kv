@@ -10,5 +10,6 @@
 #:import DataViewer2 sms.utils.dataview.DataViewer2
 #:import ExtendableDataViewer2 sms.utils.dataview.ExtendableDataViewer2
 
-<CustomSpinner@Spinner>:
+<CustomSpinner@FocusBehavior+Spinner>:
     size_hint_x: None
+    is_open: root.focus

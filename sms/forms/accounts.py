@@ -5,8 +5,9 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, ListProperty, DictProperty
 
-from sms import urlTo
+from sms import urlTo, titles
 from sms.forms.template import FormTemplate
+from sms.forms.signin import tokenize
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import SuccessPopup, ErrorPopup
 
@@ -15,12 +16,20 @@ kv_path = os.path.join(form_root, 'kv_container', 'accounts.kv')
 Builder.load_file(kv_path)
 
 alphanumeric_chars = ascii_letters + digits
-titles = [
-    'Head of department', 'Exam officer', '100 level course adviser',
-    '200 level course adviser', '300 level course adviser',
-    '400 level course adviser', '500 level course adviser',
-    '500 level course adviser(2)', 'Secretary'
+
+permissions = [
+    "{\"read\": true, \"write\": true, \"superuser\": true, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [100], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [200], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [300], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [400], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [500], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [600], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": false, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}"
 ]
+
+titles_perm = dict(zip(titles, permissions))
 
 
 class PopupBase(Popup):
@@ -37,12 +46,9 @@ class NewAccountPopup(PopupBase):
     available_titles = ListProperty(titles)
 
     def on_open(self, *args):
-        hods = 1
         for acct in self.accounts:
-            if acct['title'] == 'Head of department' and hods > 0:
-                hods -= 1
-                continue
-            self.available_titles.remove(acct['title'])
+            if acct['title'] in self.available_titles:
+                self.available_titles.remove(acct['title'])
 
     def create(self):
         if not self.ids['cbox'].active and self.ids['pwd'].text != self.ids['rpwd'].text:
@@ -59,13 +65,14 @@ class NewAccountPopup(PopupBase):
             return
         if self.ids['cbox'].active:
             self.ids['pwd'].text = ''.join(choices(list(alphanumeric_chars), k=10))
-        data = {}
-        data['firstname'] = self.ids['fname'].text
-        data['lastname'] = self.ids['lname'].text
+        data = {
+            'permissions': titles_perm[self.ids['title'].text] % self.ids['username'].text
+        }
+        data['fullname'] = self.ids['fname'].text + ' ' + self.ids['lname'].text
         data['email'] = self.ids['email'].text
         data['username'] = self.ids['username'].text
         data['title'] = self.ids['title'].text
-        data['password'] = self.ids['pwd'].text
+        data['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
         AsyncRequest(url, method='POST', data=data, on_success=self.success)
 
@@ -78,8 +85,12 @@ class NewAccountPopup(PopupBase):
 
 
 class RemoveAccountPopup(Popup):
+    def __init__(self, username='', **kwargs):
+        super(RemoveAccountPopup, self).__init__(**kwargs)
+        self.ids['username'].text = username
+
     def remove(self):
-        params = {'uid': int(self.ids['uid'].text)}
+        params = {'username': self.ids['username'].text}
         url = urlTo('accounts')
         AsyncRequest(url, method='DELETE', params=params, on_success=self.success)
 
@@ -93,9 +104,13 @@ class ResetAccountPopup(PopupBase):
     accounts = ListProperty()
     selected_acct = DictProperty()
 
-    def get_user(self, uid):
+    def __init__(self, username='', **kwargs):
+        super(ResetAccountPopup, self).__init__(**kwargs)
+        self.ids['username'].text = username
+
+    def get_user(self, username):
         for acct in self.accounts:
-            if acct['user_id'] == uid:
+            if acct['username'] == username:
                 return acct
 
     def reset(self):
@@ -109,9 +124,9 @@ class ResetAccountPopup(PopupBase):
             return
         if self.ids['cbox'].active:
             self.ids['pwd'].text = ''.join(choices(list(alphanumeric_chars), k=10))
-        uid = int(self.ids['uid'].text)
-        self.selected_acct = self.get_user(uid)
-        self.selected_acct['password'] = self.ids['pwd'].text
+        username = self.ids['username'].text
+        self.selected_acct = self.get_user(username)
+        self.selected_acct['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
         AsyncRequest(url, method='PUT', data=self.selected_acct, on_success=self.success)
 
@@ -130,7 +145,7 @@ class Accounts(FormTemplate):
 
     def __init__(self, **kwargs):
         super(Accounts, self).__init__(**kwargs)
-        self.dv.rv.viewclass = 'DataViewerLabel'
+        self.dv.dv.set_viewclass('DataViewerLabel')
 
     def get_accts(self):
         url = urlTo('accounts')
@@ -154,12 +169,17 @@ class Accounts(FormTemplate):
         new_acct.open()
 
     def remove_account(self):
-        rm_acct = RemoveAccountPopup()
+        selected_item = self.dv.dv.get_selected_items()
+        username = '' if not len(selected_item) else selected_item[0][0]
+        rm_acct = RemoveAccountPopup(username=username)
         rm_acct.bind(on_dismiss=self.refresh)
         rm_acct.open()
 
     def reset_account(self):
-        reset_acct = ResetAccountPopup(accounts=self.accounts)
+        selected_item = self.dv.dv.get_selected_items()
+        username = '' if not len(selected_item) else selected_item[0][0]
+        reset_acct = ResetAccountPopup(
+            username=username, accounts=self.accounts)
         reset_acct.bind(on_dismiss=self.refresh)
         reset_acct.open()
 

@@ -37,7 +37,8 @@ class GpaCardsPopup(Popup):
         AsyncRequest(url, params=params, on_success=self.show_gpa_cards, on_failure=self.show_error)
 
     def _show_gpa_cards(self, resp):
-        from sms import reports
+        from sms import sm
+        reports = sm.get_screen('reports')
         data = resp.json()
         tab_title = self.ids['level'].text + ' Level Gpa Card'
         gpa_cards_view = GpaCardsView()

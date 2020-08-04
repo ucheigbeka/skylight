@@ -202,6 +202,6 @@
         Button:
             size_hint: .1, .1
             pos_hint: {'center_x': .5}
-            disabled: root.max_credits < root.credits_to_register
+            disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
             text: 'Register'
             on_press: root.register_courses()
