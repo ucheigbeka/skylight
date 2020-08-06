@@ -1,7 +1,9 @@
 import os
 from base64 import b64encode
 from hashlib import md5
+from kivy.app import App
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.properties import StringProperty
 
 from sms import urlTo, store_token, set_title
@@ -34,6 +36,8 @@ class SigninWindow(FormTemplate):
     username = StringProperty()
     password = StringProperty()
 
+    title = 'Login'
+
     def signin(self):
         url = urlTo('login')
         token = tokenize(self.username + ':' + self.password)
@@ -56,9 +60,10 @@ class SigninWindow(FormTemplate):
         token, title = data['token'], data['title']
         store_token(token)
         set_title(title)
-        self.manager.title = title
-        self.manager.transition.direction = 'left'
-        self.manager.current = 'main_page'
+
+        root = App.get_running_app().root
+        root.title = title
+        Clock.schedule_once(root.login)
 
     def auth_error(self, resp):
         ErrorPopup('Invalid username or password')
