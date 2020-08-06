@@ -1,5 +1,4 @@
 import os
-from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
@@ -37,16 +36,15 @@ class GpaCardsPopup(Popup):
         AsyncRequest(url, params=params, on_success=self.show_gpa_cards, on_failure=self.show_error)
 
     def _show_gpa_cards(self, resp):
-        from sms import sm
-        reports = sm.get_screen('reports')
+        from sms import root
+        reports = root.sm.get_screen('reports')
         data = resp.json()
         tab_title = self.ids['level'].text + ' Level Gpa Card'
         gpa_cards_view = GpaCardsView()
         gpa_cards_view.set_data(data)
         reports.generate_report([gpa_cards_view], tab_title)
         self.dismiss()
-        app = App.get_running_app()
-        app.root.current = 'reports'
+        root.sm.current = 'reports'
 
     def show_gpa_cards(self, resp):
         Clock.schedule_once(lambda dt: self._show_gpa_cards(resp))

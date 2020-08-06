@@ -1,6 +1,5 @@
 import os
 from threading import Thread
-from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 
@@ -25,14 +24,13 @@ class StudentUpdatePopup(Popup):
         Thread(target=self._generate_result_update, args=(resp,)).start()
 
     def _generate_result_update(self, resp):
-        from sms import sm
-        reports = sm.get_screen('reports')
+        from sms import root
+        reports = root.sm.get_screen('reports')
         screens = generate_preview_screens(resp)
         tab_title = self.ids['mat_no'].text
         reports.generate_report(screens, tab_title)
         self.dismiss()
-        app = App.get_running_app()
-        app.root.current = 'reports'
+        root.sm.current = 'reports'
 
     def show_error(self, resp):
         pass
