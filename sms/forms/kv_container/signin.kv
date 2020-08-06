@@ -3,90 +3,29 @@
     password: pwd.text
 
     BoxLayout:
-        id: main
         orientation: "vertical"
         spacing: 10
-        space_x: self.size[0]/3
+        size_hint: 1/3., .3
+        pos_hint: {'center_x': .5, 'center_y': .7}
 
-        BoxLayout:
-            pos_hint: {'top': 1}
-            size_hint_y: .2
-            height: 80
-            orientation: 'vertical'
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.20)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-            BoxLayout:
-                size_hint_y: .12
-
-                Label:
-                    text: "Department of Mechanical Engineering"
-                    bold: True
-                    halign: 'center'
-                    font_size: 35
-                    size_hint_x: .9
-
-                ImageButton:
-                    size_hint_x: .1
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
-                    canvas.before:
-                        Color:
-                            rgba: (0,0,0,.10)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-                    on_press: app.get_running_app().stop()
-
-
-            Label:
-                text: "University of Benin, Nigeria"
-                halign: 'center'
-                font_size: 30
-                size_hint_y: .08
-
-
-        BoxLayout:
-            pos_hint: {'bottom': 1}
-            size_hint_y: .8
-            orientation: "vertical"
-            padding: main.space_x, 10
-            BoxLayout:
-                orientation: "vertical"
-                spacing: 10
-                size_hint_y: None
-                height: 150
-
-                Label:
-                    id: sp
-                    size_hint_y: None
-                    height: 60
-
-                TextInput:
-                    id: username
-                    hint_text: "Username"
-                    multiline: False
-                    focus: True
-                    on_text_validate: pwd.focus = True
-                TextInput:
-                    id: pwd
-                    hint_text: "Password"
-                    multiline: False
-                    password: True
-                    on_text_validate: root.get_session_key()
-            Label:
-                id: sp
-                size_hint_y: None
-                height: 40
-            Button:
-                text: "Sign In"
-                size_hint_y: None
-                height: 40
-                background_color: (0,0,0,.80)
-                background_normal: ''
-                on_press: root.get_session_key()
-            Label:
-                id: sp
+        CustomTextInput:
+            id: username
+            size_hint_x: 1
+            hint_text: "Username"
+            focus: True
+            on_text_validate: pwd.focus = True
+        CustomTextInput:
+            id: pwd
+            size_hint_x: 1
+            hint_text: "Password"
+            password: True
+            on_text_validate: root.get_session_key()
+        Label:
+            size_hint_y: None
+            height: dp(20)
+        MenuButton:
+            text: "Sign In"
+            size_hint_y: 1
+            background_color: (0,0,0,.80)
+            background_normal: ''
+            on_press: root.get_session_key()

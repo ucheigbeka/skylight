@@ -99,95 +99,70 @@
 
 <CourseManagement>:
     BoxLayout:
-        orientation: 'vertical'
+        padding: dp(10)
+
+        DataViewer2:
+            id: dv2
+            cols: 8
+            weightings: [.1, .36, .07, .07, .1, .1, .1, .07]
+            headers: ['Course code', 'Course title', 'Course credit', 'Semester', 'Teaching dept', 'Start date', 'End date', 'Optional']
+            _data: root._data
 
         BoxLayout:
-            size_hint_y: None
-            height: dp(50)
-            canvas.before:
-                Color:
-                    rgba: (0, 0, 0, .4)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            Label:
-                text: 'Course Management'
-                font_size: sp(20)
-                halign: 'center'
-                valign: 'middle'
-                markup: True
-                size_hint_x: .9
-
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'admin'
-
-        BoxLayout:
-            padding: [dp(10), dp(10)]
-            DataViewer2:
-                id: dv2
-                cols: 8
-                weightings: [.1, .36, .07, .07, .1, .1, .1, .07]
-                headers: ['Course code', 'Course title', 'Course credit', 'Semester', 'Teaching dept', 'Start date', 'End date', 'Optional']
-                _data: root._data
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_x: .25
-                RelativeLayout:
-                    BoxLayout:
-                        orientation: 'vertical'
-                        size_hint: None, None
-                        pos_hint: {'center_x': .5, 'center_y': .5}
-                        size: self.minimum_size
-                        CustomSpinner:
-                            id: lvl_spinner
-                            values: ['100 level courses', '200 level courses', '300 level courses', '400 level courses', '500 level courses']
-                            on_text: root.get_course_details()
-                            size_hint_y: None
-                            size: dp(200), dp(60)
-                        CustomSpinner:
-                            id: session_spinner
-                            text: 'Current session'
-                            values: ['Current session', 'All sessions']
-                            on_text: root.get_course_details()
-                            size_hint_y: None
-                            size: dp(200), dp(60)
-                RelativeLayout:
-                    BoxLayout:
-                        orientation: 'vertical'
+            orientation: 'vertical'
+            size_hint_x: .25
+            RelativeLayout:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: None, None
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    size: self.minimum_size
+                    CustomSpinner:
+                        id: lvl_spinner
+                        values: ['100 level courses', '200 level courses', '300 level courses', '400 level courses', '500 level courses']
+                        on_text: root.get_course_details()
                         size_hint_y: None
-                        height: dp(200)
-                        pos_hint: {'center_x': .5, 'center_y': .5}
-                        MenuButton:
-                            text: 'Update'
-                            disabled: not(cbox.active)
-                            on_press: root.update_courses()
-                        MenuButton:
-                            text: 'Add course'
-                            on_press: root.add_course()
-                        MenuButton:
-                            text: 'Remove course'
-                            on_press: root.remove_course()
-                RelativeLayout:
-                    BoxLayout:
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 0, .2
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        size: dp(200), dp(60)
+                    CustomSpinner:
+                        id: session_spinner
+                        text: 'Current session'
+                        values: ['Current session', 'All sessions']
+                        on_text: root.get_course_details()
+                        size_hint_y: None
+                        size: dp(200), dp(60)
+            RelativeLayout:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(200)
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    MenuButton:
+                        text: 'Update'
+                        disabled: not(cbox.active)
+                        on_press: root.update_courses()
+                    MenuButton:
+                        text: 'Add course'
+                        on_press: root.add_course()
+                    MenuButton:
+                        text: 'Remove course'
+                        on_press: root.remove_course()
+            RelativeLayout:
+                BoxLayout:
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, .2
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    size_hint: None, None
+                    size: self.minimum_size
+                    CustomLabel:
+                        text: 'Edit'
+                        valign: 'middle'
+                        size_hint_y: None
+                        height: dp(100)
+                    CheckBox:
+                        id: cbox
                         size_hint: None, None
-                        size: self.minimum_size
-                        CustomLabel:
-                            text: 'Edit'
-                            valign: 'middle'
-                            size_hint_y: None
-                            height: dp(100)
-                        CheckBox:
-                            id: cbox
-                            size_hint: None, None
-                            size: dp(70), dp(100)
+                        size: dp(70), dp(100)

@@ -52,35 +52,13 @@
     second_sem_view: second_sem_view
     BoxLayout:
         orientation: 'vertical'
-        BoxLayout:
-            canvas.before:
-                Color:
-                    rgba: (0, 0, 0, .4)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            size_hint_y: None
-            height: dp(50)
-            Label:
-                text: 'COURSE REGISTRATION FORM'
-                font_size: sp(20)
-                halign: 'center'
-                valign: 'middle'
-                size_hint_x: .9
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'main_page'
-
+        padding: dp(10)
         BoxLayout:
             size_hint_y: None
             height: grid.height
             GridLayout:
                 id: grid
                 cols: 2
-                padding: dp(20)
                 spacing: [dp(10), dp(5)]
                 size_hint: (.5, None)
                 height: self.minimum_height
@@ -177,9 +155,9 @@
                 size_hint_x: .3
 
         BoxLayout:
+            spacing: dp(10)
             BoxLayout:
                 orientation: 'vertical'
-                padding: [dp(10), dp(0)]
                 Label:
                     text: 'FIRST SEMESTER'
                     text_size: self.size
@@ -190,7 +168,6 @@
                     id: first_sem_view
             BoxLayout:
                 orientation: 'vertical'
-                padding: [dp(10), dp(0)]
                 Label:
                     text: 'SECOND SEMESTER'
                     text_size: self.size

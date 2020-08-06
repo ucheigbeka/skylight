@@ -2,34 +2,8 @@
     mat_no: mat_no.text
     BoxLayout:
         orientation: 'vertical'
-        padding_x: 10
-
+        padding_x: dp(10)
         BoxLayout:
-            size_hint_y: None
-            height: 50
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.4)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            Label:
-                text: 'Personal Information'
-                font_size: 20
-                halign: 'center'
-                valign: 'middle'
-                markup: True
-                size_hint_x: .9
-
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'main_page'
-
-        BoxLayout:
-            padding: 10
 
             ScrollView:
                 do_scroll: True
@@ -37,11 +11,11 @@
                 GridLayout:
                     id: grid
                     cols: 2
-                    padding: 20
+                    padding: dp(20)
                     size_hint: (.4, None)
                     height: self.minimum_height
                     spacing: (10, 5)
-                    row_default_height: 30
+                    row_default_height: dp(30)
                     row_force_default: True
                     pos_hint: {'top': 1}
                     CustomLabel:

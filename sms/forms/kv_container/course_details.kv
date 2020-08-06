@@ -1,93 +1,78 @@
 <CourseDetails>:
     BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint_y: None
-            height: 50
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.4)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            Label:
-                text: 'Course Details'
-                font_size: 20
-                halign: 'center'
-                valign: 'middle'
-                size_hint_x: .9
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'main_page'
-
-        BoxLayout:
-            GridLayout:
-                cols: 2
-                padding: 20
-                size_hint: (.5, None)
-                height: self.minimum_height
-                spacing: (10, 5)
-                row_default_height: 30
-                row_force_default: True
-                pos_hint: {'top': 1}
-                CustomLabel:
-                    text: 'Course code'
-                BoxLayout:
-                    CustomTextInput:
-                        id: course_code
-                        max_length: 6
-                        width: 100
-                    ImageButton:
-                        size_hint_x: None
-                        width: 50
-                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
-                        on_press: root.search()
-                    ImageButton:
-                        size_hint_x: None
-                        width: 50
-                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
-                        on_press: root.clear_fields()
-                CustomLabel:
-                    text: 'Course title'
+        padding: dp(10)
+        GridLayout:
+            cols: 2
+            size_hint: (.5, None)
+            height: self.minimum_height
+            spacing: (dp(10), dp(5))
+            row_default_height: dp(30)
+            row_force_default: True
+            pos_hint: {'top': 1}
+            CustomLabel:
+                text: 'Course code'
+                halign: 'left'
+            BoxLayout:
                 CustomTextInput:
-                    id: course_title
-                CustomLabel:
-                    text: 'Course credit'
-                CustomTextInput:
-                    id: course_credit
-                    max_length: 1
-                    width: 100
-                CustomLabel:
-                    text: 'Course semester'
-                CustomSpinner:
-                    id: course_semester
-                    values: ['First', 'Second']
-                CustomLabel:
-                    text: 'Course level'
-                CustomSpinner:
-                    id: course_level
-                    values: ['100', '200', '300', '400', '500']
-                CustomLabel:
-                    text: 'Teaching department'
-                CustomSpinner:
-                    id: teaching_dept
-                    values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
-                CustomLabel:
-                    text: 'Start date'
-                CustomTextInput:
-                    id: start_date
-                    width: 100
-                CustomLabel:
-                    text: 'End date'
-                CustomTextInput:
-                    id: end_date
-                    width: 100
-                CustomLabel:
-                    text: 'Optional'
-                CustomTextInput:
-                    id: options
-                    width: 50
-            FloatLayout
+                    id: course_code
+                    max_length: 6
+                    width: dp(100)
+                ImageButton:
+                    size_hint_x: None
+                    width: dp(50)
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                    on_press: root.search()
+                ImageButton:
+                    size_hint_x: None
+                    width: dp(50)
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                    on_press: root.clear_fields()
+            CustomLabel:
+                text: 'Course title'
+                halign: 'left'
+            CustomTextInput:
+                id: course_title
+            CustomLabel:
+                text: 'Course credit'
+                halign: 'left'
+            CustomTextInput:
+                id: course_credit
+                max_length: 1
+                width: dp(100)
+            CustomLabel:
+                text: 'Course semester'
+                halign: 'left'
+            CustomSpinner:
+                id: course_semester
+                values: ['First', 'Second']
+            CustomLabel:
+                text: 'Course level'
+                halign: 'left'
+            CustomSpinner:
+                id: course_level
+                values: ['100', '200', '300', '400', '500']
+            CustomLabel:
+                text: 'Teaching department'
+                halign: 'left'
+            CustomSpinner:
+                id: teaching_dept
+                values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+            CustomLabel:
+                text: 'Start date'
+                halign: 'left'
+            CustomTextInput:
+                id: start_date
+                width: dp(100)
+            CustomLabel:
+                text: 'End date'
+                halign: 'left'
+            CustomTextInput:
+                id: end_date
+                width: dp(100)
+            CustomLabel:
+                text: 'Optional'
+                halign: 'left'
+            CustomTextInput:
+                id: options
+                width: dp(50)
+        FloatLayout

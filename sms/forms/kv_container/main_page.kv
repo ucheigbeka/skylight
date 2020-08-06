@@ -1,115 +1,57 @@
 <MainPage>:
     dv: dv
-    FloatLayout:
+    BoxLayout:
+        padding: dp(10)
+
+        FloatLayout:
+            size_hint_x: .6
+            DataViewer2:
+                id: dv
+                cols: 3
+                center_y: .5
+                weightings: [.2, .4, .2]
+                headers: ['User', 'Action', 'Time']
+                _data: root.logs
 
         BoxLayout:
-            pos_hint: {'top': 1}
-            size_hint_y: .2
-            height: dp(80)
             orientation: 'vertical'
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.20)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+            size_hint_x: .4
+
+            MenuButton:
+                text:"Course Details"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'course_details'
+            MenuButton:
+                text: "Personal Data"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'personal_info'
+            MenuButton:
+                text:"Course Registration"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'course_registration'
+            MenuButton:
+                text:"Result Entry"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'result_entry'
+            MenuButton:
+                text:"Reports"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'page_reports'
+            MenuButton:
+                text:"Administrator"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'admin'
+
+            MenuButton:
+                text:"Logs"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'logs'
+
             Label:
-                text: "Department of Mechanical Engineering"
-                bold: True
-                halign: 'center'
-                font_size: sp(35)
-                size_hint_y: .12
-            Label:
-                text: "University of Benin, Nigeria"
-                halign: 'center'
-                font_size: sp(30)
-                size_hint_y: .08
-
-        BoxLayout:
-            pos_hint: {'bottom': 1}
-            size_hint_y: .8
-
-            BoxLayout:
-                size_hint_x: .6
-                orientation: 'vertical'
-
-                Label:
-                    size_hint_y: .09
-
-                CustomLabel:
-                    text: "Menu"
-                    halign: 'right'
-                    valign: 'center'
-                    padding: dp(35), dp(1)
-                    font_size: sp(35)
-                    size_hint: .4, .11
-                    canvas.before:
-                        Color:
-                            rgba: (0, 0, 0, .20)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-
-                Label:
-                    size_hint_y: .09
-
-                DataViewer2:
-                    id: dv
-                    cols: 3
-                    weightings: [.2, .4, .2]
-                    headers: ['User', 'Action', 'Time']
-                    _data: root.logs
-
-                Label:
-                    size_hint_y: .09
-
-            ScrollView:
-                do_scroll: True
-                size_hint_x: .4
-                BoxLayout:
-                    pos_hint: {'right': 1}
-                    orientation: 'vertical'
-
-                    Label:
-                        size_hint_y: .1
-
-                    MenuButton:
-                        text:"Course Details"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'course_details'
-                    MenuButton:
-                        text: "Personal Data"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'personal_info'
-                    MenuButton:
-                        text:"Course Registration"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'course_registration'
-                    MenuButton:
-                        text:"Result Entry"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'result_entry'
-                    MenuButton:
-                        text:"Reports"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'page_reports'
-                    MenuButton:
-                        text:"Administrator"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'admin'
-
-                    MenuButton:
-                        text:"Logs"
-                        on_press:
-                            app.root.transition.direction = 'left'
-                            app.root.current = 'logs'
-
-                    Label:
-                        size_hint_y: .4
-

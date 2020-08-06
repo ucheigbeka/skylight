@@ -140,55 +140,31 @@
 
 <Accounts>:
     dv: dv
+
     BoxLayout:
-        orientation: 'vertical'
+        padding: dp(10)
 
-        BoxLayout:
-            size_hint_y: None
-            height: dp(50)
-            canvas.before:
-                Color:
-                    rgba: (0, 0, 0,.4)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            Label:
-                text: 'Accounts'
-                font_size: sp(20)
-                halign: 'center'
-                valign: 'middle'
-                markup: True
-                size_hint_x: .9
+        DataViewer2:
+            id: dv
+            cols: 4
+            weightings: [.2, .4, .2, .2]
+            headers: ['Username', 'Fullname', 'Title', 'Email']
+            _data: root._data
+            selectable: True
 
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'admin'
-
-        BoxLayout:
-            padding: [dp(10), dp(10)]
-            DataViewer2:
-                id: dv
-                cols: 4
-                weightings: [.2, .4, .2, .2]
-                headers: ['Username', 'Fullname', 'Title', 'Email']
-                _data: root._data
-                selectable: True
-            RelativeLayout:
-                size_hint_x: .2
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: None
-                    height: dp(200)
-                    pos_hint: {'center_x': .5, 'center_y': .5}
-                    MenuButton:
-                        text: 'New account'
-                        on_press: root.new_account()
-                    MenuButton:
-                        text: 'Remove account'
-                        on_press: root.remove_account()
-                    MenuButton:
-                        text: 'Reset account'
-                        on_press: root.reset_account()
+        RelativeLayout:
+            size_hint_x: .2
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(200)
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                MenuButton:
+                    text: 'New account'
+                    on_press: root.new_account()
+                MenuButton:
+                    text: 'Remove account'
+                    on_press: root.remove_account()
+                MenuButton:
+                    text: 'Reset account'
+                    on_press: root.reset_account()

@@ -1,85 +1,64 @@
 <Logs>:
     dv: dv
     BoxLayout:
-        orientation: 'vertical'
+        padding: dp(10)
         BoxLayout:
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.2)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            size_hint_y: None
-            height: 50
-            Label:
-                text: 'LOGS'
-                font_size: 25
-                halign: 'center'
-                valign: 'middle'
-                size_hint_x: .9
-            ImageButton:
-                size_hint_x: .1
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                on_press:
-                    app.root.transition.direction = 'right'
-                    app.root.current = 'main_page'
+            orientation: 'vertical'
+            size_hint_x: .6
+            DataViewer2:
+                id: dv
+                cols: 3
+                weightings: [.25, .5, .25]
+                headers: ['User', 'Action', 'Time']
+                _data: root.displayed_logs
+            BoxLayout
+                size_hint_y: None
+                height: dp(35)
+                Button:
+                    text: '<<'
+                    on_press: root.pan_up()
+                Label:
+                    text: "{} - {} of {}".format(root.view_start, root.view_stop, len(root.ufmt_displayed_logs))
+                Button:
+                    text: '>>'
+                    on_press: root.pan_down()
         BoxLayout:
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_x: .6
-                DataViewer2:
-                    id: dv
-                    cols: 3
-                    weightings: [.25, .5, .25]
-                    headers: ['User', 'Action', 'Time']
-                    _data: root.displayed_logs
-                BoxLayout
-                    size_hint_y: None
-                    height: dp(35)
+            orientation: 'vertical'
+            size_hint_x: .4
+            RelativeLayout:
+                GridLayout:
+                    cols: 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    size_hint: None, None
+                    row_default_height: 50
+                    col_default_width: 200
+                    row_force_default: True
+                    col_force_default: True
+                    size: self.minimum_size
+                    padding: [10, 0]
                     Button:
-                        text: '<<'
-                        on_press: root.pan_up()
+                        text: 'Refresh'
+                        on_press: root.refresh()
+                    Label
                     Label:
-                        text: "{} - {} of {}".format(root.view_start, root.view_stop, len(root.ufmt_displayed_logs))
-                    Button:
-                        text: '>>'
-                        on_press: root.pan_down()
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_x: .4
-                RelativeLayout:
-                    GridLayout:
-                        cols: 1
-                        pos_hint: {'center_x': .5, 'center_y': .5}
-                        size_hint: None, None
-                        row_default_height: 50
-                        col_default_width: 200
-                        row_force_default: True
-                        col_force_default: True
-                        size: self.minimum_size
-                        padding: [10, 0]
-                        Button:
-                            text: 'Refresh'
-                            on_press: root.refresh()
-                        Label
-                        Label:
-                            text: 'Filter'
-                            texture_size: self.size
-                            halign: 'center'
-                            valign: 'middle'
-                            font_size: sp(30)
-                        CustomSpinner:
-                            id: time_spinner
-                            text: 'Time'
-                            values: ['All', 'Last 7 days', 'This month', 'This session']
-                            on_text: root.filter_log()
-                            width: 200
-                        CustomSpinner:
-                            id: users_spinner
-                            text: 'Users'
-                            width: 200
-                            on_text: root.filter_log()
-                TextInput:
-                    id: textview
-                    size_hint_y: None
-                    height: 400
+                        text: 'Filter'
+                        texture_size: self.size
+                        halign: 'center'
+                        valign: 'middle'
+                        font_size: sp(30)
+                    CustomSpinner:
+                        id: time_spinner
+                        text: 'Time'
+                        values: ['All', 'Last 7 days', 'This month', 'This session']
+                        on_text: root.filter_log()
+                        width: 200
+                    CustomSpinner:
+                        id: users_spinner
+                        text: 'Users'
+                        width: 200
+                        on_text: root.filter_log()
+            CustomTextInput:
+                id: textview
+                size_hint: 1, 1
+                multiline: True
+                height: 400

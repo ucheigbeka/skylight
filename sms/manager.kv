@@ -1,9 +1,19 @@
 #:import MenuBar sms.utils.menubar.MenuBar
 
-<Manager>:
+<Root>:
     sm: sm
+    menu_bar: menu_bar
     orientation: 'vertical'
+    Label:
+        # canvas.before:
+        #     BorderImage:
+        #     source: ''
+        size_hint_y: .08
+        text: 'Department of Mechanical Engineering'
+        bold: True
+        font_size: sp(30)
     MenuBar:
-        size_hint_y: .1
-    ScreenManager:
+        id: menu_bar
+        size_hint_y: .08
+    Manager:
         id: sm

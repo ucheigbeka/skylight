@@ -1,80 +1,14 @@
 <PageReports>:
-    FloatLayout:
+    BoxLayout:
+        padding: dp(10)
+
+        Label:
+            size_hint_x: .6
 
         BoxLayout:
-            pos_hint: {'top': 1}
-            size_hint_y: .2
-            height: 80
             orientation: 'vertical'
-            canvas.before:
-                Color:
-                    rgba: (0,0,0,.20)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            BoxLayout:
-                size_hint_y: .12
-
-                Label:
-                    text: "Department of Mechanical Engineering"
-                    bold: True
-                    halign: 'center'
-                    font_size: 35
-                    size_hint_x: .9
-
-                ImageButton:
-                    size_hint_x: .1
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-back-64.png')
-                    on_press: 
-                        app.root.transition.direction = 'right'
-                        app.root.current = 'main_page'
-
+            size_hint_x: .4
+            MenuButton:
+                text: "Students\' Update"
+                on_press: root.open_student_update_popup()
             Label:
-                text: "University of Benin, Nigeria"
-                halign: 'center'
-                font_size: 30
-                size_hint_y: .08
-
-        BoxLayout:
-            pos_hint: {'bottom': 1}
-            size_hint_y: .8
-
-            BoxLayout:
-                size_hint_x: .6
-                orientation: 'vertical'
-
-                Label:
-                    size_hint_y: .09
-
-                CustomLabel:
-                    text: "Reports"
-                    halign: 'right'
-                    valign: 'center'
-                    padding: 35,1
-                    font_size: 35
-                    size_hint_y: .11
-                    size_hint_x: .4
-                    canvas.before:
-                        Color:
-                            rgba: (0,0,0,.20)
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-
-                Label:
-                    size_hint_y: 0.8
-
-            ScrollView:
-                do_scroll: True
-                size_hint_x: .4
-                BoxLayout:
-                    pos_hint: {'right': 1}
-                    orientation: 'vertical'
-
-                    Label:
-                        size_hint_y: .1
-                    MenuButton:
-                        text: "Students\' Update"
-                        on_press: root.open_student_update_popup()
-                    Label:
-                        size_hint_y: .1
