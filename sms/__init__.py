@@ -1,7 +1,6 @@
 import os
 from kivy.lang import Builder
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager
 
 # Backend config
 base_url = 'http://127.0.0.1:1807/api/'
@@ -90,12 +89,13 @@ win_size = Window.size
 Window.minimum_width = win_size[0] * .7
 Window.minimum_height = win_size[1] * .8
 
-from sms.manager import Manager
-sm = Manager()
+from sms.manager import Root
+
+root = Root()
 
 # Load the forms
 # from sms.forms.error import Error
-from sms.forms.signin import SigninWindow
+# from sms.forms.signin import SigninWindow
 # from sms.forms.main_page import MainPage
 # from sms.forms.personalinfo import PersonalInfo
 # from sms.forms.course_details import CourseDetails
@@ -109,7 +109,7 @@ from sms.forms.signin import SigninWindow
 # from sms.forms.course_management import CourseManagement
 
 # sm = ScreenManager()
-sign_in = SigninWindow(name='signin')
+# sign_in = SigninWindow(name='signin')
 # main_page = MainPage(name='main_page')
 # personal_info = PersonalInfo(name='personal_info')
 # course_details = CourseDetails(name='course_details')
@@ -124,7 +124,7 @@ sign_in = SigninWindow(name='signin')
 # course_mgmt = CourseManagement(name='course_mgmt')
 
 # Adds the screens in the order that they would appear
-sm.add_widget(sign_in)
+# sm.add_widget(sign_in)
 # sm.add_widget(main_page)
 # sm.add_widget(personal_info)
 # sm.add_widget(course_details)

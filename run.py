@@ -7,7 +7,7 @@ Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Config.set('kivy', 'exit_on_escape', '0')
 
 from kivy.app import App
-from sms import sm
+from sms import root
 
 
 class StudentManagementSystemApp(App):
@@ -15,7 +15,7 @@ class StudentManagementSystemApp(App):
     icon = 'skylight.png'
 
     def build(self):
-        return sm
+        return root
 
 
 if __name__ == '__main__':
