@@ -4,9 +4,10 @@ from kivy.uix.button import Button
 
 Builder.load_string('''
 <MenuButton>:
-    size_hint_y: .1
     font_size: 18
     background_color: (0, 0, 0, .2)
+    size_hint_y: None
+    height: dp(70)
 ''')
 
 
