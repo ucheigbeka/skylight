@@ -77,6 +77,8 @@ class CourseManagement(FormTemplate):
     course_details = ListProperty()
     original__data = ListProperty()
 
+    title = 'Course Management'
+
     def __init__(self, **kwargs):
         super(CourseManagement, self).__init__(**kwargs)
         self.ids['cbox'].bind(active=self.enable_dv_edit)

@@ -143,6 +143,8 @@ class Accounts(FormTemplate):
     _data = ListProperty()
     accounts = ListProperty()
 
+    title = 'Accounts'
+
     def __init__(self, **kwargs):
         super(Accounts, self).__init__(**kwargs)
         self.dv.dv.set_viewclass('DataViewerLabel')

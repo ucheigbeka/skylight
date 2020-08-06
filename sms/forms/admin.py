@@ -10,4 +10,4 @@ Builder.load_file(kv_path)
 
 
 class Administrator(FormTemplate):
-    pass
+    title = 'Administrator'

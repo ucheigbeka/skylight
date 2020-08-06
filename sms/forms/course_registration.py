@@ -131,6 +131,8 @@ class CourseRegistration(FormTemplate):
     max_credits = NumericProperty()
     is_old_course_reg = BooleanProperty(False)
 
+    title = 'Course Registration'
+
     def __init__(self, **kwargs):
         super(CourseRegistration, self).__init__(**kwargs)
         self.ids.reg_session.text = str(get_current_session())
@@ -243,11 +245,3 @@ class CourseRegistration(FormTemplate):
     def show_reg_error(self, resp):
         # Should probably be more explicit
         ErrorPopup('Error registering courses')
-
-
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
-    from kivy.core.window import Window
-
-    Window.maximize()
-    runTouchApp(CourseRegistration())

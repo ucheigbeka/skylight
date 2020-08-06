@@ -16,6 +16,7 @@ Builder.load_file(kv_path)
 
 class PersonalInfo(FormTemplate):
     mat_no = StringProperty()
+    title = 'Personal Information'
 
     def add(self, *args):
         data = dict()

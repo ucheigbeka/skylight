@@ -13,9 +13,12 @@ Builder.load_file(kv_path)
 class Reports(FormTemplate):
     tabbed_panel = ObjectProperty(None)
 
+    title = 'Reports'
+
     def on_enter(self, *args):
         tabs = self.tabbed_panel.tab_list
-        self.tabbed_panel.switch_to(tabs[0])
+        if tabs:
+            self.tabbed_panel.switch_to(tabs[0])
 
     def generate_report(self, screens, tab_title):
         self.add_screens(tab_title, screens)

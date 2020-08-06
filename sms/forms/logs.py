@@ -46,6 +46,8 @@ class Logs(FormTemplate):
     view_stop = NumericProperty(1)
     dv = ObjectProperty(None)
 
+    title = 'Logs'
+
     def __init__(self, **kwargs):
         self.view_start = 1
         self.view_stop = 1

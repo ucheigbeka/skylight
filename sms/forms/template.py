@@ -1,5 +1,6 @@
 import os
 from kivy.lang import Builder
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 
 form_root = os.path.dirname(__file__)
@@ -9,6 +10,7 @@ Builder.load_file(kv_path)
 
 class FormTemplate(Screen):
     form_root = form_root
+    title = StringProperty('')
 
     def clear_fields(self):
         pass

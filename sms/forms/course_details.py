@@ -12,6 +12,8 @@ Builder.load_file(kv_path)
 
 
 class CourseDetails(FormTemplate):
+    title = 'Course Details'
+
     def search(self, *args):
         course_code = self.ids['course_code'].text
         course_code = course_code[:3].upper() + course_code[3:]

@@ -9,4 +9,4 @@ Builder.load_file(kv_path)
 
 
 class Error(FormTemplate):
-    pass
+    title = 'Error'

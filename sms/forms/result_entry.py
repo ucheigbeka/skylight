@@ -58,6 +58,8 @@ class LoadPopup(Popup):
 class Result_Entry(FormTemplate):
     edv = ObjectProperty(None)
 
+    title = 'Result Entry'
+
     def __init__(self, **kwargs):
         super(Result_Entry, self).__init__(**kwargs)
         pass

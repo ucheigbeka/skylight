@@ -13,6 +13,7 @@ Builder.load_file(kv_path)
 class MainPage(FormTemplate):
     logs = ListProperty()
     dv = ObjectProperty(None)
+    title = 'Home'
 
     def __init__(self, **kwargs):
         super(MainPage, self).__init__(**kwargs)

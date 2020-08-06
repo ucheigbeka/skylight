@@ -10,6 +10,8 @@ Builder.load_file(kv_path)
 
 
 class PageReports(FormTemplate):
+    title = 'Page Reports'
+
     def open_student_update_popup(self):
         StudentUpdatePopup().open()
 
