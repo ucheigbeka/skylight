@@ -113,7 +113,6 @@ if __name__ == '__main__':
                 focus: True
                 font_size: 17
                 padding: 8
-        
             Label:
                 text: 'New HOD'
             TextInput:
@@ -121,7 +120,6 @@ if __name__ == '__main__':
                 focus: True
                 font_size: 17
                 padding: 8
-        
             Label:
                 text: 'New Exam Officer'
             TextInput:
