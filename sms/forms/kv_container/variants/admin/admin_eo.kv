@@ -1,0 +1,16 @@
+<Administrator>:
+    BoxLayout:
+        padding: dp(10)
+
+        Label:
+            size_hint_x: .6
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: .4
+            MenuButton:
+                text:"Manage courses"
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'course_mgmt'
+            Label:

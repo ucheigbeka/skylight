@@ -8,7 +8,7 @@ base_url = 'http://127.0.0.1:1807/api/'
 
 # Frontend config
 MODE = 'DEBUG'
-token, title = '', ''
+token, title, username = '', '', ''
 kv_surfix = ''
 
 titles = [
@@ -31,13 +31,14 @@ def get_token():
     return token
 
 
-def store_token(_token):
-    global token
+def get_username():
+    return username
+
+
+def set_details(_username, _token, _title):
+    global username, token, title
+    username = _username
     token = _token
-
-
-def set_title(_title):
-    global title, kv_surfix
     title = _title
     set_suffix()
 
