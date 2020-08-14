@@ -1,6 +1,8 @@
 import os
 from kivy.lang import Builder
 from kivy.properties import StringProperty
+from kivy.uix.textinput import TextInput
+from kivy.uix.spinner import Spinner
 from kivy.uix.screenmanager import Screen
 
 form_root = os.path.dirname(__file__)
@@ -13,7 +15,9 @@ class FormTemplate(Screen):
     title = StringProperty('')
 
     def clear_fields(self):
-        pass
+        for _id in self.ids:
+            if isinstance(self.ids, (TextInput, Spinner)):
+                self.ids[_id].text = ''
 
     def on_leave(self):
         self.clear_fields()
