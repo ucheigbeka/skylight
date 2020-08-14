@@ -100,12 +100,14 @@ class Manager(ScreenManager):
         from sms.forms.course_details import CourseDetails
         from sms.forms.page_reports import PageReports
         from sms.forms.reports import Reports
+        from sms.forms.profile import Profile
 
         screens = {
             'personal_info': PersonalInfo,
             'course_details': CourseDetails,
             'page_reports': PageReports,
-            'reports': Reports
+            'reports': Reports,
+            'profile': Profile
         }
         self.forms_dict.update(screens)
 
@@ -198,7 +200,7 @@ class Root(BoxLayout):
         return
 
     def profile(self, instance):
-        return
+        self.switch_screen('profile')
 
     def logout(self, instance):
         return
