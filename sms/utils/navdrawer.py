@@ -92,11 +92,51 @@ if __name__ == '__main__':
 <ChildWidget1>:
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            text: 'Hello World'
-        Button:
-            text: 'Testing'
-
+        GridLayout:
+            padding: dp(50)
+            spacing: 40
+            cols: 2
+            size_hint: 1, .7
+            row_default_height: dp(40)
+            row_force_default: True
+            Label:
+                text: 'New Vice Chancellor'
+            TextInput:
+                font_size: 17
+                padding: 8
+                multiline: False
+                focus: True
+            Label:
+                text: 'New Dean'
+            TextInput:
+                multiline: False
+                focus: True
+                font_size: 17
+                padding: 8
+            Label:
+                text: 'New HOD'
+            TextInput:
+                multiline: False
+                focus: True
+                font_size: 17
+                padding: 8
+            Label:
+                text: 'New Exam Officer'
+            TextInput:
+                multiline: False
+                focus: True
+                font_size: 17
+                padding: 8
+        FloatLayout:
+            size_hint: 1, .3
+            Button:
+                text: 'Submit'
+                size_hint: None, None
+                size_hint: .3, .3
+                pos_hint: {'x': .35, 'y': .7}
+                font_size: 20
+                background_color: 0,1,0,.5
+                
 <ChildWidget2>
     Label:
         text: 'Project Skylight'
@@ -107,7 +147,7 @@ if __name__ == '__main__':
         ''')
 
     nav_drawer = NavigationDrawer()
-    nav_drawer.add_screen('Main', ChildWidget1)
+    nav_drawer.add_screen('New Admin Data', ChildWidget1)
     nav_drawer.add_screen('Main2', ChildWidget2)
     nav_drawer.add_screen('Main3', ChildWidget3)
 
