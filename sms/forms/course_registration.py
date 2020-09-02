@@ -6,7 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
     ObjectProperty, BooleanProperty
 
-from sms import urlTo, get_current_session
+from sms import urlTo, get_current_session, get_assigned_level
 from sms.forms.template import FormTemplate
 from sms.utils.popups import ErrorPopup
 from sms.utils.asyncrequest import AsyncRequest
@@ -99,13 +99,13 @@ class CourseRegView(BoxLayout):
         self.add_field()
 
     def get_courses_for_reg(self):
-        courses = [[code_wid.text] for code_wid, _, _ in self.fields[:-1]]
+        courses = [[code_wid.text, title_wid.text, int(credits_wid.text)] for code_wid, title_wid, credits_wid in self.fields[:-1]]
         return courses
 
     def insert_compulsory_courses(self, compulsory_courses):
         self.clear()
         self.num_compulsory_courses = len(compulsory_courses)
-        for code, title, credit in compulsory_courses:
+        for code, title, credit, _ in compulsory_courses:
             self.add_field(bind_spinner=False)
 
             course_code_spinner = self.fields[-1][0]
@@ -135,30 +135,31 @@ class CourseRegistration(FormTemplate):
 
     def __init__(self, **kwargs):
         super(CourseRegistration, self).__init__(**kwargs)
-        self.ids.reg_session.text = str(get_current_session())
         self.first_sem_view.bind(total_credits=self.set_credits_to_register)
         self.second_sem_view.bind(total_credits=self.set_credits_to_register)
+
+    def setup(self):
+        self.ids.mat_no.text = 'ENG'
+        self.ids.reg_session.text = str(get_current_session())
         self.data = dict()
+
+        assigned_level = get_assigned_level()
+        if assigned_level:
+            self.ids['cur_level'].values = [str(assigned_level)]
+        else:
+            self.ids['cur_level'].values = [str(level) for level in range(100, 900, 100)]
 
     def set_credits_to_register(self, *args):
         self.credits_to_register = self.first_sem_view.total_credits + self.second_sem_view.total_credits
 
     def search(self):
         acad_session = int(self.ids.reg_session.text)
-        if acad_session == get_current_session():
-            url = urlTo('course_reg_new')
-            param = {
-                'mat_no': self.ids.mat_no.text,
-                'acad_session': acad_session
-            }
-            AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
-        else:
-            url = urlTo('course_reg')
-            param = {
-                'mat_no': self.ids.mat_no.text,
-                'acad_session': acad_session
-            }
-            AsyncRequest(url, on_success=self.populate_fields_for_old_reg, on_failure=self.show_error, params=param)    
+        url = urlTo('course_reg')
+        param = {
+            'mat_no': self.ids.mat_no.text,
+            'acad_session': acad_session
+        }
+        AsyncRequest(url, on_success=self.populate_fields_for_old_reg, on_failure=self.check_query_session, params=param)
 
     def populate_fields(self, resp):
         self.disable_entries = True
@@ -177,9 +178,9 @@ class CourseRegistration(FormTemplate):
         first_sem_courses = choices['first_sem']
         second_sem_courses = choices['second_sem']
 
-        for code, title, credit in first_sem_courses:
+        for code, title, credit, _, _ in first_sem_courses:
             FIRST_SEM_COURSES[code] = [title, credit]
-        for code, title, credit in second_sem_courses:
+        for code, title, credit, _, _ in second_sem_courses:
             SECOND_SEM_COURSES[code] = [title, credit]
 
         self.first_sem_view.course_codes = FIRST_SEM_COURSES.keys()
@@ -208,36 +209,44 @@ class CourseRegistration(FormTemplate):
         self.is_old_course_reg = True
 
     def register_courses(self):
-        self.data['fees_status'] = self.ids['fees_stat'].text
+        if not self.data:
+            ErrorPopup('Registration error')
+            return
+        if not self.validate_inputs:
+            ErrorPopup('Fees status field is empty')
+            return
+        self.data['fees_status'] = int(self.ids['fees_stat'].text == 'Paid')
         courses = {
             'first_sem': self.first_sem_view.get_courses_for_reg(),
             'second_sem': self.second_sem_view.get_courses_for_reg()
         }
         self.data['courses'] = courses
         url = urlTo('course_reg')
-        AsyncRequest(url, data=self.data, method='POST', on_failure=self.show_reg_error, on_success=self.clear)
+        AsyncRequest(url, data=self.data, method='POST', on_failure=self.show_reg_error, on_success=self.clear_fields)
 
-    def clear(self):
+    def clear_fields(self, *args):
         global FIRST_SEM_COURSES, SECOND_SEM_COURSES
+        super(CourseRegistration, self).clear_fields()
 
         self.disable_entries = False
-        fields = list(self.ids.keys())
-        fields.remove('passport')
-        fields.remove('first_sem_view')
-        fields.remove('second_sem_view')
-        for field in fields:
-            self.ids[field].text = ''
-        self.ids.reg_session.text = str(get_current_session())
-        self.ids.mat_no.text = 'ENG'
-
         self.first_sem_view.clear()
         self.second_sem_view.clear()
         self.max_credits = 0
-        self.data = dict()
         self.is_old_course_reg = False
 
         FIRST_SEM_COURSES = {}
         SECOND_SEM_COURSES = {}
+
+    def check_query_session(self, resp):
+        acad_session = int(self.ids.reg_session.text)
+        if acad_session == get_current_session():
+            url = urlTo('course_reg_new')
+            param = {
+                'mat_no': self.ids.mat_no.text
+            }
+            AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
+        else:
+            self.show_error(resp)
 
     def show_error(self, resp):
         ErrorPopup('Record not found')
