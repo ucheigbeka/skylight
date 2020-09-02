@@ -1,0 +1,33 @@
+<LoadPopupContent>:
+    orientation: 'vertical'
+    Label:
+    Button:
+        text: 'Load'
+
+<ResultEntryMultiple>:
+    edv: edv
+    BoxLayout:
+        padding: dp(10)
+        ExtendableDataViewer2:
+            id: edv
+            cols: 4
+            weightings: [1 / self.cols] * self.cols
+            widths: [200] * self.cols
+            headers: ['Course code', 'Session', 'Matno', 'Score']
+            selectable: True
+            multiselection: True
+        FloatLayout:
+            BoxLayout:
+                orientation: 'vertical'
+                top: 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                size_hint: None, None
+                size: dp(400), dp(200)
+                MenuButton:
+                    text:"Load"
+                    on_press:
+                        root.show_load()
+                MenuButton:
+                    text:"Upload"
+                    on_press:
+                        root.upload()

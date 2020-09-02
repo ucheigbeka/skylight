@@ -71,6 +71,10 @@ def get_kv_path(fname):
         return os.path.join(fpath_base, 'variants', fname, fname + kv_surfix)
 
 
+def get_assigned_level():
+    return root.sm.assigned_level
+
+
 from sms.utils.asyncrequest import AsyncRequest
 
 
@@ -93,48 +97,3 @@ Window.minimum_height = win_size[1] * .8
 from sms.manager import Root
 
 root = Root()
-
-# Load the forms
-# from sms.forms.error import Error
-# from sms.forms.signin import SigninWindow
-# from sms.forms.main_page import MainPage
-# from sms.forms.personalinfo import PersonalInfo
-# from sms.forms.course_details import CourseDetails
-# from sms.forms.page_reports import PageReports
-# from sms.forms.course_registration import CourseRegistration
-# from sms.forms.result_entry import Result_Entry
-# from sms.forms.admin import Administrator
-# from sms.forms.logs import Logs
-# from sms.forms.reports import Reports
-# from sms.forms.accounts import Accounts
-# from sms.forms.course_management import CourseManagement
-
-# sm = ScreenManager()
-# sign_in = SigninWindow(name='signin')
-# main_page = MainPage(name='main_page')
-# personal_info = PersonalInfo(name='personal_info')
-# course_details = CourseDetails(name='course_details')
-# course_reg = CourseRegistration(name='course_registration')
-# reports = Reports(name='reports')
-# page_reports = PageReports(name='page_reports')
-# error = Error(name='error')
-# admin = Administrator(name="admin")
-# result_entry = Result_Entry(name='result_entry')
-# logs = Logs(name="logs")
-# accounts = Accounts(name='accounts')
-# course_mgmt = CourseManagement(name='course_mgmt')
-
-# Adds the screens in the order that they would appear
-# sm.add_widget(sign_in)
-# sm.add_widget(main_page)
-# sm.add_widget(personal_info)
-# sm.add_widget(course_details)
-# sm.add_widget(course_reg)
-# sm.add_widget(result_entry)
-# sm.add_widget(page_reports)
-# sm.add_widget(error)
-# sm.add_widget(admin)
-# sm.add_widget(logs)
-# sm.add_widget(reports)
-# sm.add_widget(accounts)
-# sm.add_widget(course_mgmt)
