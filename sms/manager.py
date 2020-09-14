@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, NoTransition, SlideTransition
 from kivy.properties import StringProperty, ListProperty,\
-    DictProperty, ObjectProperty
+    DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
 from sms import titles, MODE
 from sms.utils.menubar import LoginActionView, MainActionView
@@ -18,6 +18,9 @@ Builder.load_file(kv_path)
 
 
 class Manager(ScreenManager):
+    is_admin = BooleanProperty(False)
+    assigned_level = NumericProperty(0)
+
     from sms.forms.error import Error
 
     forms_dict = DictProperty({
@@ -42,6 +45,10 @@ class Manager(ScreenManager):
             self.set_screens_for_secretary
         ]
         funcs[idx]()
+
+        if idx in range(2, 8):
+            self.assigned_level = (idx - 1) * 100
+        print('Assigned level:', self.assigned_level)
 
     # def on_current(self, instance, value):
     #     previous_screen = self.sm.current_screen
@@ -72,6 +79,7 @@ class Manager(ScreenManager):
             'accounts': Accounts
         }
         self.forms_dict.update(screens)
+        self.is_admin = 1
 
     def set_screens_for_exam_officer(self):
         from sms.forms.admin import Administrator
@@ -83,15 +91,22 @@ class Manager(ScreenManager):
             'course_mgmt': CourseManagement
         }
         self.forms_dict.update(screens)
+        self.is_admin = 2
 
     def set_screens_for_course_adviser(self):
         from sms.forms.course_registration import CourseRegistration
-        from sms.forms.result_entry import Result_Entry
+        from sms.forms.result_entry_menu import ResultEntryMenu
+        from sms.forms.result_entry_single import ResultEntrySingle
+        from sms.forms.result_entry_multiple import ResultEntryMultiple
+        from sms.forms.result_entry import ResultEntry
 
         self.set_screens_for_secretary()
         screens = {
             'course_registration': CourseRegistration,
-            'result_entry': Result_Entry
+            'result_entry_menu': ResultEntryMenu,
+            'result_entry_single': ResultEntrySingle,
+            'result_entry_multiple': ResultEntryMultiple,
+            'result_entry': ResultEntry
         }
         self.forms_dict.update(screens)
 
@@ -121,13 +136,15 @@ class Root(BoxLayout):
 
     def __init__(self, **kwargs):
         from sms.forms.signin import SigninWindow
+        # from sms.forms.result_entry import ResultEntry
 
         super(Root, self).__init__(**kwargs)
 
         self.set_menu_view(LoginActionView)
         self.view_ins.title = 'Login'
-        self.sm.add_widget(SigninWindow(name='signin'))
 
+        # self.sm.add_widget(ResultEntry(name='r'))
+        self.sm.add_widget(SigninWindow(name='signin'))
         self.sm.bind(current=self.set_menu_title)
 
     def on_title(self, instance, value):
