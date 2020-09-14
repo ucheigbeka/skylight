@@ -40,7 +40,7 @@ class Profile(FormTemplate):
 
     def update(self):
         if not self.ids['password'].text:
-            ErrorPopup('Password field can\' be empyty')
+            ErrorPopup('Password field can\'t be empty')
             return
         if ':' in self.ids['password'].text:
             ErrorPopup('Password contains ":"')
