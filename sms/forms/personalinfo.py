@@ -3,7 +3,7 @@ import json
 from kivy.lang import Builder
 from kivy.properties import StringProperty
 
-from sms import urlTo
+from sms import urlTo, get_assigned_level
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, SuccessPopup
@@ -13,18 +13,41 @@ form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'personalinfo.kv')
 Builder.load_file(kv_path)
 
+MODES_OF_ENTRY = ['PUTME', 'DE (200)', 'DE (300)']
+
 
 class PersonalInfo(FormTemplate):
-    mat_no = StringProperty()
     title = 'Personal Information'
+    profile_icon = StringProperty(os.path.join(
+        form_root, 'resc', 'icons', 'icons8-edit-profile-480.png'))
 
-    def add(self, *args):
+    def setup(self):
+        self.ids.mat_no.text = 'ENG'
+        self.ids.passport.source = self.profile_icon
+        self.ids['dob'].text = ''
+        self.ids['btn_positive'].text = 'Add'
+        if not self.manager.is_admin:
+            assigned_level = get_assigned_level()
+            self.ids['level'].text = str(assigned_level)
+            if assigned_level in range(100, 400):
+                self.ids['mode_of_entry'].values = [MODES_OF_ENTRY[(assigned_level // 100) - 1]]
+            else:
+                self.ids['mode_of_entry'].disabled = True
+                self.ids['btn_positive'].disabled = True
+        elif self.manager.is_admin == 2:
+            self.ids['level'].values = [str(i) for i in range(100, 400, 100)]
+            self.ids['mode_of_entry'].values = MODES_OF_ENTRY
+        else:
+            self.ids['level'].values = [str(i) for i in range(100, 1000, 100)]
+            self.ids['mode_of_entry'].values = MODES_OF_ENTRY
+
+    def add_update(self):
         data = dict()
         data['mat_no'] = self.ids.mat_no.text
         data['surname'] = self.ids.surname.text.upper()
         data['othernames'] = ' '.join([self.ids.fname.text.capitalize(), self.ids.mname.text.capitalize()])
         try:
-            data['mode_of_entry'] = self.ids.mode_of_entry.values.index(self.ids.mode_of_entry.text) + 1
+            data['mode_of_entry'] = MODES_OF_ENTRY.index(self.ids.mode_of_entry.text) + 1
         except ValueError:
             self.show_input_error()
             return
@@ -38,17 +61,17 @@ class PersonalInfo(FormTemplate):
         data['email_address'] = self.ids.email.text
         data['sponsor_phone_no'] = self.ids.s_phone_no.text
         data['sponsor_email_address'] = self.ids.s_email.text
-        data['grad_stats'] = int(self.ids.grad.text == 'YES')
+        data['grad_status'] = int(self.ids.grad.text == 'YES')
 
         url = urlTo('personal_info')
         AsyncRequest(url, method='POST', data=data, on_success=self.record_added, on_failure=self.show_add_error)
 
-    def cancel(self, *args):
+    def delete(self):
         pass
 
     def search(self, *args):
         url = urlTo('personal_info')
-        param = {'mat_no': self.mat_no}
+        param = {'mat_no': self.ids.mat_no.text}
         AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
 
     def populate_fields(self, resp):
@@ -58,7 +81,7 @@ class PersonalInfo(FormTemplate):
             self.ids.fname.text, self.ids.mname.text = data['othernames'].split()
         else:
             self.ids.fname.text, self.ids.mname.text = str(data['othernames']), ''
-        self.ids.mode_of_entry.text = self.ids.mode_of_entry.values[data['mode_of_entry'] - 1]
+        self.ids.mode_of_entry.text = MODES_OF_ENTRY[data['mode_of_entry'] - 1]
         self.ids.session_admit.text = str(data['session_admitted'])
         self.ids.level.text = str(data['level'])
         self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
@@ -69,7 +92,9 @@ class PersonalInfo(FormTemplate):
         self.ids.email.text = str(data['email_address'])
         self.ids.s_phone_no.text = str(data['sponsor_phone_no'])
         self.ids.s_email.text = str(data['sponsor_email_address'])
-        self.ids.grad.text = self.ids.grad.values[not bool(data['grad_stats'])]
+        self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
+
+        self.ids['btn_positive'].text = 'Update'
 
     def show_error(self, resp):
         ErrorPopup('Record not found')
@@ -98,15 +123,3 @@ class PersonalInfo(FormTemplate):
             self.ids['passport'].source = instance.selected_path
             self.ids['passport'].allow_stretch = True
             self.ids['passport'].keep_ratio = False
-
-    def clear_fields(self):
-        fields = list(self.ids.keys())
-        fields.remove('grid')
-        fields.remove('passport')
-        for field in fields:
-            self.ids[field].text = ''
-        self.ids.mat_no.text = 'ENG'
-        self.ids.passport.source = ''
-
-    def on_leave(self):
-        self.clear_fields()
