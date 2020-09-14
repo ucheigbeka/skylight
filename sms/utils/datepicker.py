@@ -140,6 +140,7 @@ class DatePickerBase(BoxLayout):
 
     def generate_days(self, *args):
         self.reset_bg_color()
+        if not self.year_txt or int(self.year_txt) == 0: return
         monthCalendar = calendar.monthcalendar(
             int(self.year_txt), months.index(self.manager.current) + 1)
 
