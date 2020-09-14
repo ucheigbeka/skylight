@@ -105,7 +105,7 @@ class CourseRegView(BoxLayout):
     def insert_compulsory_courses(self, compulsory_courses):
         self.clear()
         self.num_compulsory_courses = len(compulsory_courses)
-        for code, title, credit, _ in compulsory_courses:
+        for code, title, credit, _, _ in compulsory_courses:
             self.add_field(bind_spinner=False)
 
             course_code_spinner = self.fields[-1][0]
