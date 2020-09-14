@@ -72,7 +72,7 @@
                     max_length: 4
                     input_filter: 'int'
                     width: dp(100)
-                    disabled: root.disable_entries
+                    disabled: False if not root.manager else not (root.manager.is_admin == 1)
                 CustomLabel:
                     text: 'Mat number'
                     halign: 'left'
@@ -81,7 +81,6 @@
                     CustomTextInput:
                         id: mat_no
                         width: dp(125)
-                        text: 'ENG'
                         max_length: 10
                         disabled: root.disable_entries
                     ImageButton:
@@ -93,7 +92,7 @@
                         size_hint_x: None
                         width: dp(50)
                         source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
-                        on_press: root.clear()
+                        on_press: root.clear_fields()
                 CustomLabel:
                     text: 'Surname'
                     halign: 'left'
@@ -111,7 +110,6 @@
                     halign: 'left'
                 CustomSpinner:
                     id: cur_level
-                    values: ['100', '200', '300', '400', '500']
                     disabled: root.disable_entries
                 CustomLabel:
                     text: 'Phone number'
@@ -127,12 +125,14 @@
                 CustomSpinner:
                     id: prob_stat
                     disabled: root.disable_entries
-                    values: ['not on probation', 'on probation']
+                    width: dp(150)
+                    values: ['Not on probation', 'On probation']
                 CustomLabel:
                     text: 'Fees status'
                     halign: 'left'
                 CustomSpinner:
                     id: fees_stat
+                    values: ['Paid', 'Unpaid']
             CustomLabel:
                 text: 'Passport'
                 size_hint: (None, None)
@@ -176,7 +176,7 @@
                     size_hint_y: .1
                 CourseRegView:
                     id: second_sem_view
-        Button:
+        PositiveActionButton:
             size_hint: .1, .1
             pos_hint: {'center_x': .5}
             disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
