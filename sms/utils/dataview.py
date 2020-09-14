@@ -211,7 +211,7 @@ class DataViewerInput(RecycleDataViewBehavior, TextInput):
     def on_text(self, instance, value):
         try:
             self.root._data[self.index][self.col_num] = value
-        except AttributeError:
+        except (AttributeError, IndexError):
             pass
 
     # def on_focus(self, instance, value):
@@ -270,7 +270,10 @@ class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, Recycl
 
     def on_focus(self, instance, value):
         if not value:
-            root = self.parent.parent.parent.dv
+            try:
+                root = self.parent.parent.parent.dv
+            except AttributeError:
+                root = self.parent.parent
             if root.selectable and not root.multiselection and root.selected_indexes:
                 index = root.selected_indexes.pop()
                 root.deselect(index)
@@ -316,7 +319,11 @@ class DataViewer(BoxLayout):
                     width = self.widths[col_num]
                 prop = {'index': index, 'col_num': col_num, 'text': str(
                     col), 'width': width, 'root': self}
-                prop.update(self.prop)
+                for attr, val in self.prop.items():
+                    if isinstance(val, list) and len(val) == self.cols:
+                        prop[attr] = val[col_num]
+                    else:
+                        prop[attr] = val
                 data_for_widget.append(prop)
         return data_for_widget
 
@@ -325,6 +332,9 @@ class DataViewer(BoxLayout):
 
     def get_data(self):
         return self._data
+
+    def set_data(self, data):
+        self._data = [row[:] for row in data]
 
     def set_viewclass(self, viewclass):
         self.rv.viewclass = viewclass
@@ -371,6 +381,18 @@ class DataViewer(BoxLayout):
             self._data = data
         else:
             self._data.extend(data)
+
+    def get_view_by_cord(self, row_idx, col_idx):
+        index = row_idx * self.cols + col_idx
+        return self.get_view_by_index(index)
+
+    def get_view_by_index(self, index):
+        curr_views = self.ids['content_layout'].children
+        view = None
+        for view in curr_views:
+            if view._index == index:
+                break
+        return view
 
     def get_selected_items(self):
         selected_items = []
