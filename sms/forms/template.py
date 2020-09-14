@@ -14,10 +14,33 @@ class FormTemplate(Screen):
     form_root = form_root
     title = StringProperty('')
 
+    def __init__(self, **kwargs):
+        super(FormTemplate, self).__init__(**kwargs)
+        self._setup()
+
+    def validate_inputs(self):
+        for _id in self.ids:
+            if isinstance(self.ids[_id], (TextInput, Spinner)):
+                if not self.ids[_id].text:
+                    return False
+        return True
+
+    def _setup(self):
+        if self.manager:
+            self.setup()
+
+    def on_manager(self, instance, value):
+        if value:
+            self.setup()
+
+    def setup(self):
+        pass
+
     def clear_fields(self):
         for _id in self.ids:
-            if isinstance(self.ids, (TextInput, Spinner)):
+            if isinstance(self.ids[_id], (TextInput, Spinner)):
                 self.ids[_id].text = ''
+        self.setup()
 
     def on_leave(self):
         self.clear_fields()
