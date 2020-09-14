@@ -66,7 +66,9 @@ class AsyncRequest(Thread):
             ErrorPopup(msg)
             # Restart server
         except requests.exceptions.HTTPError as err:
-            if callable(self.on_failure):
+            if self.resp.status_code == 440:
+                ErrorPopup('Session expired, login again')
+            elif callable(self.on_failure):
                 self.on_failure(self.resp)
             else:
                 try:
