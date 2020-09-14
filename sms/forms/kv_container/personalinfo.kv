@@ -1,8 +1,7 @@
 <PersonalInfo>:
-    mat_no: mat_no.text
     BoxLayout:
         orientation: 'vertical'
-        padding_x: dp(10)
+        padding: dp(10)
         BoxLayout:
 
             ScrollView:
@@ -14,7 +13,7 @@
                     padding: dp(20)
                     size_hint: (.4, None)
                     height: self.minimum_height
-                    spacing: (10, 5)
+                    spacing: dp(10), dp(5)
                     row_default_height: dp(30)
                     row_force_default: True
                     pos_hint: {'top': 1}
@@ -22,20 +21,20 @@
                         text: 'Mat number'
                         halign: 'left'
                     BoxLayout:
-                        spacing: 20
+                        spacing: dp(20)
                         CustomTextInput:
                             id: mat_no
-                            width: 125
+                            width: dp(125)
                             text: 'ENG'
                             max_length: 10
                         ImageButton:
                             size_hint_x: None
-                            width: 50
+                            width: dp(50)
                             source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
                             on_press: root.search()
                         ImageButton:
                             size_hint_x: None
-                            width: 50
+                            width: dp(50)
                             source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
                             on_press: root.clear_fields()
                     CustomLabel:
@@ -46,7 +45,6 @@
                     CustomLabel:
                         text: 'First name'
                         halign: 'left'
-                        pos_hint: {'x': 1}
                     CustomTextInput:
                         id: fname
                     CustomLabel:
@@ -59,7 +57,6 @@
                         halign: 'left'
                     CustomSpinner:
                         id: mode_of_entry
-                        values: ['PUTME', 'DE (200)', 'DE (300)']
                     CustomLabel:
                         text: 'Session admitted'
                         halign: 'left'
@@ -67,13 +64,13 @@
                         id: session_admit
                         max_length: 4
                         input_filter: 'int'
-                        width: 100
+                        width: dp(100)
                     CustomLabel:
                         text: 'Current level'
                         halign: 'left'
                     CustomSpinner:
                         id: level
-                        values: ['100', '200', '300', '400', '500']
+                        disabled: False if not root.manager else not root.manager.is_admin
                     CustomLabel:
                         text: 'Sex'
                         halign: 'left'
@@ -86,25 +83,25 @@
                     DatePicker:
                         id: dob
                         size_hint_x: None
-                        width: 100
+                        width: dp(100)
                     CustomLabel:
                         text: 'State of origin'
                         halign: 'left'
                     CustomTextInput:
                         id: state_of_origin
-                        width: 100
+                        width: dp(100)
                     CustomLabel:
                         text: 'LGA of origin'
                         halign: 'left'
                     CustomTextInput:
                         id: lga_of_origin
-                        width: 100
+                        width: dp(150)
                     CustomLabel:
                         text: 'Phone number'
                         halign: 'left'
                     CustomTextInput:
                         id: phone_no
-                        width: 125
+                        width: dp(125)
                         max_length: 11
                     CustomLabel:
                         text: 'Email Address'
@@ -116,7 +113,7 @@
                         halign: 'left'
                     CustomTextInput:
                         id: s_phone_no
-                        width: 125
+                        width: dp(125)
                         max_length: 11
                     CustomLabel:
                         text: 'Sponsor\'s email'
@@ -128,7 +125,9 @@
                         halign: 'left'
                     CustomSpinner:
                         id: grad
+                        text: 'No'
                         values: ['Yes', 'No']
+                        disabled: False if not root.manager else not (root.manager.is_admin == 1)
 
             CustomLabel:
                 text: 'Passport'
@@ -144,25 +143,26 @@
                 Image:
                     id: passport
                     size_hint: (None, None)
-                    size: (117, 160)
+                    size: dp(117), dp(160)
                     pos_hint: {'top': 1, 'x': 0}
                     on_touch_down: root.load_image(*args)
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
             FloatLayout:
                 size_hint_x: .3
 
         BoxLayout:
             size_hint: (None, .1)
-            width: 200
+            padding: dp(0), dp(10)
+            width: dp(600)
             pos_hint: {'center_x': .5}
-            spacing: 20
-            ImageButton:
+            spacing: dp(20)
+            PositiveActionButton:
+                id: btn_positive
                 size_hint_x: None
-                width: 50
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-add-48.png')
-                on_press: root.add()
-            ImageButton:
+                width: dp(200)
+                text: 'Add'
+                on_press: root.add_update()
+            NegativeActionButton:
                 size_hint_x: None
-                width: 50
-                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-cancel-48.png')
-                on_press: root.cancel()
+                width: dp(200)
+                text: 'Delete'
+                on_press: root.delete()
