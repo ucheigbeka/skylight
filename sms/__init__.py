@@ -1,4 +1,5 @@
 import os
+import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
 
@@ -17,6 +18,7 @@ titles = [
     '400 level course adviser', '500 level course adviser',
     '500 level course adviser(2)', 'Secretary'
 ]
+current_session = None
 
 
 def urlTo(path):
@@ -24,7 +26,13 @@ def urlTo(path):
 
 
 def get_current_session():
-    return 2019
+    global current_session
+    if not current_session:
+        url = urlTo('current_session')
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            current_session = resp.json()
+    return current_session
 
 
 def get_token():
