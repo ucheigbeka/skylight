@@ -9,7 +9,7 @@ from kivy.properties import StringProperty, ListProperty,\
 
 from sms import titles, MODE
 from sms.utils.menubar import LoginActionView, MainActionView
-from sms.utils.asynctask import run_in_background
+# from sms.utils.asynctask import run_in_background
 
 base_path = os.path.dirname(__file__)
 kv_path = os.path.join(base_path, 'manager.kv')
