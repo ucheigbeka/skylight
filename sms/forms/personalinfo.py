@@ -42,6 +42,7 @@ class PersonalInfo(FormTemplate):
             self.ids['mode_of_entry'].values = MODES_OF_ENTRY
 
     def add_update(self):
+        method = ['POST', 'PATCH'][self.ids['btn_positive'].text == 'Update']
         data = dict()
         data['mat_no'] = self.ids.mat_no.text
         data['surname'] = self.ids.surname.text.upper()
@@ -64,7 +65,7 @@ class PersonalInfo(FormTemplate):
         data['grad_status'] = int(self.ids.grad.text == 'YES')
 
         url = urlTo('personal_info')
-        AsyncRequest(url, method='POST', data=data, on_success=self.record_added, on_failure=self.show_add_error)
+        AsyncRequest(url, method=method, data=data, on_success=self.record_added, on_failure=self.show_add_error)
 
     def delete(self):
         pass
@@ -85,13 +86,13 @@ class PersonalInfo(FormTemplate):
         self.ids.session_admit.text = str(data['session_admitted'])
         self.ids.level.text = str(data['level'])
         self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
-        self.ids.dob.text = str(data['date_of_birth'])
+        self.ids.dob.text = str(data['date_of_birth']) if data['date_of_birth'] else ''
         self.ids.state_of_origin.text = str(data['state_of_origin'])
         self.ids.lga_of_origin.text = str(data['lga'])
         self.ids.phone_no.text = str(data['phone_no'])
         self.ids.email.text = str(data['email_address'])
-        self.ids.s_phone_no.text = str(data['sponsor_phone_no'])
-        self.ids.s_email.text = str(data['sponsor_email_address'])
+        self.ids.s_phone_no.text = str(data['sponsor_phone_no']) if data['sponsor_phone_no'] else ''
+        self.ids.s_email.text = str(data['sponsor_email_address']) if data['sponsor_email_address'] else ''
         self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
 
         self.ids['btn_positive'].text = 'Update'
@@ -100,7 +101,7 @@ class PersonalInfo(FormTemplate):
         ErrorPopup('Record not found')
 
     def show_add_error(self, resp):
-        ErrorPopup('Record could not be added')
+        ErrorPopup('Record could not be added: ' + str(resp.json()))
 
     def show_input_error(self):
         ErrorPopup('Some input fields are missing')
