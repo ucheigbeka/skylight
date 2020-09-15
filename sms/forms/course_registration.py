@@ -250,8 +250,7 @@ class CourseRegistration(FormTemplate):
             self.show_error(resp)
 
     def show_error(self, resp):
-        ErrorPopup('Record not found')
+        ErrorPopup('Record not found: ' + resp.json())
 
     def show_reg_error(self, resp):
-        # Should probably be more explicit
-        ErrorPopup('Error registering courses')
+        ErrorPopup('Error registering courses: ' + resp.json())
