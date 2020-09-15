@@ -51,6 +51,9 @@ class AsyncRequest(Thread):
             elif self.method == 'PUT':
                 self.resp = requests.put(
                     self.url, headers=self.headers, json=self.data)
+            elif self.method == 'PATCH':
+                self.resp = requests.patch(
+                    self.url, headers=self.headers, json=self.data)
             elif self.method == 'DELETE':
                 self.resp = requests.delete(
                     self.url, headers=self.headers, params=self.params)
@@ -63,7 +66,9 @@ class AsyncRequest(Thread):
             ErrorPopup(msg)
             # Restart server
         except requests.exceptions.HTTPError as err:
-            if callable(self.on_failure):
+            if self.resp.status_code == 440:
+                ErrorPopup('Session expired, login again')
+            elif callable(self.on_failure):
                 self.on_failure(self.resp)
             else:
                 try:

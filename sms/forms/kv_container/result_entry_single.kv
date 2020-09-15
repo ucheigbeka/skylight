@@ -1,0 +1,100 @@
+<ResultEntrySingle>:
+    results_view: results_view
+    carryovers_result_view: carryovers_result_view
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        GridLayout:
+            cols: 2
+            spacing: dp(10), dp(5)
+            row_default_height: dp(30)
+            row_force_default: True
+            size_hint_y: None
+            height: self.minimum_height
+            CustomLabel:
+                text: 'Mat number'
+                halign: 'left'
+            BoxLayout:
+                CustomTextInput:
+                    id: mat_no
+                    text: 'ENG'
+                    width: dp(125)
+                    max_length: 10
+                ImageButton:
+                    size_hint_x: None
+                    width: dp(50)
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                    on_press: root.search()
+                ImageButton:
+                    size_hint_x: None
+                    width: dp(50)
+                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                    on_press: root.clear_fields()
+            CustomLabel:
+                text: 'Session'
+                halign: 'left'
+            CustomTextInput:
+                id: session
+                width: dp(100)
+                input_filter: 'int'
+                max_length: 4
+                disabled: False if not root.manager else not root.manager.is_admin
+            CustomLabel:
+                text: 'Name'
+                halign: 'left'
+            CustomTextInput:
+                id: name
+            CustomLabel:
+                text: 'Level'
+                halign: 'left'
+            CustomSpinner:
+                id: level
+                width: dp(125)
+                values: [str(x) for x in range(100, 900, 100)]
+                disabled: False if not root.manager else not root.manager.is_admin
+            CustomLabel:
+                text: 'Special case'
+                halign: 'left'
+            CustomSpinner:
+                id: special_case
+                width: 150
+                values: [str(x) for x in range(100, 900, 100)]
+
+        BoxLayout:
+            spacing: dp(10)
+            BoxLayout: 
+                orientation: 'vertical'
+                CustomLabel:
+                    text: 'Regular Courses'
+                    size_hint: 1, .1
+                    font_size: sp(20)
+
+                DataViewer:
+                    id: results_view
+                    cols: 5
+                    pos_hint: {'center_x': .5}
+                    weightings: [.2, .5, .1, .1, .1]
+                    headers: ['Course code', 'Course title', 'Credits', 'Score', 'Grade']
+                    prop: {'disabled': [True, True, True, False, True]}
+
+            BoxLayout: 
+                orientation: 'vertical'
+                CustomLabel:
+                    text: 'Carryover Courses'
+                    size_hint: 1, .1
+                    font_size: sp(20)
+
+                DataViewer:
+                    id: carryovers_result_view
+                    cols: 5
+                    pos_hint: {'center_x': .5}
+                    weightings: [.2, .5, .1, .1, .1]
+                    headers: ['Course code', 'Course title', 'Credits', 'Score', 'Grade']
+                    prop: {'disabled': [True, True, True, False, True]}
+
+        PositiveActionButton:
+            size_hint: .2, .1
+            pos_hint: {'center_x': .5}
+            text: 'Update'
+            on_press: root.update()

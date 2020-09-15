@@ -6,7 +6,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import StringProperty
 
-from sms import urlTo, store_token, set_title
+from sms import urlTo, set_details
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -58,8 +58,7 @@ class SigninWindow(FormTemplate):
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
-        store_token(token)
-        set_title(title)
+        set_details(self.username, token, title)
 
         root = App.get_running_app().root
         root.title = title
