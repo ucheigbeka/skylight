@@ -96,9 +96,10 @@ class PersonalInfo(FormTemplate):
         self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
 
         self.ids['btn_positive'].text = 'Update'
+        self.ids['btn_positive'].disabled = False if data['level'] == get_assigned_level() else True
 
     def show_error(self, resp):
-        ErrorPopup('Record not found')
+        ErrorPopup('Record not found: ' + resp.json())
 
     def show_add_error(self, resp):
         ErrorPopup('Record could not be added: ' + str(resp.json()))
