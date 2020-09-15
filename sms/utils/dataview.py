@@ -95,7 +95,7 @@ Builder.load_string('''
             height: DEFAULT_SIZE_HEADER[1]
         RecycleView:
             viewclass: 'SelectableLabel'
-            data: [{'text': str(i), 'valign': 'middle'} for i in range(int(len(dv._data)))]
+            data: [{'text': str(i + 1), 'valign': 'middle'} for i in range(int(len(dv._data)))]
             scroll_y: dv.rv.scroll_y
             do_scroll_y: False
             SelectableRecycleGridLayout:
