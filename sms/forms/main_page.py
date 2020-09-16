@@ -1,4 +1,4 @@
-from time import localtime, asctime
+from datetime import datetime
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import ListProperty, ObjectProperty
@@ -33,10 +33,11 @@ class MainPage(FormTemplate):
     def populate_dv(self, resp):
         logs = resp.json()
         d_logs = []
-        for log in logs[::-1]:
+        for log in logs:
             timestamp, action = log
-            timestamp = asctime(localtime(timestamp))
+            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %e, %Y; %l:%M%p")
+            formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             if len(action) > 35:
                 action = action[:35] + '...'
-            d_logs.append([action[: action.find(' ')], action, timestamp])
+            d_logs.append([action[: action.find(' ')], action, formatted_time])
         self.logs = d_logs
