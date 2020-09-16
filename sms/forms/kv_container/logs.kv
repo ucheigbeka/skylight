@@ -27,7 +27,7 @@
             size_hint_x: .4
             RelativeLayout:
                 GridLayout:
-                    cols: 1
+                    cols: 3
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     size_hint: None, None
                     row_default_height: 50
@@ -36,27 +36,42 @@
                     col_force_default: True
                     size: self.minimum_size
                     padding: [10, 0]
-                    Button:
-                        text: 'Refresh'
-                        on_press: root.refresh()
-                    Label
+
                     Label:
                         text: 'Filter'
                         texture_size: self.size
-                        halign: 'center'
-                        valign: 'middle'
+                        halign: 'left'
                         font_size: sp(30)
-                    CustomSpinner:
-                        id: time_spinner
-                        text: 'Time'
-                        values: ['All', 'Last 7 days', 'This month', 'This session']
-                        on_text: root.filter_log()
-                        width: 200
+                    Label
+                    Label
+
+                    DatePicker:
+                        id: date_picker
+                        text: 'From Date'
+                        width: dp(200)
                     CustomSpinner:
                         id: users_spinner
                         text: 'Users'
                         width: 200
-                        on_text: root.filter_log()
+                    CustomSpinner:
+                        id: operations_spinner
+                        text: 'Operations'
+                        width: 200
+
+                    Label
+                    Label
+                    Label
+
+                    Label
+                    Button:
+                        text: 'Clear Filters'
+                        halign: 'left'
+                        on_press: root.refresh()
+                    Button:
+                        text: 'Apply Filters'
+                        on_press: root.filter_log()
+
+
             CustomTextInput:
                 id: textview
                 size_hint: 1, 1
