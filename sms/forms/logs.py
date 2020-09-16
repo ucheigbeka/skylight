@@ -1,6 +1,6 @@
 import os
+from datetime import datetime
 from math import copysign
-from time import localtime, asctime, time
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, ListProperty, AliasProperty,\
     NumericProperty
@@ -15,19 +15,6 @@ from sms.utils.popups import ErrorPopup
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'logs.kv')
 Builder.load_file(kv_path)
-
-titles_mapping = {
-    'All': 0,
-    'HOD': 'Head of department',
-    'Exam officer': 'Exam officer',
-    '100L course adviser': '100 level course adviser',
-    '200L course adviser': '200 level course adviser',
-    '300L course adviser': '300 level course adviser',
-    '400L course adviser': '400 level course adviser',
-    '500L course adviser': '500 level course adviser',
-    '500L course adviser(2)': '500 level course adviser(2)',
-    'Secretary': 'Secretary'
-}
 
 
 class CustomDataViewerLabel(DataViewerLabel):
@@ -58,7 +45,8 @@ class Logs(FormTemplate):
         self.prev_scroll = 1
         self.bind(scroll=self.query_more_logs)
         self.users = []
-        self.ids['users_spinner'].values = list(titles_mapping.keys())
+        self.operations = []
+        self.filter = {}
 
     def displayed_logs_getter(self, *args, **kwargs):
         displayed_logs = []
@@ -66,19 +54,21 @@ class Logs(FormTemplate):
             if not log[0]:
                 return [['', '', '']]
             timestamp = log[-1]
-            formatted_time = asctime(localtime(timestamp))
+            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %e, %Y; %l:%M%p")
+            formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             displayed_logs.append(log[:-1] + [formatted_time])
         return displayed_logs
 
     def on_enter(self):
         get_log(self.populate_dv, limit=100)
         self.dv.dv.set_viewclass('CustomDataViewerLabel')
+        self.ids['operations_spinner'].values = list(operations_mapping.keys())
         self.query_users()
 
     def populate_dv(self, resp):
         logs = resp.json()
         d_logs = []
-        for log in logs[::-1]:
+        for log in logs:
             timestamp, action = log
             d_logs.append([action[: action.find(' ')], action, timestamp])
         self.logs = d_logs
@@ -91,29 +81,44 @@ class Logs(FormTemplate):
         if not logs[0]:
             return
         old_disp_log_len = len(self.ufmt_displayed_logs)
-        for log in logs[::-1]:
+        for log in logs:
             timestamp, action = log
-            self.logs.append([action[: action.find(' ')], action, timestamp])
-            self.ufmt_displayed_logs.append([action[: action.find(' ')], action, timestamp])
+            fmt_log = [action[: action.find(' ')], action, timestamp]
+            self.logs.append(fmt_log)
+            self.ufmt_displayed_logs.append(fmt_log)
         self.log_offset += 10
-        if self.ids.time_spinner.text == 'Time':
-            self.filter_by_time('All')  # (self.ids.time_spinner, 'All')
-        else:
-            self.filter_log()
-        self.dv.dv.rv.scroll_y = 1 - old_disp_log_len / len(self.ufmt_displayed_logs)
+        scroll_y_val = 1 - old_disp_log_len / len(self.ufmt_displayed_logs)
+        if scroll_y_val: self.dv.dv.rv.scroll_y = scroll_y_val
 
-    def refresh(self, *args):
-        self.clear_fields()
-        get_log(self.populate_dv, limit=100)
+    def refresh(self):
+        self.filter = {}
+        self.show_logs(reset_filter_text=True)
+
+    def filter_log(self):
+        date = self.ids['date_picker'].text
+        user_title = self.ids['users_spinner'].text
+        operation = self.ids['operations_spinner'].text
+        self.filter = {}
+
+        if isinstance(date, str) and len(date.split('/')) == 3:
+            self.filter['time'] = datetime.strptime(date, '%d/%m/%Y').timestamp()
+        if user_title not in ['Users', 'All']: self.filter['title'] = user_title
+        if operation not in ['Operations', '']: self.filter['operation'] = operations_mapping[operation]
+
+        self.show_logs()
+
+    def show_logs(self, reset_filter_text=False):
+        self.clear_fields(reset_filter_text)
+        get_log(self.populate_dv, limit=100, **self.filter)
         self.dv.dv.rv.scroll_y = 1
         self.query_users()
 
     def query_more_logs(self, *args):
         if args:
             if args[1] < 0.001:
-                get_log(self.extend_dv, limit=15, offset=self.log_offset)
+                get_log(self.extend_dv, limit=15, offset=self.log_offset, **self.filter)
         else:
-            get_log(self.extend_dv, limit=15, offset=self.log_offset)
+            get_log(self.extend_dv, limit=15, offset=self.log_offset, **self.filter)
 
     def query_users(self):
         url = urlTo('accounts')
@@ -122,8 +127,10 @@ class Logs(FormTemplate):
 
     def update_users(self, resp):
         data = resp.json()
+        self.users = []
         for row in data:
             self.users.append([row['username'], row['title']])
+        self.ids['users_spinner'].values = [user[1] for user in self.users]
 
     def set_scroll(self, instance, value):
         self.scroll = value
@@ -133,65 +140,6 @@ class Logs(FormTemplate):
         self.view_start = int(disp_log_size - diff)
         self.view_stop = self.view_start + 16 if self.view_start + 16 < disp_log_size else disp_log_size
         self.prev_scroll = value
-
-    def t_filter(self, t):
-        now = time()
-        time_interval = now - 60 * 60 * 24 * t
-
-        filtered_log = list(
-            filter(lambda x: x[-1] >= time_interval, self.logs))
-
-        if filtered_log:
-            self.ufmt_displayed_logs = filtered_log
-        else:
-            self.ufmt_displayed_logs = [['', '', '']]
-
-    def filter_by_time(self, value):
-        # TODO: implement filtering by session
-        if value == 'Time':
-            return
-
-        index = self.ids['time_spinner'].values.index(value)
-        if index == 0:
-            self.ufmt_displayed_logs = self.logs
-            return
-        elif index == 3:
-            self.ufmt_displayed_logs = self.logs
-            return
-
-        funcs = [0, self.t_filter, self.t_filter, 0]
-        args = [0, 7, 30, 0]
-        funcs[index](args[index])
-
-    def get_user(self, title):
-        user = list(filter(lambda user: user[1] == title, self.users))
-        return None if not user else list(set(x[0] for x in user))
-
-    def filter_by_user(self, value):
-        if value == 'Users' or value == 'All':
-            return
-        if self.ufmt_displayed_logs[0] == ['', '', '']:
-            return
-
-        user = self.get_user(titles_mapping[value])
-        if not user:
-            msg = 'No active ' + titles_mapping[value].lower()
-            ErrorPopup(msg)
-            return
-
-        filtered_log = list(
-            filter(lambda row: row[0] in user, self.ufmt_displayed_logs))
-
-        if filtered_log:
-            self.ufmt_displayed_logs = filtered_log
-        else:
-            self.ufmt_displayed_logs = [['', '', '']]
-
-    def filter_log(self):
-        time_filter_option = self.ids['time_spinner'].text
-        users_filter_option = self.ids['users_spinner'].text
-        self.filter_by_time(time_filter_option)
-        self.filter_by_user(users_filter_option)
 
     def pan_up(self, *args):
         diff = 16 / len(self.ufmt_displayed_logs)
@@ -207,11 +155,63 @@ class Logs(FormTemplate):
         else:
             self.dv.dv.rv.scroll_y -= diff
 
-    def clear_fields(self):
-        self.ids['time_spinner'].text = 'Time'
-        self.ids['users_spinner'].text = 'Users'
+    def clear_fields(self, reset_filter_text=False):
+        if reset_filter_text:
+            self.ids['date_picker'].text = 'From Date'
+            self.ids['users_spinner'].text = 'Users'
+            self.ids['operations_spinner'].text = 'Operations'
+
         self.ids['textview'].text = ''
         self.ufmt_displayed_logs = [['', '', '']]
 
     displayed_logs = AliasProperty(
         displayed_logs_getter, bind=['ufmt_displayed_logs'])
+
+
+operations_mapping = {
+    'Login': 'users.login',
+    'Logout': 'users.logout',
+
+    'Get Course Registration': 'course_reg.get',
+    'Start Course Registration': 'course_reg.init_new',
+    'Register Courses': 'course_reg.post',
+    'Delete Course Registration': 'course_reg.delete',
+
+    'Get Results': 'results.get',
+    'Add Results': 'results.post',
+    'Set Result Edit': 'results.set_resultedit',
+    'Get Single Result': 'results.get_result_details',
+    'Get Result Entry Stats': 'results.get_multiple_results_stats',
+
+    'Get Personal Info': 'personal_info.get_exp',
+    'Add Personal Info': 'personal_info.post_exp',
+    'Edit Personal Info': 'personal_info.patch',
+    'Delete Personal Info': 'personal_info.delete',
+
+    'Get Result Update': 'result_update.get',
+    'Get Course Form': 'course_form.get',
+    'Get Broad-Sheet': 'broad_sheet.get',
+    'Get Senate Version': 'senate_version.get',
+    'Get GPA Card': 'gpa_cards.get',
+
+    # 'Get Accounts': 'accounts.get',
+    'Create Account': 'accounts.post',
+    'Edit Account': 'accounts.patch',
+    'Delete Account': 'accounts.delete',
+
+    'List Backups': 'backups.get',
+    'Download Backups': 'backups.download',
+    'Backup Database': 'backups.backup',
+    'Restore Backup': 'backups.restore',
+    'Delete Backups': 'backups.delete',
+
+    'Add Course': 'course_details.post',
+    'Edit Course': 'course_details.patch',
+    'Delete Course': 'course_details.delete',
+
+    # 'results.get_single_results_stats': 'results.get_single_results_stats',
+    # 'logs.get': 'logs.get',
+    # 'logs.delete': 'logs.delete',
+    # 'grading_rules.get': 'grading_rules.get',
+
+}
