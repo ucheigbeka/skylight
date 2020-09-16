@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition, SlideTransition
 from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
-from sms import titles, MODE
+from sms import titles, MODE, urlTo, AsyncRequest, get_token
 from sms.utils.menubar import LoginActionView, MainActionView
 # from sms.utils.asynctask import run_in_background
 
@@ -220,9 +220,12 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
-        return
+        url = urlTo('logout')
+        data = {
+            'token': get_token()
+        }
+        AsyncRequest(url, method='POST', data=data)
         self.sm.forms_dict = {}
-
         self.switch_screen('signin')
 
     def about(self, instance):
