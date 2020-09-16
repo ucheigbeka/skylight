@@ -86,14 +86,19 @@ def get_assigned_level():
 from sms.utils.asyncrequest import AsyncRequest
 
 
-def get_log(func, limit=20, offset=0):
+def get_log(func, **kwargs):
     url = urlTo('logs')
-    AsyncRequest(url, params={'limit': limit, 'offset': offset}, on_success=func)
+    params = {
+        'limit': kwargs.pop('limit', 20),
+        'offset': kwargs.pop('offset', 0)
+    }
+    params.update(kwargs)
+    AsyncRequest(url, params=params, on_success=func)
 
 
 # Loads all the kv imports
-imports_path = os.path.join(os.path.dirname(
-    __file__), 'forms', 'kv_container', 'imports.kv')
+imports_path = os.path.join(os.path.dirname(__file__),
+                            'forms', 'kv_container', 'imports.kv')
 Builder.load_file(imports_path)
 
 # Sets the window's mininum size
@@ -103,5 +108,4 @@ Window.minimum_width = win_size[0] * .7
 Window.minimum_height = win_size[1] * .8
 
 from sms.manager import Root
-
 root = Root()
