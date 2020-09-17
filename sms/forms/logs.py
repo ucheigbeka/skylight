@@ -90,11 +90,11 @@ class Logs(FormTemplate):
         scroll_y_val = 1 - old_disp_log_len / len(self.ufmt_displayed_logs)
         if scroll_y_val: self.dv.dv.rv.scroll_y = scroll_y_val
 
-    def refresh(self):
+    def fetch_all(self):
         self.filter = {}
         self.show_logs(reset_filter_text=True)
 
-    def filter_log(self):
+    def fetch_filtered(self):
         date = self.ids['date_picker'].text
         user_title = self.ids['users_spinner'].text
         operation = self.ids['operations_spinner'].text

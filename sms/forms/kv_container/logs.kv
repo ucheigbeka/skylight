@@ -66,10 +66,10 @@
                     Button:
                         text: 'Clear Filters'
                         halign: 'left'
-                        on_press: root.refresh()
+                        on_press: root.fetch_all()
                     Button:
                         text: 'Apply Filters'
-                        on_press: root.filter_log()
+                        on_press: root.fetch_filtered()
 
 
             CustomTextInput:
