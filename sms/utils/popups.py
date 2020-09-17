@@ -49,16 +49,24 @@ class DismissablePopupLabel(BoxLayout):
 
 class YesNoPopupContent(BoxLayout):
     text = StringProperty()
+    yes_func = None
+    no_func = None
+    end_func = None
 
     def yes(self):
-        pass
+        if self.yes_func:
+            self.yes_func()
+        self.end_func()
 
     def no(self):
-        pass
+        if self.no_func:
+            self.no_func()
+        self.end_func()
 
-    def set_callbacks(self, yes, no):
-        self.yes = yes
-        self.no = no
+    def set_callbacks(self, yes, no, end_func):
+        self.yes_func = yes
+        self.no_func = no
+        self.end_func = end_func
 
 
 class PopupBase(Popup):
@@ -91,6 +99,6 @@ class YesNoPopup(PopupBase):
     def __init__(self, message, on_yes=None, on_no=None, **kwargs):
         self.title = kwargs.get('title', 'Info')
         self.content = YesNoPopupContent(text=message)
-        self.content.set_callbacks(on_yes, lambda: on_no())
+        self.content.set_callbacks(on_yes, on_no, self.dismiss)
         self.auto_dismiss = False
         super(YesNoPopup, self).__init__(**kwargs)
