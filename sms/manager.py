@@ -9,6 +9,7 @@ from kivy.properties import StringProperty, ListProperty,\
 
 from sms import titles, MODE, urlTo, AsyncRequest, get_token
 from sms.utils.menubar import LoginActionView, MainActionView
+from sms.utils.popups import YesNoPopup
 # from sms.utils.asynctask import run_in_background
 
 base_path = os.path.dirname(__file__)
@@ -220,12 +221,14 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
-        # todo: bring up confirmation dialog before logout
+        YesNoPopup(message='Do you want to Log out?', on_yes=self.logout_routine)
+
+    def logout_routine(self):
         url = urlTo('logout')
-        data = {
-            'token': get_token()
-        }
+        data = {'token': get_token()}
         AsyncRequest(url, method='POST', data=data)
+        self.set_menu_view(LoginActionView)
+        self.view_ins.title = 'Login'
         self.sm.forms_dict = {}
         self.switch_screen('signin')
 
