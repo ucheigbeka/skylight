@@ -28,12 +28,17 @@ Builder.load_string('''
         text: root.text
         markup: True
     BoxLayout:
-        size_hint_x: .3
+        size_hint_x: .2
+        spacing: 10
         Button:
             text: 'Yes'
+            halign: 'left'
+            size_hint_y: .5
             on_press: root.yes()
         Button:
             text: 'No'
+            halign: 'right'
+            size_hint_y: .5
             on_press: root.no()
 ''')
 
@@ -56,12 +61,16 @@ class YesNoPopupContent(BoxLayout):
     def yes(self):
         if self.yes_func:
             self.yes_func()
-        self.end_func()
+        self.end()
 
     def no(self):
         if self.no_func:
             self.no_func()
-        self.end_func()
+        self.end()
+
+    def end(self):
+        if self.end_func: self.end_func()
+        else: pass
 
     def set_callbacks(self, yes, no, end_func):
         self.yes_func = yes
@@ -101,4 +110,5 @@ class YesNoPopup(PopupBase):
         self.content = YesNoPopupContent(text=message)
         self.content.set_callbacks(on_yes, on_no, self.dismiss)
         self.auto_dismiss = False
+        self.size_hint = (.4, .2)
         super(YesNoPopup, self).__init__(**kwargs)
