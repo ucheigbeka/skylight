@@ -54,7 +54,7 @@ class Logs(FormTemplate):
             if not log[0]:
                 return [['', '', '']]
             timestamp = log[-1]
-            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %e, %Y; %l:%M%p")
+            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %#e, %Y; %#I:%M%p")
             formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             displayed_logs.append(log[:-1] + [formatted_time])
         return displayed_logs

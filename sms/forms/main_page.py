@@ -35,7 +35,7 @@ class MainPage(FormTemplate):
         d_logs = []
         for log in logs:
             timestamp, action = log
-            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %e, %Y; %l:%M%p")
+            formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %#e, %Y; %#I:%M%p")
             formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             if len(action) > 35:
                 action = action[:35] + '...'
