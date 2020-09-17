@@ -220,6 +220,7 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
+        # todo: bring up confirmation dialog before logout
         url = urlTo('logout')
         data = {
             'token': get_token()
