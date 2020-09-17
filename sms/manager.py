@@ -221,9 +221,10 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
-        YesNoPopup(message='Do you want to Log out?', on_yes=self.logout_routine)
+        YesNoPopup(message='Do you want to Log out?', on_yes=self.logout_routine, title='Logout')
 
     def logout_routine(self):
+        # todo: destroy previously loaded screens
         url = urlTo('logout')
         data = {'token': get_token()}
         AsyncRequest(url, method='POST', data=data)
