@@ -17,7 +17,7 @@ class Profile(FormTemplate):
 
     def __init__(self, **kwargs):
         super(Profile, self).__init__(**kwargs)
-        self.username = get_username()
+        self.username = ''
         self.data = {}
 
     def on_enter(self):
@@ -25,6 +25,7 @@ class Profile(FormTemplate):
 
     def query_profile(self, *args):
         url = urlTo('accounts')
+        self.username = get_username()
         params = {'username': self.username}
         self.ids['password'].text = ''
         AsyncRequest(url, params=params, on_success=self.populate_fields)
