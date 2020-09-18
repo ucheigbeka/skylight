@@ -11,7 +11,8 @@ from kivy.properties import StringProperty, ListProperty,\
 from sms import titles, MODE
 from sms.scripts.logout import logout
 from sms.utils.menubar import LoginActionView, MainActionView
-from sms.utils.asynctask import run_in_background
+from sms.utils.popups import YesNoPopup
+# from sms.utils.asynctask import run_in_background
 
 base_path = os.path.dirname(__file__)
 kv_path = os.path.join(base_path, 'manager.kv')
@@ -223,6 +224,7 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
+    	YesNoPopup(message='Do you want to Log out?', on_yes=self.logout_routine, title='Logout')
         logout()
         self.set_menu_view(LoginActionView)
 

@@ -1,4 +1,5 @@
 import os
+import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
 
@@ -17,6 +18,7 @@ titles = [
     '400 level course adviser', '500 level course adviser',
     '500 level course adviser(2)', 'Secretary'
 ]
+current_session = None
 
 
 def urlTo(path):
@@ -24,7 +26,13 @@ def urlTo(path):
 
 
 def get_current_session():
-    return 2019
+    global current_session
+    if not current_session:
+        url = urlTo('current_session')
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            current_session = resp.json()
+    return current_session
 
 
 def get_token():
@@ -81,14 +89,19 @@ def get_assigned_level():
 from sms.utils.asyncrequest import AsyncRequest
 
 
-def get_log(func, limit=20, offset=0):
+def get_log(func, **kwargs):
     url = urlTo('logs')
-    AsyncRequest(url, params={'limit': limit, 'offset': offset}, on_success=func)
+    params = {
+        'limit': kwargs.pop('limit', 20),
+        'offset': kwargs.pop('offset', 0)
+    }
+    params.update(kwargs)
+    AsyncRequest(url, params=params, on_success=func)
 
 
 # Loads all the kv imports
-imports_path = os.path.join(os.path.dirname(
-    __file__), 'forms', 'kv_container', 'imports.kv')
+imports_path = os.path.join(os.path.dirname(__file__),
+                            'forms', 'kv_container', 'imports.kv')
 Builder.load_file(imports_path)
 
 # Sets the window's mininum size
@@ -98,5 +111,4 @@ Window.minimum_width = win_size[0] * .7
 Window.minimum_height = win_size[1] * .8
 
 from sms.manager import Root
-
 root = Root()

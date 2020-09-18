@@ -112,7 +112,7 @@ class CourseRegView(BoxLayout):
     def insert_compulsory_courses(self, compulsory_courses):
         self.clear()
         self.num_compulsory_courses = len(compulsory_courses)
-        for code, title, credit, _, _ in compulsory_courses:
+        for code, title, credit, _ in compulsory_courses:
             self.add_field(bind_spinner=False)
 
             course_code_spinner = self.fields[-1][0]
@@ -179,15 +179,16 @@ class CourseRegistration(FormTemplate):
         self.ids.cur_level.text = str(personal_info['level'])
         self.ids.phone_no.text = personal_info['phone_no']
         self.ids.prob_stat.text = self.ids.prob_stat.values[data['probation_status']]
+        self.ids.fees_stat.text = self.ids.fees_stat.values[data['fees_status']]
 
         # queues regular courses
         choices = data.pop('choices')
         first_sem_courses = choices['first_sem']
         second_sem_courses = choices['second_sem']
 
-        for code, title, credit, _, _ in first_sem_courses:
+        for code, title, credit, _ in first_sem_courses:
             FIRST_SEM_COURSES[code] = [title, credit]
-        for code, title, credit, _, _ in second_sem_courses:
+        for code, title, credit, _ in second_sem_courses:
             SECOND_SEM_COURSES[code] = [title, credit]
 
         self.first_sem_view.course_codes = FIRST_SEM_COURSES.keys()
@@ -256,8 +257,7 @@ class CourseRegistration(FormTemplate):
             self.show_error(resp)
 
     def show_error(self, resp):
-        ErrorPopup('Record not found')
+        ErrorPopup('Record not found: ' + resp.json())
 
     def show_reg_error(self, resp):
-        # Should probably be more explicit
-        ErrorPopup('Error registering courses')
+        ErrorPopup('Error registering courses: ' + resp.json())
