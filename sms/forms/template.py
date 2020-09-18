@@ -40,7 +40,7 @@ class FormTemplate(Screen):
         for _id in self.ids:
             if isinstance(self.ids[_id], (TextInput, Spinner)):
                 self.ids[_id].text = ''
-        self.setup()
+        self._setup()
 
     def on_leave(self):
         self.clear_fields()
