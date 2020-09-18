@@ -31,7 +31,7 @@ Builder.load_string('''
                 padding: dp(8)
                 size_hint_x: .5
             CustomLabel:
-                text: 'Falculty Exam Officer'
+                text: 'Faculty Exam Officer'
             CustomTextInput:
                 font_size: sp(17)
                 padding: dp(8)
