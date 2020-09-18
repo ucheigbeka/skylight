@@ -1,5 +1,6 @@
 import os
 from time import sleep
+from importlib import reload
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
@@ -8,6 +9,7 @@ from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
 from sms import titles, MODE
+from sms.scripts.logout import logout
 from sms.utils.menubar import LoginActionView, MainActionView
 from sms.utils.asynctask import run_in_background
 
@@ -20,15 +22,14 @@ Builder.load_file(kv_path)
 class Manager(ScreenManager):
     is_admin = BooleanProperty(False)
     assigned_level = NumericProperty(0)
+    imported_modules = DictProperty()
 
-    from sms.forms.error import Error
-
-    forms_dict = DictProperty({
-        'error': Error
-    })
+    forms_dict = DictProperty()
     persistent_screens = ListProperty(['reports', 'main_page'])
 
     def initialize(self, title):
+        if not title:
+            return
         try:
             idx = titles.index(title)
         except ValueError as err:
@@ -50,14 +51,6 @@ class Manager(ScreenManager):
             self.assigned_level = (idx - 1) * 100
         print('Assigned level:', self.assigned_level)
 
-    # def on_current(self, instance, value):
-    #     previous_screen = self.sm.current_screen
-    #     if not self.sm.has_screen(value):
-    #         self.sm.add_widget(self.forms_dict[value](name=value))
-    #     self.sm.on_current(instance, value)
-    #     if previous_screen and previous_screen.name not in self.persistent_screens:
-    #         self.remove_screen(previous_screen.name)
-
     def remove_screen(self, name):
         screen = self.sm.get_screen(name)
         self.sm.remove_widget(screen)
@@ -69,60 +62,72 @@ class Manager(ScreenManager):
             self.add_widget(screen(name=name))
             # sleep(.1)
 
+    def import_form(self, form):
+        if form in self.imported_modules:
+            module = self.imported_modules[form]
+            reload(module)
+        else:
+            exec('from sms.forms import ' + form)
+            module = locals()[form]
+            self.imported_modules[form] = module
+        return module
+
     def set_screens_for_hod(self):
-        from sms.forms.logs import Logs
-        from sms.forms.accounts import Accounts
+        logs = self.import_form('logs')
+        accounts = self.import_form('accounts')
 
         self.set_screens_for_exam_officer()
         screens = {
-            'logs': Logs,
-            'accounts': Accounts
+            'logs': logs.Logs,
+            'accounts': accounts.Accounts
         }
         self.forms_dict.update(screens)
         self.is_admin = 1
 
     def set_screens_for_exam_officer(self):
-        from sms.forms.admin import Administrator
-        from sms.forms.course_management import CourseManagement
+        admin = self.import_form('admin')
+        course_management = self.import_form('course_management')
 
         self.set_screens_for_course_adviser()
         screens = {
-            'admin': Administrator,
-            'course_mgmt': CourseManagement
+            'admin': admin.Administrator,
+            'course_mgmt': course_management.CourseManagement
         }
         self.forms_dict.update(screens)
         self.is_admin = 2
 
     def set_screens_for_course_adviser(self):
-        from sms.forms.course_registration import CourseRegistration
-        from sms.forms.result_entry_menu import ResultEntryMenu
-        from sms.forms.result_entry_single import ResultEntrySingle
-        from sms.forms.result_entry_multiple import ResultEntryMultiple
-        from sms.forms.result_entry import ResultEntry
+        course_registration = self.import_form('course_registration')
+        result_entry_menu = self.import_form('result_entry_menu')
+        result_entry_single = self.import_form('result_entry_single')
+        result_entry_multiple = self.import_form('result_entry_multiple')
+        result_entry = self.import_form('result_entry')
 
         self.set_screens_for_secretary()
         screens = {
-            'course_registration': CourseRegistration,
-            'result_entry_menu': ResultEntryMenu,
-            'result_entry_single': ResultEntrySingle,
-            'result_entry_multiple': ResultEntryMultiple,
-            'result_entry': ResultEntry
+            'course_registration': course_registration.CourseRegistration,
+            'result_entry_menu': result_entry_menu.ResultEntryMenu,
+            'result_entry_single': result_entry_single.ResultEntrySingle,
+            'result_entry_multiple': result_entry_multiple.ResultEntryMultiple,
+            'result_entry': result_entry.ResultEntry
         }
         self.forms_dict.update(screens)
 
     def set_screens_for_secretary(self):
-        from sms.forms.personalinfo import PersonalInfo
-        from sms.forms.course_details import CourseDetails
-        from sms.forms.page_reports import PageReports
-        from sms.forms.reports import Reports
-        from sms.forms.profile import Profile
+        personalinfo = self.import_form('personalinfo')
+        course_details = self.import_form('course_details')
+        page_reports = self.import_form('page_reports')
+        reports = self.import_form('reports')
+        profile = self.import_form('profile')
+        error = self.import_form('error')
 
         screens = {
-            'personal_info': PersonalInfo,
-            'course_details': CourseDetails,
-            'page_reports': PageReports,
-            'reports': Reports,
-            'profile': Profile
+            'personal_info': personalinfo.PersonalInfo,
+            'course_details': course_details.CourseDetails,
+            'page_reports': page_reports.PageReports,
+            'reports': reports.Reports,
+            'profile': profile.Profile,
+            'error': error.Error
         }
         self.forms_dict.update(screens)
 
@@ -136,14 +141,12 @@ class Root(BoxLayout):
 
     def __init__(self, **kwargs):
         from sms.forms.signin import SigninWindow
-        # from sms.forms.result_entry import ResultEntry
 
         super(Root, self).__init__(**kwargs)
 
         self.set_menu_view(LoginActionView)
         self.view_ins.title = 'Login'
 
-        # self.sm.add_widget(ResultEntry(name='r'))
         self.sm.add_widget(SigninWindow(name='signin'))
         self.sm.bind(current=self.set_menu_title)
 
@@ -193,9 +196,9 @@ class Root(BoxLayout):
             self.sm.current = screen_name
 
     def login(self, dt):
-        from sms.forms.main_page import MainPage
+        main_page = self.sm.import_form('main_page')
 
-        main_page = MainPage(name='main_page')
+        main_page = main_page.MainPage(name='main_page')
         self.sm.add_widget(main_page)
 
         self.set_menu_view(MainActionView)
@@ -220,10 +223,8 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
-        return
-        self.sm.forms_dict = {}
-
-        self.switch_screen('signin')
+        logout()
+        self.set_menu_view(LoginActionView)
 
     def about(self, instance):
         pass
