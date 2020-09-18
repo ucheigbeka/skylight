@@ -19,6 +19,10 @@ DEFAULT_DV_DATA = [
 ]
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class ResultEntry(FormTemplate):
     title = 'Result Entry'
     dv = ObjectProperty()

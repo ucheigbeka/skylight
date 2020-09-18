@@ -10,6 +10,10 @@ kv_path = get_kv_path('main_page')
 Builder.load_file(kv_path)
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class MainPage(FormTemplate):
     logs = ListProperty()
     dv = ObjectProperty(None)

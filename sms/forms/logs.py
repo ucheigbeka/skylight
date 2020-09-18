@@ -30,6 +30,10 @@ titles_mapping = {
 }
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class CustomDataViewerLabel(DataViewerLabel):
     textview = None
 

@@ -20,6 +20,10 @@ keys = [
 ]
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class NewCoursePopup(Popup):
     course_details = ListProperty()
 

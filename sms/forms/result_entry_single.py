@@ -15,6 +15,10 @@ grading_rules = {}
 EXTRAS = {}
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 def insert_extra(extra):
     EXTRAS.update(extra)
 

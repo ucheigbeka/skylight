@@ -12,6 +12,10 @@ kv_path = os.path.join(form_root, 'kv_container', 'profile.kv')
 Builder.load_file(kv_path)
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class Profile(FormTemplate):
     title = 'Profile'
 

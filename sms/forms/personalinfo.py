@@ -16,6 +16,10 @@ Builder.load_file(kv_path)
 MODES_OF_ENTRY = ['PUTME', 'DE (200)', 'DE (300)']
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class PersonalInfo(FormTemplate):
     title = 'Personal Information'
     profile_icon = StringProperty(os.path.join(

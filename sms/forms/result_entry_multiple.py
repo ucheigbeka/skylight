@@ -19,6 +19,10 @@ Builder.load_file(kv_path)
 HEADER = ['COURSE_CODE', 'SESSION', 'MATNO', 'SCORE']
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 def parse_xl_sheet(sheet):
     data = []
     if sheet.ncols != 4:

@@ -21,6 +21,10 @@ FIRST_SEM_COURSES = {}
 SECOND_SEM_COURSES = {}
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class CourseRegView(BoxLayout):
     grid = ObjectProperty()
     fields = ListProperty()
@@ -32,7 +36,10 @@ class CourseRegView(BoxLayout):
     size_hints = [.35, .5, .15]
 
     def __init__(self, **kwargs):
-        super(CourseRegView, self).__init__(**kwargs)
+        try:
+            super(CourseRegView, self).__init__(**kwargs)
+        except TypeError:
+            super(BoxLayout, self).__init__(**kwargs)
         self.course_code_options = self.course_codes[:]
 
     def add_field(self, bind_spinner=True):

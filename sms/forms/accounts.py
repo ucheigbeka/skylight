@@ -32,6 +32,10 @@ permissions = [
 titles_perm = dict(zip(titles, permissions))
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class PopupBase(Popup):
     def highlight_textinput(self, instance):
         instance.background_color = [1, 0, 0, 1]
@@ -128,7 +132,7 @@ class ResetAccountPopup(PopupBase):
         self.selected_acct = self.get_user(username)
         self.selected_acct['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
-        AsyncRequest(url, method='PUT', data=self.selected_acct, on_success=self.success)
+        AsyncRequest(url, method='PATCH', data=self.selected_acct, on_success=self.success)
 
     def success(self, resp):
         self.dismiss()

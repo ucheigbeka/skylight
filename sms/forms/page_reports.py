@@ -9,6 +9,10 @@ kv_path = get_kv_path('page_reports')
 Builder.load_file(kv_path)
 
 
+def unload():
+    Builder.unload_file(kv_path)
+
+
 class PageReports(FormTemplate):
     title = 'Page Reports'
 
