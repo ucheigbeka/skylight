@@ -45,6 +45,9 @@ def set_details(_username, _token, _title):
 
 def set_suffix():
     global kv_surfix
+    if not title:
+        kv_surfix = ''
+        return
     try:
         idx = titles.index(title)
     except ValueError:
