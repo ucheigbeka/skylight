@@ -1,5 +1,4 @@
 import os
-from time import sleep
 from importlib import reload
 from kivy.app import App
 from kivy.lang import Builder
@@ -8,7 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition, SlideTransition
 from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
-from sms import titles, MODE
+from sms import titles, MODE, stop_loading
 from sms.scripts.logout import logout
 from sms.utils.menubar import LoginActionView, MainActionView
 from sms.utils.popups import YesNoPopup
@@ -50,7 +49,8 @@ class Manager(ScreenManager):
 
         if idx in range(2, 8):
             self.assigned_level = (idx - 1) * 100
-        print('Assigned level:', self.assigned_level)
+        if MODE == 'DEBUG':
+            print('Assigned level:', self.assigned_level)
 
     def remove_screen(self, name):
         screen = self.sm.get_screen(name)
@@ -59,9 +59,8 @@ class Manager(ScreenManager):
     # @run_in_background
     def load_screens(self):
         for name, screen in self.forms_dict.items():
-            print('Loading screen:', name)
             self.add_widget(screen(name=name))
-            # sleep(.1)
+        stop_loading()
 
     def import_form(self, form):
         if form in self.imported_modules:
@@ -224,9 +223,7 @@ class Root(BoxLayout):
         self.switch_screen('profile')
 
     def logout(self, instance):
-    	YesNoPopup(message='Do you want to Log out?', on_yes=self.logout_routine, title='Logout')
-        logout()
-        self.set_menu_view(LoginActionView)
+        YesNoPopup(message='Are you sure you want to logout?', on_yes=logout, title='Logout')
 
     def about(self, instance):
         pass
