@@ -1,10 +1,14 @@
+import os
 from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+from kivy.uix.modalview import ModalView
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, BooleanProperty
 
 Builder.load_string('''
+#:import os os
+
 <PopupLabel>:
     text_size: self.size
     valign: 'middle'
@@ -28,18 +32,28 @@ Builder.load_string('''
         text: root.text
         markup: True
     BoxLayout:
-        size_hint_x: .2
-        spacing: 10
+        size_hint_y: .2
+        spacing: dp(10)
         Button:
             text: 'Yes'
-            halign: 'left'
-            size_hint_y: .5
             on_press: root.yes()
         Button:
             text: 'No'
-            halign: 'right'
-            size_hint_y: .5
             on_press: root.no()
+
+<LoadPopup>:
+    BoxLayout:
+        padding: 0, dp(10)
+        AsyncImage:
+            source: os.path.join(root.base_dir, 'icons', 'progress-80.gif')
+            anim_delay: 1 / 24
+            size_hiny: None, None
+            size: self.texture_size
+        PopupLabel:
+            text: root.text
+            text_size: self.size
+            halign: 'left'
+            markup: True
 ''')
 
 
@@ -69,8 +83,8 @@ class YesNoPopupContent(BoxLayout):
         self.end()
 
     def end(self):
-        if self.end_func: self.end_func()
-        else: pass
+        if self.end_func:
+            self.end_func()
 
     def set_callbacks(self, yes, no, end_func):
         self.yes_func = yes
@@ -110,5 +124,39 @@ class YesNoPopup(PopupBase):
         self.content = YesNoPopupContent(text=message)
         self.content.set_callbacks(on_yes, on_no, self.dismiss)
         self.auto_dismiss = False
-        self.size_hint = (.4, .2)
+        self.size_hint = (.3, .4)
         super(YesNoPopup, self).__init__(**kwargs)
+
+
+class LoadPopup(ModalView):
+    base_dir = os.path.dirname(__file__)
+    text = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(LoadPopup, self).__init__(**kwargs)
+        self.size_hint = (.25, .15)
+        self.auto_dismiss = False
+
+    def open(self, *args, text=None, **kwargs):
+        if not text:
+            text = 'Loading...'
+        self.text = text
+        super(LoadPopup, self).open(*args, **kwargs)
+
+
+if __name__ == '__main__':
+    from kivy.app import runTouchApp
+    from kivy.uix.button import Button
+
+    def yes():
+        print('Yes')
+
+    def no():
+        print('No')
+
+    def callback(ins):
+        # YesNoPopup('This is a test', on_yes=yes, on_no=no)
+        LoadPopup().open()
+
+    btn = Button(text='Test', on_press=callback)
+    runTouchApp(btn)
