@@ -2,6 +2,7 @@ import os
 import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
+from sms.utils.popups import LoadPopup
 
 # Backend config
 base_url = 'http://127.0.0.1:1807/api/'
@@ -19,6 +20,15 @@ titles = [
     '500 level course adviser(2)', 'Secretary'
 ]
 current_session = None
+loading_popup = LoadPopup()
+
+
+def start_loading(text=None):
+    loading_popup.open(text=text)
+
+
+def stop_loading():
+    loading_popup.dismiss()
 
 
 def urlTo(path):
