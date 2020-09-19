@@ -6,7 +6,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import StringProperty
 
-from sms import urlTo, set_details
+from sms import urlTo, set_details, start_loading, stop_loading
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -42,6 +42,7 @@ class SigninWindow(FormTemplate):
         url = urlTo('login')
         token = tokenize(self.username + ':' + self.password)
         data = {'token': token}
+        start_loading(text='Logging in...')
         AsyncRequest(url, on_success=self.grant_access,
                      on_failure=self.auth_error, data=data, method='POST')
 
@@ -65,6 +66,7 @@ class SigninWindow(FormTemplate):
         Clock.schedule_once(root.login)
 
     def auth_error(self, resp):
+        stop_loading()
         ErrorPopup('Invalid username or password')
 
     def server_error(self, resp):
