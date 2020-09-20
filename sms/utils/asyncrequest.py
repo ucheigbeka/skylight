@@ -67,7 +67,7 @@ class AsyncRequest(Thread):
             # Restart server
         except requests.exceptions.HTTPError as err:
             if self.resp.status_code == 440:
-                YesNoPopup(message='Session expired, login again?', on_yes=sign_in_overlay, title='Session Timeout')
+                YesNoPopup(message='Session expired, login again?', on_yes=draw_sign_in_popup, title='Session Timeout')
             elif callable(self.on_failure):
                 self.on_failure(self.resp)
             else:
@@ -90,8 +90,11 @@ class AsyncRequest(Thread):
         Window.set_system_cursor('arrow')
 
 
-def sign_in_overlay():
-    # todo: use an actual overlay; subclass PopupBase
+def draw_sign_in_popup():
     from kivy.app import App
+    from sms.forms.signin import SigninPopup
+
     root = App.get_running_app().root
-    root.switch_screen('signin')
+    signin_screen = [screen for screen in root.sm.screens if screen.name == 'signin']
+    if signin_screen:
+        SigninPopup(signin_screen[0])
