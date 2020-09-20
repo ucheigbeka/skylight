@@ -119,6 +119,5 @@ class SigninPopup(PopupBase):
     def __init__(self, signin_window_object, **kwargs):
         self.title = kwargs.get('title', 'Signin')
         self.content = SigninPopupContent(signin_window_object, dismiss=self.dismiss)
-        self.auto_dismiss = False
         self.size_hint = (.3, .4)
         super(SigninPopup, self).__init__(**kwargs)
