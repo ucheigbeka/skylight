@@ -16,7 +16,7 @@ import json
 from threading import Thread
 from kivy.core.window import Window
 from sms import get_token
-from sms.utils.popups import ErrorPopup
+from sms.utils.popups import ErrorPopup, YesNoPopup
 
 
 class AsyncRequest(Thread):
@@ -67,7 +67,7 @@ class AsyncRequest(Thread):
             # Restart server
         except requests.exceptions.HTTPError as err:
             if self.resp.status_code == 440:
-                ErrorPopup('Session expired, login again')
+                YesNoPopup(message='Session expired, login again?', on_yes=draw_sign_in_popup, title='Session Timeout')
             elif callable(self.on_failure):
                 self.on_failure(self.resp)
             else:
@@ -88,3 +88,18 @@ class AsyncRequest(Thread):
                 self.on_success(self.resp)
 
         Window.set_system_cursor('arrow')
+
+
+def draw_sign_in_popup():
+    from kivy.app import App
+    from sms.forms.signin import SigninPopup
+
+    root = App.get_running_app().root
+    signin_screen = [screen for screen in root.sm.screens if screen.name == 'signin']
+    if not signin_screen:
+        SigninPopup(signin_screen[0])
+    else:
+        # backup
+        from sms.scripts.logout import reset
+        YesNoPopup(message='Cannot retrieve session, incomplete works would be aborted. \n\nProceed to Signin screen?',
+                   on_yes=reset, title='Session Timeout')

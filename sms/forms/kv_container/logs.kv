@@ -62,11 +62,14 @@
                     Label
                     Label
 
-                    Label
                     Button:
                         text: 'Clear Filters'
                         halign: 'left'
                         on_press: root.fetch_all()
+                    CustomSpinner:
+                        id: time_sort_spinner
+                        text: 'Sort by'
+                        width: 200
                     Button:
                         text: 'Apply Filters'
                         on_press: root.fetch_filtered()

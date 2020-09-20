@@ -147,6 +147,8 @@ class LoadPopup(ModalView):
 if __name__ == '__main__':
     from kivy.app import runTouchApp
     from kivy.uix.button import Button
+    from sms.forms.signin import SigninPopup
+
 
     def yes():
         print('Yes')
@@ -156,7 +158,8 @@ if __name__ == '__main__':
 
     def callback(ins):
         # YesNoPopup('This is a test', on_yes=yes, on_no=no)
-        LoadPopup().open()
+        # LoadPopup().open()
+        SigninPopup(signin_window_object=None)
 
     btn = Button(text='Test', on_press=callback)
     runTouchApp(btn)
