@@ -5,11 +5,12 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import StringProperty
+from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import ErrorPopup
+from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
 
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 
@@ -65,8 +66,9 @@ class SigninWindow(FormTemplate):
         kv_instance = App.get_running_app()
         root = kv_instance.root
         root.title = title
+
         if self.username == prev_username:
-            root.goto_previous_screen(kv_instance)
+            self.dismiss()
             stop_loading()
         else:
             Clock.schedule_once(root.login)
@@ -77,3 +79,46 @@ class SigninWindow(FormTemplate):
 
     def server_error(self, resp):
         ErrorPopup('Server down')
+
+
+class SigninPopupContent(BoxLayout):
+    username = StringProperty()
+    password = StringProperty()
+    sn = None
+    dismiss = None
+
+    def __init__(self, signin_window_object, dismiss, **kwargs):
+        self.dismiss = dismiss
+        self.sn = signin_window_object
+        # self.ids.username.focus = True
+        super().__init__(**kwargs)
+
+    def signin(self):
+        self.sn.username = self.username
+        self.sn.password = self.password
+        self.sn.dismiss = self.dismiss
+        prev_username = get_username()
+        if self.username != prev_username:
+            YesNoPopup('Different user detected, incomplete works would be aborted. Proceed?',
+                       on_yes=self.reset, on_no=self.clear_fields)
+            return
+        self.sn.get_session_key()
+
+    def reset(self):
+        from sms.scripts.logout import logout
+        logout()
+        self.sn.get_session_key()
+        self.dismiss()
+
+    def clear_fields(self):
+        self.ids.username.text = ''
+        self.ids.pwd.text = ''
+
+
+class SigninPopup(PopupBase):
+    def __init__(self, signin_window_object, **kwargs):
+        self.title = kwargs.get('title', 'Signin')
+        self.content = SigninPopupContent(signin_window_object, dismiss=self.dismiss)
+        self.auto_dismiss = False
+        self.size_hint = (.3, .4)
+        super(SigninPopup, self).__init__(**kwargs)
