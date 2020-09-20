@@ -6,7 +6,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import StringProperty
 
-from sms import urlTo, set_details, start_loading, stop_loading
+from sms import urlTo, set_details, start_loading, stop_loading, get_username
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -35,7 +35,6 @@ def tokenize(text):
 class SigninWindow(FormTemplate):
     username = StringProperty()
     password = StringProperty()
-
     title = 'Login'
 
     def signin(self):
@@ -59,11 +58,18 @@ class SigninWindow(FormTemplate):
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
+
+        prev_username = get_username()
         set_details(self.username, token, title)
 
-        root = App.get_running_app().root
+        kv_instance = App.get_running_app()
+        root = kv_instance.root
         root.title = title
-        Clock.schedule_once(root.login)
+        if self.username == prev_username:
+            root.goto_previous_screen(kv_instance)
+            stop_loading()
+        else:
+            Clock.schedule_once(root.login)
 
     def auth_error(self, resp):
         stop_loading()
