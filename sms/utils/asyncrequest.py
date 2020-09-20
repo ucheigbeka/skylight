@@ -47,7 +47,7 @@ class AsyncRequest(Thread):
                     self.url, headers=self.headers, params=self.params)
             elif self.method == 'POST':
                 self.resp = requests.post(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PUT':
                 self.resp = requests.put(
                     self.url, headers=self.headers, json=self.data)
