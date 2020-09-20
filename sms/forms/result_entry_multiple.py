@@ -4,7 +4,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 
-from sms import urlTo
+from sms import urlTo, get_assigned_level, root
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -151,11 +151,16 @@ class ResultEntryMultiple(FormTemplate):
     def upload(self, *args):
         url = urlTo('results')
         dv = self.edv.get_dataviewer()
-        data = dv.get_data()
-        idx, is_valid = self.validate_data(data)
+        list_of_results = dv.get_data()
+        idx, is_valid = self.validate_data(list_of_results)
         if is_valid:
-            AsyncRequest(url, data=data, method='POST',
-                         on_success=self.clear_dataview)
+            params = {'superuser': True} if root.sm.is_admin else None
+            data = {
+                'level': get_assigned_level(),
+                'list_of_results': list_of_results
+            }
+            AsyncRequest(url, data=data, params=params, method='POST', on_success=self.clear_dataview)
+
         else:
             if idx != '':
                 ErrorPopup('Error parsing results at index ' + str(idx))

@@ -2,7 +2,7 @@ import os
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 
-from sms import urlTo, get_current_session, get_assigned_level
+from sms import urlTo, get_current_session, get_assigned_level, root
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.dataview import DataViewerInput
@@ -130,21 +130,23 @@ class ResultEntrySingle(FormTemplate):
         results_diff = self.compute_diff(results_list, self.data['result'])
         carryovers_diff = self.compute_diff(carryovers_list, self.data['carryovers'])
 
-        data = []
+        data = {
+            'level': get_assigned_level(),
+            'list_of_results': []
+        }
+
         session = int(self.ids['session'].text)
 
         for course_list in results_diff:
             course_code = course_list[0]
             score = course_list[-2]
-            data.append([course_code, session, self.data['mat_no'], score])
+            data['list_of_results'].append([course_code, session, self.data['mat_no'], score])
 
         for course_list in carryovers_diff:
             course_code = course_list[0]
             score = course_list[-2]
-            data.append([course_code, session, self.data['mat_no'], score])
+            data['list_of_results'].append([course_code, session, self.data['mat_no'], score])
 
         url = urlTo('results')
-        if session == get_current_session():
-            AsyncRequest(url, data=data, method='POST', on_success=self.clear_fields)
-        else:
-            AsyncRequest(url, data=data, method='PUT', on_success=self.clear_fields)
+        params = {'superuser': True} if root.sm.is_admin else None
+        AsyncRequest(url, data=data, params=params, method='POST', on_success=self.clear_fields)
