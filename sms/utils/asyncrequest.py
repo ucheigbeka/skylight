@@ -96,7 +96,7 @@ def draw_sign_in_popup():
 
     root = App.get_running_app().root
     signin_screen = [screen for screen in root.sm.screens if screen.name == 'signin']
-    if not signin_screen:
+    if signin_screen:
         SigninPopup(signin_screen[0])
     else:
         # backup
