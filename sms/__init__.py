@@ -102,8 +102,8 @@ from sms.utils.asyncrequest import AsyncRequest
 def get_log(func, **kwargs):
     url = urlTo('logs')
     params = {
-        'limit': kwargs.pop('limit', 20),
-        'offset': kwargs.pop('offset', 0)
+        'count': kwargs.pop('count', 20),
+        'step': kwargs.pop('step', 0)
     }
     params.update(kwargs)
     AsyncRequest(url, params=params, on_success=func)
