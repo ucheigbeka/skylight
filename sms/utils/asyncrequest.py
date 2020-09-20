@@ -91,6 +91,7 @@ class AsyncRequest(Thread):
 
 
 def sign_in_overlay():
+    # todo: use an actual overlay; subclass PopupBase
     from kivy.app import App
     root = App.get_running_app().root
     root.switch_screen('signin')
