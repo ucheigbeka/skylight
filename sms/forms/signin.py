@@ -99,7 +99,7 @@ class SigninPopupContent(BoxLayout):
         self.sn.dismiss = self.dismiss
         prev_username = get_username()
         if self.username != prev_username:
-            YesNoPopup('Different user detected, incomplete works would be aborted. Proceed?',
+            YesNoPopup('Different user detected, incomplete works would be aborted. \n\nProceed?',
                        on_yes=self.reset, on_no=self.clear_fields)
             return
         self.sn.get_session_key()
