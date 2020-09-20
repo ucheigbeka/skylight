@@ -67,6 +67,7 @@ class Logs(FormTemplate):
         get_log(self.populate_dv, limit=100)
         self.dv.dv.set_viewclass('CustomDataViewerLabel')
         self.ids['operations_spinner'].values = list(operations_mapping.keys())
+        self.ids['time_sort_spinner'].values = ['Most Recent First', 'Oldest First']
         self.query_users()
 
     def populate_dv(self, resp):
@@ -102,7 +103,8 @@ class Logs(FormTemplate):
         date = self.ids['date_picker'].text
         user_title = self.ids['users_spinner'].text
         operation = self.ids['operations_spinner'].text
-        self.filter = {}
+        time_sort = self.ids['time_sort_spinner'].text
+        self.filter = {'reverse': time_sort == 'Oldest First'}
 
         if isinstance(date, str) and len(date.split('/')) == 3:
             self.filter['time'] = datetime.strptime(date, '%d/%m/%Y').timestamp()
