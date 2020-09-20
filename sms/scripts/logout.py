@@ -11,7 +11,7 @@ def logout():
     AsyncRequest(url, method='POST', data={'token': get_token()}, on_success=reset)
 
 
-def reset(resp):
+def reset(resp=None):
     root = App.get_running_app().root
     sm = root.sm
     set_details('', '', '')
