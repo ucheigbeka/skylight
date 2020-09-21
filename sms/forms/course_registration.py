@@ -186,6 +186,8 @@ class CourseRegistration(FormTemplate):
         first_sem_courses = choices['first_sem']
         second_sem_courses = choices['second_sem']
 
+        FIRST_SEM_COURSES.clear()
+        SECOND_SEM_COURSES.clear()
         for code, title, credit, _ in first_sem_courses:
             FIRST_SEM_COURSES[code] = [title, credit]
         for code, title, credit, _ in second_sem_courses:
