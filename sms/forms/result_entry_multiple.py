@@ -135,6 +135,9 @@ class ResultEntryMultiple(FormTemplate):
         if resp:
             err_msg = '\n'.join(resp)
             ErrorPopup(err_msg, title='Alert')
+        # self.clear()
+
+    def clear(self):
         self.edv.data = [[''] * 4]
         # Refreshs the dataview
         self.edv.data.append([''] * 4)
