@@ -3,7 +3,7 @@ import json
 from kivy.lang import Builder
 from kivy.properties import StringProperty
 
-from sms import urlTo, get_assigned_level
+from sms import urlTo, get_assigned_level, root
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, SuccessPopup
@@ -100,7 +100,8 @@ class PersonalInfo(FormTemplate):
         self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
 
         self.ids['btn_positive'].text = 'Update'
-        self.ids['btn_positive'].disabled = False if data['level'] == get_assigned_level() else True
+        self.ids['btn_positive'].disabled = False if data['level'] == get_assigned_level() or root.sm.is_admin else True
+        self.ids['delete'].disabled = False if data['level'] == get_assigned_level() or root.sm.is_admin else True
 
     def show_error(self, resp):
         ErrorPopup('Record not found: ' + resp.json())
