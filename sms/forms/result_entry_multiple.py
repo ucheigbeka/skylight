@@ -130,14 +130,7 @@ class ResultEntryMultiple(FormTemplate):
             else:
                 self.parse_txt(instance)
 
-    def clear_dataview(self, resp):
-        resp = resp.json()
-        if resp:
-            err_msg = '\n'.join(resp)
-            ErrorPopup(err_msg, title='Alert')
-        # self.clear()
-
-    def clear(self):
+    def clear_dataview(self):
         self.edv.data = [[''] * 4]
         # Refreshs the dataview
         self.edv.data.append([''] * 4)
@@ -162,10 +155,16 @@ class ResultEntryMultiple(FormTemplate):
                 'level': get_assigned_level(),
                 'list_of_results': list_of_results
             }
-            AsyncRequest(url, data=data, params=params, method='POST', on_success=self.clear_dataview)
+            AsyncRequest(url, data=data, params=params, method='POST', on_success=self.show_response)
 
         else:
             if idx != '':
                 ErrorPopup('Error parsing results at index ' + str(idx))
             else:
                 ErrorPopup('Error parsing results. Check your input')
+
+    def show_response(self, resp):
+        resp = resp.json()
+        if resp:
+            err_msg = '\n'.join(resp)
+            ErrorPopup(err_msg, title='Alert')
