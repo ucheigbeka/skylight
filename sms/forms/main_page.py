@@ -32,7 +32,7 @@ class MainPage(FormTemplate):
         self.logs = [['', '', '']]
 
     def query_logs(self, dt):
-        get_log(self.populate_dv, limit=10)
+        get_log(self.populate_dv, count=15)
 
     def populate_dv(self, resp):
         logs = resp.json()
