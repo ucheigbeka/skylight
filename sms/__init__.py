@@ -10,8 +10,11 @@ base_url = 'http://127.0.0.1:1807/api/'
 
 # Frontend config
 MODE = 'DEBUG'
-token, title, username = '', '', ''
 kv_surfix = ''
+token, title, username = '', '', ''
+current_session = None
+# For auto logout; time is in seconds
+allowable_idle_time = 20 * 60  # 30 minutes
 
 titles = [
     'Head of Department', 'Exam officer', '100 level course adviser',
@@ -19,7 +22,6 @@ titles = [
     '400 level course adviser', '500 level course adviser',
     '500 level course adviser(2)', 'Secretary'
 ]
-current_session = None
 loading_popup = LoadPopup()
 
 
@@ -39,6 +41,7 @@ def get_current_session():
     global current_session
     if not current_session:
         url = urlTo('current_session')
+        # AsyncRequest not used as the session is needed immediately to draw pages
         resp = requests.get(url)
         if resp.status_code == 200:
             current_session = resp.json()
