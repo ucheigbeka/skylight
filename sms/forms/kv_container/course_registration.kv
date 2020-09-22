@@ -176,9 +176,21 @@
                     size_hint_y: .1
                 CourseRegView:
                     id: second_sem_view
-        PositiveActionButton:
-            size_hint: .1, .1
+        BoxLayout:
+            size_hint: (None, .1)
+            padding: dp(0), dp(10)
+            width: dp(520)
             pos_hint: {'center_x': .5}
-            disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
-            text: 'Register'
-            on_press: root.register_courses()
+            spacing: dp(20)
+            PositiveActionButton:
+                size_hint_x: None
+                width: dp(250)
+                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                text: 'Register'
+                on_press: root.register_courses()
+            NegativeActionButton:
+                size_hint_x: None
+                width: dp(250)
+                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                text: 'Delete'
+                on_press: root.delete_course_reg()
