@@ -229,4 +229,5 @@ class Root(BoxLayout):
         pass
 
     def exit(self, instance):
+        logout()
         App.get_running_app().stop()
