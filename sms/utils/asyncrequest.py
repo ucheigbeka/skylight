@@ -91,15 +91,5 @@ class AsyncRequest(Thread):
 
 
 def draw_sign_in_popup():
-    from kivy.app import App
     from sms.forms.signin import SigninPopup
-
-    root = App.get_running_app().root
-    signin_screen = [screen for screen in root.sm.screens if screen.name == 'signin']
-    if not signin_screen:
-        SigninPopup(signin_screen[0])
-    else:
-        # backup
-        from sms.scripts.logout import reset
-        YesNoPopup(message='Cannot retrieve session, incomplete works would be aborted. \n\nProceed to Signin screen?',
-                   on_yes=reset, title='Session Timeout')
+    SigninPopup()
