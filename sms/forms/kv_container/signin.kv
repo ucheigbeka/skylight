@@ -37,31 +37,21 @@
 
     BoxLayout:
         orientation: "vertical"
-        size_hint: 1, 1
-        spacing: dp(20)
+        spacing: dp(30)
         padding: dp(20)
-        background_color: (0,0,0,.80)
-        Label:
-            size_hint_y: None
-            height: dp(20)
         CustomTextInput:
             id: username
-            size_hint: 1, .5
             focus: True
             hint_text: "Username"
+            size_hint_x: 1
             on_text_validate: pwd.focus = True
         CustomTextInput:
             id: pwd
-            size_hint: 1, .5
             password: True
             hint_text: "Password"
+            size_hint_x: 1
             on_text_validate: root.signin()
-        Label:
-            size_hint_y: None
-            height: dp(20)
         MenuButton:
             text: "Sign In"
-            size_hint: 1, 1
-            background_color: (0,0,0,.80)
-            background_normal: ''
+            size_hint_y: 1
             on_press: root.signin()
