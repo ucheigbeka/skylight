@@ -14,7 +14,7 @@ kv_surfix = ''
 token, title, username = '', '', ''
 current_session = None
 # For auto logout; time is in seconds
-allowable_idle_time = 20 * 60  # 30 minutes
+allowable_idle_time = 20 * 60  # 20 minutes
 
 titles = [
     'Head of Department', 'Exam officer', '100 level course adviser',
