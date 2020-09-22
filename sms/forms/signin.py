@@ -4,7 +4,7 @@ from hashlib import md5
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
@@ -36,6 +36,7 @@ def tokenize(text):
 class SigninWindow(FormTemplate):
     username = StringProperty()
     password = StringProperty()
+    retain_session = BooleanProperty(False)
     title = 'Login'
 
     def signin(self):
@@ -48,8 +49,7 @@ class SigninWindow(FormTemplate):
 
     def get_session_key(self, *args):
         url = urlTo('session_key')
-        AsyncRequest(url, on_success=self.set_token_key,
-                     on_failure=self.server_error)
+        AsyncRequest(url, on_success=self.set_token_key)
 
     def set_token_key(self, resp):
         global SESSION_KEY
@@ -59,56 +59,49 @@ class SigninWindow(FormTemplate):
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
-
-        prev_username = get_username()
         set_details(self.username, token, title)
-
-        kv_instance = App.get_running_app()
-        root = kv_instance.root
+        root = App.get_running_app().root
         root.title = title
 
-        if self.username == prev_username:
-            self.dismiss()
-            stop_loading()
-        else:
+        if not self.retain_session:
             Clock.schedule_once(root.login)
+        else:
+            self.retain_session = False
+            stop_loading()
 
     def auth_error(self, resp):
         stop_loading()
         ErrorPopup('Invalid username or password')
 
-    def server_error(self, resp):
-        ErrorPopup('Server down')
-
 
 class SigninPopupContent(BoxLayout):
     username = StringProperty()
     password = StringProperty()
-    sn = None
-    dismiss = None
+    dismiss = BooleanProperty(False)
 
-    def __init__(self, signin_window_object, dismiss, **kwargs):
-        self.dismiss = dismiss
-        self.sn = signin_window_object
-        # self.ids.username.focus = True
-        super().__init__(**kwargs)
+    def __init__(self, **kwargs):
+        super(SigninPopupContent, self).__init__(**kwargs)
+        root = App.get_running_app().root
+        self.sn = root.sm.get_screen('signin')
 
     def signin(self):
         self.sn.username = self.username
         self.sn.password = self.password
-        self.sn.dismiss = self.dismiss
+
         prev_username = get_username()
         if self.username != prev_username:
             YesNoPopup('Different user detected, incomplete works would be aborted. \n\nProceed?',
                        on_yes=self.reset, on_no=self.clear_fields)
             return
+        self.sn.retain_session = True
         self.sn.get_session_key()
+        self.dismiss = True
 
     def reset(self):
-        from sms.scripts.logout import logout
-        logout()
+        from sms.scripts.logout import reset
+        self.dismiss = True
+        reset()
         self.sn.get_session_key()
-        self.dismiss()
 
     def clear_fields(self):
         self.ids.username.text = ''
@@ -116,8 +109,9 @@ class SigninPopupContent(BoxLayout):
 
 
 class SigninPopup(PopupBase):
-    def __init__(self, signin_window_object, **kwargs):
+    def __init__(self, **kwargs):
         self.title = kwargs.get('title', 'Signin')
-        self.content = SigninPopupContent(signin_window_object, dismiss=self.dismiss)
+        self.content = SigninPopupContent()
+        self.content.bind(dismiss=lambda ins, val: self.dismiss())
         self.size_hint = (.3, .4)
         super(SigninPopup, self).__init__(**kwargs)
