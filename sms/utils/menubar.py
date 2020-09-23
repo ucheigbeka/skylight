@@ -12,9 +12,6 @@ Builder.load_string('''
 <Separator@Label+ActionItem>:
     size_hint_x: .7
 
-<TestLabel@Label>:
-    text: '1'
-
 <LoginActionView>:
     spacing: dp(20)
     ActionPrevious:
@@ -141,6 +138,7 @@ class MainActionView(ActionView):
     def clear_drawing(self):
         self.circular_bg.size = (0, 0)
         self.not_text.size = (0, 0)
+        self.notification.canvas.ask_update()
 
     def update_drawing(self, instance, value):
         if self.circular_bg:
