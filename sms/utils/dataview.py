@@ -367,6 +367,10 @@ class DataViewer(BoxLayout):
     def clear(self):
         self._data = [[''] * self.cols]
         if self.selectable:
+            # Refresh the dataview
+            self._data.append([''] * self.cols)
+            self._data = [[''] * self.cols]
+
             self.selectable_grid.clear_selection()
             self.selected_indexes = []
 

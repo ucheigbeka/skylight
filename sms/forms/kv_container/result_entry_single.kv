@@ -39,12 +39,12 @@
                 width: dp(100)
                 input_filter: 'int'
                 max_length: 4
-                disabled: False if not root.manager else not root.manager.is_admin
             CustomLabel:
                 text: 'Name'
                 halign: 'left'
             CustomTextInput:
                 id: name
+                disabled: True
             CustomLabel:
                 text: 'Level'
                 halign: 'left'

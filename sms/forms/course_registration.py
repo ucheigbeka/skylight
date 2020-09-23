@@ -6,9 +6,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
     ObjectProperty, BooleanProperty
 
-from sms import urlTo, get_current_session, get_assigned_level
+from sms import urlTo, get_current_session, get_assigned_level, root
 from sms.forms.template import FormTemplate
-from sms.utils.popups import ErrorPopup
+from sms.utils.popups import ErrorPopup, YesNoPopup
 from sms.utils.asyncrequest import AsyncRequest
 # from sms.utils.asynctask import  run_in_background
 
@@ -186,6 +186,8 @@ class CourseRegistration(FormTemplate):
         first_sem_courses = choices['first_sem']
         second_sem_courses = choices['second_sem']
 
+        FIRST_SEM_COURSES.clear()
+        SECOND_SEM_COURSES.clear()
         for code, title, credit, _ in first_sem_courses:
             FIRST_SEM_COURSES[code] = [title, credit]
         for code, title, credit, _ in second_sem_courses:
@@ -214,7 +216,9 @@ class CourseRegistration(FormTemplate):
 
     def populate_fields_for_old_reg(self, resp):
         self.populate_fields(resp)
-        self.is_old_course_reg = True
+        acad_session = int(self.ids.reg_session.text)
+        if acad_session < get_current_session():
+            self.is_old_course_reg = True
 
     def register_courses(self):
         if not self.data:
@@ -231,6 +235,21 @@ class CourseRegistration(FormTemplate):
         self.data['courses'] = courses
         url = urlTo('course_reg')
         AsyncRequest(url, data=self.data, method='POST', on_failure=self.show_reg_error, on_success=self.clear_fields)
+
+    def delete_course_reg(self):
+        YesNoPopup(message='Do you want to delete this course registration?', on_yes=self._delete_course_reg)
+
+    def _delete_course_reg(self):
+        if not self.data:
+            ErrorPopup('Delete error')
+            return
+        params = {
+            'mat_no': self.data['mat_no'],
+            'acad_session': self.data['course_reg_session'],
+            'superuser': True if root.sm.is_admin else None
+        }
+        url = urlTo('course_reg')
+        AsyncRequest(url, params=params, method='DELETE', on_failure=self.show_error, on_success=self.clear_fields)
 
     def clear_fields(self, *args):
         global FIRST_SEM_COURSES, SECOND_SEM_COURSES

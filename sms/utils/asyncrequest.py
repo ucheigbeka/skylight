@@ -1,4 +1,4 @@
-'''
+"""
 AsyncRequest
 ============
 
@@ -9,14 +9,17 @@ method arguement definies the type of http request to make
     method = 'POST' - for adding new items to the database
     method = 'PUT' - for updating a record in the database
     method = 'DELETE' - for deleting a record from the database
-'''
+"""
 
 import requests
 import json
 from threading import Thread
+from datetime import datetime
 from kivy.core.window import Window
-from sms import get_token
+from sms import get_token, urlTo, allowable_idle_time
 from sms.utils.popups import ErrorPopup, YesNoPopup
+
+last_request_timestamp = datetime.now().timestamp()
 
 
 class AsyncRequest(Thread):
@@ -41,13 +44,15 @@ class AsyncRequest(Thread):
 
     def run(self):
         Window.set_system_cursor('wait')
+        # update last_request_timestamp to track activity
+        session_timer(self.url, self.params)
         try:
             if self.method == 'GET':
                 self.resp = requests.get(
                     self.url, headers=self.headers, params=self.params)
             elif self.method == 'POST':
                 self.resp = requests.post(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PUT':
                 self.resp = requests.put(
                     self.url, headers=self.headers, json=self.data)
@@ -88,6 +93,25 @@ class AsyncRequest(Thread):
                 self.on_success(self.resp)
 
         Window.set_system_cursor('arrow')
+
+
+def session_timer(url, params):
+    global last_request_timestamp
+    curr_timestamp = datetime.now().timestamp()
+
+    if last_request_timestamp and curr_timestamp - last_request_timestamp > allowable_idle_time:
+        if url not in [urlTo('logout'), urlTo('login')]:  # if the request is logout or login, the let it pass
+            # else logout silently
+            requests.post(
+                url=urlTo('logout'),
+                headers={'Content-type': 'application/json',
+                         'token': get_token()},
+                json={'token': get_token()}
+            )
+    log_filter_params = ['time', 'title', 'operation', 'reverse']
+    # don't update last_request_timestamp if logs is called w/o filters (from main menu)
+    if url != urlTo('logs') or any(map(lambda param: param in params, log_filter_params)):
+        last_request_timestamp = curr_timestamp
 
 
 def draw_sign_in_popup():

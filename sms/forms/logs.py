@@ -9,7 +9,6 @@ from sms import get_log, urlTo
 from sms.forms.template import FormTemplate
 from sms.utils.dataview import DataViewerLabel
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import ErrorPopup
 
 
 form_root = os.path.dirname(__file__)
@@ -47,6 +46,7 @@ class Logs(FormTemplate):
         self.ufmt_displayed_logs = [['', '', '']]
         self.dv.dv.rv.bind(scroll_y=self.set_scroll)
         self.prev_scroll = 1
+        self.log_step = 0
         self.bind(scroll=self.query_more_logs)
         self.users = []
         self.operations = []
@@ -61,10 +61,10 @@ class Logs(FormTemplate):
             formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %#e, %Y; %#I:%M%p")
             formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             displayed_logs.append(log[:-1] + [formatted_time])
-        return displayed_logs
+        return displayed_logs if displayed_logs else [['', '', '']]
 
     def on_enter(self):
-        get_log(self.populate_dv, limit=100)
+        get_log(self.populate_dv, count=15)
         self.dv.dv.set_viewclass('CustomDataViewerLabel')
         self.ids['operations_spinner'].values = list(operations_mapping.keys())
         self.ids['time_sort_spinner'].values = ['Most Recent First', 'Oldest First']
@@ -78,12 +78,12 @@ class Logs(FormTemplate):
             d_logs.append([action[: action.find(' ')], action, timestamp])
         self.logs = d_logs
         self.ufmt_displayed_logs = self.logs    # Potentially dangerous
-        self.log_offset = 100
+        self.log_step = 1
         self.view_stop = [len(self.logs), 16][len(self.logs) > 16]
 
     def extend_dv(self, resp):
         logs = resp.json()
-        if not logs[0]:
+        if not (logs and logs[0]):
             return
         old_disp_log_len = len(self.ufmt_displayed_logs)
         for log in logs:
@@ -91,7 +91,7 @@ class Logs(FormTemplate):
             fmt_log = [action[: action.find(' ')], action, timestamp]
             self.logs.append(fmt_log)
             self.ufmt_displayed_logs.append(fmt_log)
-        self.log_offset += 10
+        self.log_step += 1
         scroll_y_val = 1 - old_disp_log_len / len(self.ufmt_displayed_logs)
         if scroll_y_val: self.dv.dv.rv.scroll_y = scroll_y_val
 
@@ -115,16 +115,16 @@ class Logs(FormTemplate):
 
     def show_logs(self, reset_filter_text=False):
         self.clear_fields(reset_filter_text)
-        get_log(self.populate_dv, limit=100, **self.filter)
+        get_log(self.populate_dv, count=15, **self.filter)
         self.dv.dv.rv.scroll_y = 1
         self.query_users()
 
     def query_more_logs(self, *args):
         if args:
             if args[1] < 0.001:
-                get_log(self.extend_dv, limit=15, offset=self.log_offset, **self.filter)
+                get_log(self.extend_dv, count=15, step=self.log_step, **self.filter)
         else:
-            get_log(self.extend_dv, limit=15, offset=self.log_offset, **self.filter)
+            get_log(self.extend_dv, count=15, step=self.log_step, **self.filter)
 
     def query_users(self):
         url = urlTo('accounts')
@@ -166,6 +166,7 @@ class Logs(FormTemplate):
             self.ids['date_picker'].text = 'From Date'
             self.ids['users_spinner'].text = 'Users'
             self.ids['operations_spinner'].text = 'Operations'
+            self.ids['time_sort_spinner'].text = 'Most Recent First'
 
         self.ids['textview'].text = ''
         self.ufmt_displayed_logs = [['', '', '']]
