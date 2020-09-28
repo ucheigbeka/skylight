@@ -28,7 +28,7 @@ class CustomDataViewerInput(DataViewerInput):
     def on_focus(self, instance, value):
         if not value:
             string = self.text
-            if string and string.isdecimal():
+            if string and (string.isdecimal() or string == '-1'):
                 score = int(string)
                 grade = 'F'
 
@@ -99,6 +99,8 @@ class ResultEntrySingle(FormTemplate):
         self.ids['name'].text = self.data['name']
         self.ids['level'].text = str(self.data['level'])
         self.ids['session'].text = str(self.data['session'])
+        self.ids['level_gpa'].text = str(self.data['level_gpa'])
+        self.ids['cgpa'].text = str(self.data['cgpa'])
 
         results = self.data['result']
         carryovers = self.data['carryovers']
