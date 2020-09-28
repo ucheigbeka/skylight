@@ -82,8 +82,7 @@ class ResultEntrySingle(FormTemplate):
         self.data = data
 
         url = urlTo('grading_rules')
-        session = get_current_session() if not self.ids['session'].text else int(self.ids['session'].text)
-        params = {'acad_session': session}
+        params = {'acad_session': self.data['entry_session']}
         AsyncRequest(url, params=params, method='GET', on_success=self.populate_fields)
 
     def set_grading_rules(self, rules):
