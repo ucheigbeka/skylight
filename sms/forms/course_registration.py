@@ -170,6 +170,7 @@ class CourseRegistration(FormTemplate):
 
     def populate_fields(self, resp):
         self.disable_entries = True
+        self.is_old_course_reg = False
         data = resp.json()
 
         # populate personal info fields
