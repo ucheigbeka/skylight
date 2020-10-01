@@ -56,10 +56,10 @@ class AsyncRequest(Thread):
                     self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PUT':
                 self.resp = requests.put(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PATCH':
                 self.resp = requests.patch(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'DELETE':
                 self.resp = requests.delete(
                     self.url, headers=self.headers, params=self.params)
