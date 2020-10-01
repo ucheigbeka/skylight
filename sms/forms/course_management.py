@@ -14,8 +14,8 @@ kv_path = os.path.join(form_root, 'kv_container', 'course_management.kv')
 Builder.load_file(kv_path)
 
 keys = [
-    'course_code', 'course_title', 'course_credit',
-    'course_semester', 'teaching_dept',
+    'code', 'title', 'credit',
+    'semester', 'teaching_dept',
     'start_date', 'end_date', 'options'
 ]
 
@@ -28,26 +28,26 @@ class NewCoursePopup(Popup):
     course_details = ListProperty()
 
     def on_open(self, *args):
-        course_level = self.course_details[0]['course_level']
-        self.ids['course_level'].text = str(course_level)
+        course_level = self.course_details[0]['level']
+        self.ids['level'].text = str(course_level)
 
     def add(self):
         data = {}
         for key in keys[:-3]:
             data[key] = self.ids[key].text
-        data['course_credit'] = int(data['course_credit'])
-        data['course_semester'] = [1, 2][data['course_semester'].strip().lower() == 'second']
-        data['course_level'] = int(self.ids['course_level'].text)
+        data['credit'] = int(data['credit'])
+        data['semester'] = [1, 2][data['semester'].strip().lower() == 'second']
+        data['level'] = int(self.ids['level'].text)
         data['start_date'] = get_current_session() + 1
         data['end_date'] = 2999
         optional = self.ids['opt_yes'].active
-        data['options'] = [0, data['course_semester']][optional]
+        data['options'] = [0, data['semester']][optional]
         url = urlTo('course_details')
         AsyncRequest(url, method='POST', data=data, on_success=self.success)
 
     def success(self, resp):
         self.dismiss()
-        msg = '{} successfully added'.format(self.ids['course_code'].text)
+        msg = '{} successfully added'.format(self.ids['code'].text)
         SuccessPopup(message=msg)
 
 
@@ -55,24 +55,24 @@ class RemoveCoursePopup(Popup):
     course_details = ListProperty()
 
     def remove(self):
-        course_code = self.ids['course_code'].text
+        course_code = self.ids['code'].text
         for course in self.course_details:
-            if course['course_code'] == course_code:
+            if course['code'] == course_code:
                 break
         else:
-            msg = '{} not found'.format(self.ids['course_code'].text)
+            msg = '{} not found'.format(self.ids['code'].text)
             ErrorPopup(message=msg)
             return
         params = {
-            'course_code': course_code,
-            'course_level': course['course_level']
+            'code': course_code,
+            'level': course['level']
         }
         url = urlTo('course_details')
         AsyncRequest(url, method='DELETE', params=params, on_success=self.success)
 
     def success(self, resp):
         self.dismiss()
-        msg = '{} successfully deleted'.format(self.ids['course_code'].text)
+        msg = '{} successfully deleted'.format(self.ids['code'].text)
         SuccessPopup(message=msg)
 
 
@@ -112,7 +112,7 @@ class CourseManagement(FormTemplate):
         for row in data:
             dv_row = []
             for key in keys[:-2]:
-                if key == 'course_semester':
+                if key == 'semester':
                     dv_row.append(['First', 'Second'][row[key] - 1])
                     continue
                 dv_row.append(row[key])
@@ -148,12 +148,12 @@ class CourseManagement(FormTemplate):
             course = {}
             for idx in range(len(row) - 3):
                 course[keys[idx]] = row[idx]
-            course['course_credit'] = int(course['course_credit'])
-            course['course_semester'] = [1, 2][course['course_semester'].strip().lower() == 'second']
-            course['course_level'] = int(self.ids['lvl_spinner'].text[:3])
+            course['credit'] = int(course['credit'])
+            course['semester'] = [1, 2][course['semester'].strip().lower() == 'second']
+            course['level'] = int(self.ids['lvl_spinner'].text[:3])
             course['start_date'] = row[keys.index('start_date')]
             course['end_date'] = 2999 if not row[keys.index('end_date')] else row[keys.index('end_date')]
-            course['options'] = [0, course['course_semester']][row[keys.index('options')] == 'Yes']
+            course['options'] = [0, course['semester']][row[keys.index('options')] == 'Yes']
             data.append(course)
         AsyncRequest(url, method='PUT', data=data, on_success=self.update_callback)
 
