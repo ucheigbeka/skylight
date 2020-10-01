@@ -158,9 +158,8 @@ class CourseManagement(FormTemplate):
         AsyncRequest(url, method='PUT', data=data, on_success=self.update_callback)
 
     def update_callback(self, resp):
-        resp = resp.json()
-        if resp:
-            err_msg = '\n'.join(resp)
+        if resp.text:
+            err_msg = '\n'.join(resp.json())
             ErrorPopup(err_msg, title='Alert')
         else:
             msg = 'Update successful'
