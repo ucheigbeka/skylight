@@ -132,6 +132,9 @@ class ResetAccountPopup(PopupBase):
             self.ids['pwd'].text = ''.join(choices(list(alphanumeric_chars), k=10))
         username = self.ids['username'].text
         self.selected_acct = self.get_user(username)
+        if not self.selected_acct:
+            ErrorPopup(username + ' not found')
+            return
         self.selected_acct['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
         params = {'superuser': True} if root.sm.is_admin else None
