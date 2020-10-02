@@ -54,6 +54,18 @@
                 values: [str(x) for x in range(100, 900, 100)]
                 disabled: False if not root.manager else not root.manager.is_admin
             CustomLabel:
+                text: 'Level GPA'
+                halign: 'left'
+            CustomTextInput:
+                id: level_gpa
+                disabled: True
+            CustomLabel:
+                text: 'Current CGPA'
+                halign: 'left'
+            CustomTextInput:
+                id: cgpa
+                disabled: True
+            CustomLabel:
                 text: 'Special case'
                 halign: 'left'
             CustomSpinner:

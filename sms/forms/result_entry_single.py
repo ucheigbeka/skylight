@@ -28,7 +28,7 @@ class CustomDataViewerInput(DataViewerInput):
     def on_focus(self, instance, value):
         if not value:
             string = self.text
-            if string and string.isdecimal():
+            if string and (string.isdecimal() or string == '-1'):
                 score = int(string)
                 grade = 'F'
 
@@ -82,8 +82,7 @@ class ResultEntrySingle(FormTemplate):
         self.data = data
 
         url = urlTo('grading_rules')
-        session = get_current_session() if not self.ids['session'].text else int(self.ids['session'].text)
-        params = {'acad_session': session}
+        params = {'acad_session': self.data['entry_session']}
         AsyncRequest(url, params=params, method='GET', on_success=self.populate_fields)
 
     def set_grading_rules(self, rules):
@@ -99,6 +98,8 @@ class ResultEntrySingle(FormTemplate):
         self.ids['name'].text = self.data['name']
         self.ids['level'].text = str(self.data['level'])
         self.ids['session'].text = str(self.data['session'])
+        self.ids['level_gpa'].text = str(self.data['level_gpa'])
+        self.ids['cgpa'].text = str(self.data['cgpa'])
 
         results = self.data['result']
         carryovers = self.data['carryovers']

@@ -20,6 +20,7 @@ from sms import get_token, urlTo, allowable_idle_time
 from sms.utils.popups import ErrorPopup, YesNoPopup
 
 last_request_timestamp = datetime.now().timestamp()
+logged_in = True
 
 
 class AsyncRequest(Thread):
@@ -55,10 +56,10 @@ class AsyncRequest(Thread):
                     self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PUT':
                 self.resp = requests.put(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'PATCH':
                 self.resp = requests.patch(
-                    self.url, headers=self.headers, json=self.data)
+                    self.url, headers=self.headers, json=self.data, params=self.params)
             elif self.method == 'DELETE':
                 self.resp = requests.delete(
                     self.url, headers=self.headers, params=self.params)
@@ -96,11 +97,11 @@ class AsyncRequest(Thread):
 
 
 def session_timer(url, params):
-    global last_request_timestamp
+    global last_request_timestamp, logged_in
     curr_timestamp = datetime.now().timestamp()
 
     if last_request_timestamp and curr_timestamp - last_request_timestamp > allowable_idle_time:
-        if url not in [urlTo('logout'), urlTo('login')]:  # if the request is logout or login, the let it pass
+        if url not in [urlTo('logout'), urlTo('login')] and logged_in:  # if the request is logout or login, the let it pass
             # else logout silently
             requests.post(
                 url=urlTo('logout'),
@@ -108,6 +109,9 @@ def session_timer(url, params):
                          'token': get_token()},
                 json={'token': get_token()}
             )
+            logged_in = False
+        elif url == urlTo('login'):
+            logged_in = True
     log_filter_params = ['time', 'title', 'operation', 'reverse']
     # don't update last_request_timestamp if logs is called w/o filters (from main menu)
     if url != urlTo('logs') or any(map(lambda param: param in params, log_filter_params)):

@@ -69,7 +69,8 @@ class PersonalInfo(FormTemplate):
         data['grad_status'] = int(self.ids.grad.text == 'YES')
 
         url = urlTo('personal_info')
-        AsyncRequest(url, method=method, data=data, on_success=self.record_added, on_failure=self.show_add_error)
+        params = {'superuser': True} if root.sm.is_admin else None
+        AsyncRequest(url, method=method, data=data, params=params, on_success=self.record_added, on_failure=self.show_add_error)
 
     def delete(self):
         pass
@@ -104,10 +105,12 @@ class PersonalInfo(FormTemplate):
         self.ids['delete'].disabled = False if data['level'] == get_assigned_level() or root.sm.is_admin else True
 
     def show_error(self, resp):
-        ErrorPopup('Record not found: ' + resp.json())
+        resp = '' if not resp.text else resp.json()
+        ErrorPopup('Record not found: ' + resp)
 
     def show_add_error(self, resp):
-        ErrorPopup('Record could not be added: ' + str(resp.json()))
+        resp = '' if not resp.text else resp.json()
+        ErrorPopup('Record could not be added: ' + str(resp))
 
     def show_input_error(self):
         ErrorPopup('Some input fields are missing')

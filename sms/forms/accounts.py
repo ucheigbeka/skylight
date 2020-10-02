@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, ListProperty, DictProperty
 
-from sms import urlTo, titles
+from sms import urlTo, titles, root
 from sms.forms.template import FormTemplate
 from sms.forms.signin import tokenize
 from sms.utils.asyncrequest import AsyncRequest
@@ -94,7 +94,9 @@ class RemoveAccountPopup(Popup):
         self.ids['username'].text = username
 
     def remove(self):
-        params = {'username': self.ids['username'].text}
+        params = {
+            'username': self.ids['username'].text
+        }
         url = urlTo('accounts')
         AsyncRequest(url, method='DELETE', params=params, on_success=self.success)
 
@@ -132,7 +134,8 @@ class ResetAccountPopup(PopupBase):
         self.selected_acct = self.get_user(username)
         self.selected_acct['password'] = tokenize(self.ids['pwd'].text)
         url = urlTo('accounts')
-        AsyncRequest(url, method='PATCH', data=self.selected_acct, on_success=self.success)
+        params = {'superuser': True} if root.sm.is_admin else None
+        AsyncRequest(url, method='PATCH', data=self.selected_acct, params=params, on_success=self.success)
 
     def success(self, resp):
         self.dismiss()

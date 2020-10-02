@@ -170,6 +170,7 @@ class CourseRegistration(FormTemplate):
 
     def populate_fields(self, resp):
         self.disable_entries = True
+        self.is_old_course_reg = False
         data = resp.json()
 
         # populate personal info fields
@@ -234,7 +235,8 @@ class CourseRegistration(FormTemplate):
         }
         self.data['courses'] = courses
         url = urlTo('course_reg')
-        AsyncRequest(url, data=self.data, method='POST', on_failure=self.show_reg_error, on_success=self.clear_fields)
+        params = {'superuser': True} if root.sm.is_admin else None
+        AsyncRequest(url, data=self.data, params=params, method='POST', on_failure=self.show_reg_error, on_success=self.clear_fields)
 
     def delete_course_reg(self):
         YesNoPopup(message='Do you want to delete this course registration?', on_yes=self._delete_course_reg)
