@@ -99,7 +99,7 @@ class ResultEntrySingle(FormTemplate):
     def populate_fields(self, resp):
         self.set_grading_rules(resp.json())
 
-        self.ids['name'].text = self.data['name']
+        self.ids['name'].text = self.data['personal_info']["surname"] + " " + self.data['personal_info']["othernames"]
         self.ids['level'].text = str(self.data['level_written'])
         self.ids['session'].text = str(self.data['session_written'])
         self.ids['level_gpa'].text = str(self.data['level_gpa'])
