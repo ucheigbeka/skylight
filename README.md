@@ -1,5 +1,5 @@
 # Skylight
-This project represents the client side of the **Student Management System** for the Department of Mechanical Engineering, University of Benin.
+This project represents the client side of the **Student Management System** 
 
 ## To run on linux
 Check out the [official kivy documentations](https://kivy.org/doc/stable/installation/installation-linux.html) to install kivy on Linux 
