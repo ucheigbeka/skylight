@@ -16,7 +16,7 @@ This project represents the client side of the **Student Management System**
     python -m pip install -r requirements.txt
     ```
   
-## Run the app with 
++ Run the app with 
   ```
   python3 run.py
   ```
