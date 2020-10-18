@@ -18,7 +18,7 @@ This project represents the client side of the **Student Management System**
   
 + Run the app with 
   ```
-  python3 run.py
+  python run.py
   ```
 
 
