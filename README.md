@@ -1,17 +1,28 @@
 # Skylight
 This project represents the client side of the **Student Management System** 
 
-## To run on linux
-Check out the [official kivy documentations](https://kivy.org/doc/stable/installation/installation-linux.html) to install kivy on Linux 
+## Setup Instructions
++ Check out the [official kivy documentations](https://kivy.org/doc/stable/gettingstarted/installation.html) to install kivy
 
-+ Then install dependencies with 
++ Then install dependencies
 
-  ```pip3 install -r requirements-linux.txt```
-+ Run the app with 
+  + Linux  
+    ```
+    python -m pip install -r requirements-linux.txt
+    ```
   
-  `python3 run.py`
+  + Windows   
+    ```
+    python -m pip install -r requirements.txt
+    ```
+  
+## Run the app with 
+  ```
+  python3 run.py
+  ```
 
-## Instructions For Compilation
+
+## Compilation Instructions
 * **Pyinstaller 3.1+** is required for compiling the source code into an executable file (.exe for Windows). The same instructions apply to bundling for Windows, Mac OS X and GNU/Linux. Pyinstaller should be installed using pip:
 ```
     python -m pip install pyinstaller
