@@ -14,7 +14,7 @@ as published by the Free Software Foundation, version 3.
 About the Skylight Development Team
 --------------------------------------
 
-The core team that coordinates development on GitHub as of 2015 consists of:
+The core team that coordinates development on GitHub as of 2020 consists of:
 
 * Fortune Max-Eguakun
 * Uche Emmanuel Igbeka
