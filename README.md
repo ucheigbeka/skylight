@@ -40,3 +40,14 @@ or to avoid the prompt for modifying the dist folder if it already exists, execu
 ```
 
 * Pyinstaller creates 2 folders, a build and dist folder. The bundled app can be found in the dist folder.
+
+###### .
+
+
+---------------------------------------------------------------------------------
+
+Copyright (c) 2019-2020, Skylight Development Team.
+ 
+Distributed under the terms of the GNU Affero General Public License (Version 3)
+ 
+---------------------------------------------------------------------------------
