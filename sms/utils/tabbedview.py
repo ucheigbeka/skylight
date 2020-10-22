@@ -1,5 +1,6 @@
 import os
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.tabbedpanel import TabbedPanelHeader
@@ -107,7 +108,14 @@ class CustomTabbedPanelHeader(TabbedPanelHeader):
                     index = tabs.index(self)
                     index = index - 1 if index > 0 else index + 1
                     self.parent.tabbed_panel.switch_to(tabs[index])
+            self.reset_cursor()
             self.parent.tabbed_panel.remove_widget(self)
+
+    def reset_cursor(self):
+        for prev_screen in self.sm.screens:
+            if hasattr(prev_screen, 'cursor_change_event'):
+                Clock.unschedule(prev_screen.cursor_change_event)
+        Window.set_system_cursor('arrow')
 
 
 if __name__ == '__main__':
