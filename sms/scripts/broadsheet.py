@@ -22,6 +22,7 @@ class BroadsheetPopup(Popup):
             raw_score = self.ids['raw_score'].text == 'Yes'
         except ValueError:
             ErrorPopup('Field cannot be empty')
+            return
         params = {'acad_session': acad_session, 'level': level, 'raw_score': raw_score, 'to_print': True}
         AsyncRequest(url, params=params, on_success=self.generate_broadsheet)
 
