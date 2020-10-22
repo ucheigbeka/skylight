@@ -20,6 +20,9 @@ class CourseDetails(FormTemplate):
 
     def search(self, *args):
         course_code = self.ids['code'].text
+        if not course_code:
+            ErrorPopup('Input can\'t be empty')
+            return
         course_code = course_code[:3].upper() + course_code[3:]
         params = {'course_code': course_code}
         url = urlTo('course_details')

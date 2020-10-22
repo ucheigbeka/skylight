@@ -1,6 +1,6 @@
-<StudentUpdatePopup>:
+<SenateVersionPopup>:
     size_hint: (.3, .4)
-    title: 'Student Update'
+    title: 'Senate Version'
     BoxLayout:
         orientation: 'vertical'
         GridLayout:
@@ -12,22 +12,23 @@
             row_default_height: 30
             row_force_default: True
             CustomLabel:
-                text: 'Mat number'
+                text: 'Academic session'
                 size_hint_x: .8
             CustomTextInput:
-                id: mat_no
-                text: 'ENG'
-                width: 125
+                id: acad_session
+                width: dp(100)
+                input_filter: 'int'
+                max_length: 4
             CustomLabel:
-                text: 'Raw score'
+                text: 'Level'
                 size_hint_x: .8
             CustomSpinner:
-                id: raw_score
-                values: ['Yes', 'No']
+                id: level
+                values: ['100', '200', '300', '400', '500']
         Button:
             size_hint: .4, None
-            height: 30
             pos_hint: {'center_x': .5}
+            height: dp(30)
             text: 'Search'
             on_press: root.search()
         FloatLayout

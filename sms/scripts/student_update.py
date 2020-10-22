@@ -4,7 +4,7 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 
 from sms import urlTo
-from sms.scripts import generate_preview_screens
+from sms.scripts import generate_preview
 from sms.utils.asyncrequest import AsyncRequest
 
 form_root = os.path.dirname(__file__)
@@ -17,7 +17,7 @@ class StudentUpdatePopup(Popup):
         url = urlTo('result_update')
         mat_no = self.ids['mat_no'].text
         raw_score = self.ids['raw_score'].text == 'Yes'
-        params = {'mat_no': mat_no, 'raw_score': raw_score, 'to_print': False}
+        params = {'mat_no': mat_no, 'raw_score': raw_score, 'to_print': True}
         AsyncRequest(url, params=params, on_success=self.generate_result_update)
 
     def generate_result_update(self, resp):
@@ -26,7 +26,7 @@ class StudentUpdatePopup(Popup):
     def _generate_result_update(self, resp):
         from sms import root
         reports = root.sm.get_screen('reports')
-        screens = generate_preview_screens(resp)
+        screens = generate_preview(resp)
         tab_title = self.ids['mat_no'].text
         reports.generate_report(screens, tab_title)
         self.dismiss()

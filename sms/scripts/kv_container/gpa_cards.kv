@@ -9,21 +9,25 @@
 
 <GpaCardsPopup>:
     title: 'Gpa Cards'
-    size_hint: .3, .2
+    size_hint: .25, None
+    height: box.height + dp(50)
     BoxLayout:
+        id: box
         orientation: 'vertical'
         size_hint_y: None
         height: self.minimum_height
+        padding: dp(20)
+        spacing: dp(10)
         BoxLayout:
             size_hint_y: None
             height: dp(35)
             CustomLabel:
                 text: 'level'
-            CustomTextInput:
+                size_hint_x: 1
+            CustomSpinner:
                 id: level
                 size_hint_x: 1
-                max_length: 3
-                input_filter: 'int'
+                values: ['100', '200', '300', '400', '500', '600']
         Button:
             text: 'Search'
             on_press: root.get()
