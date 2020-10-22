@@ -8,6 +8,7 @@ from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
 from sms import titles, MODE, stop_loading
+from sms.scripts.about import about
 from sms.scripts.logout import logout
 from sms.utils.menubar import LoginActionView, MainActionView
 from sms.utils.popups import YesNoPopup
@@ -226,7 +227,7 @@ class Root(BoxLayout):
         YesNoPopup(message='Are you sure you want to logout?', on_yes=logout, title='Logout')
 
     def about(self, instance):
-        pass
+        about()
 
     def exit(self, instance):
         App.get_running_app().stop()
