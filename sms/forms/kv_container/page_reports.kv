@@ -12,7 +12,7 @@
                 text:"Raw Score Broad Sheet"
                 on_press:
                     root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
+                    on_press: root.open_broadsheet_popup()
             MenuButton:
                 text: "Letter Grade Broad Sheet"
                 on_press:
@@ -22,7 +22,7 @@
                 text:"Senate Version"
                 on_press:
                     root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
+                    on_press: root.open_senate_version_popup()
             MenuButton:
                 text:"Summary of Failed Courses"
                 on_press:
