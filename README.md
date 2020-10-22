@@ -1,17 +1,28 @@
 # Skylight
-This project represents the client side of the **Student Management System** for the Department of Mechanical Engineering, University of Benin.
+This project represents the client side of the **Student Management System** 
 
-## To run on linux
-Check out the [official kivy documentations](https://kivy.org/doc/stable/installation/installation-linux.html) to install kivy on Linux 
+## Setup Instructions
++ Check out the [official kivy documentations](https://kivy.org/doc/stable/gettingstarted/installation.html) to install kivy
 
-+ Then install dependencies with 
++ Then install dependencies
 
-  ```pip3 install -r requirements-linux.txt```
-+ Run the app with 
+  + Linux  
+    ```
+    python -m pip install -r requirements-linux.txt
+    ```
   
-  `python3 run.py`
+  + Windows   
+    ```
+    python -m pip install -r requirements.txt
+    ```
+  
++ Run the app with 
+  ```
+  python run.py
+  ```
 
-## Instructions For Compilation
+
+## Compilation Instructions
 * **Pyinstaller 3.1+** is required for compiling the source code into an executable file (.exe for Windows). The same instructions apply to bundling for Windows, Mac OS X and GNU/Linux. Pyinstaller should be installed using pip:
 ```
     python -m pip install pyinstaller
@@ -29,3 +40,14 @@ or to avoid the prompt for modifying the dist folder if it already exists, execu
 ```
 
 * Pyinstaller creates 2 folders, a build and dist folder. The bundled app can be found in the dist folder.
+
+###### .
+
+
+---------------------------------------------------------------------------------
+
+###### Copyright (c) 2019-2020, Skylight Development Team.
+ 
+###### Distributed under the terms of the GNU Affero General Public License (Version 3)
+ 
+---------------------------------------------------------------------------------

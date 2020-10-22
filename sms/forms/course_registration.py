@@ -182,17 +182,25 @@ class CourseRegistration(FormTemplate):
         self.ids.prob_stat.text = self.ids.prob_stat.values[data['probation_status']]
         self.ids.fees_stat.text = self.ids.fees_stat.values[data['fees_status']]
 
+        regulars = data.pop('regulars')
+        carryovers = data.pop('carryovers')
+
+        if 'course_reg_new' not in resp.request.path_url:
+            [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
+            regulars = {sem: [] for sem in ('first_sem', 'second_sem')}
+
         # queues regular courses
-        choices = data.pop('choices')
-        first_sem_courses = choices['first_sem']
-        second_sem_courses = choices['second_sem']
+        first_sem_courses = regulars['first_sem']
+        second_sem_courses = regulars['second_sem']
 
         FIRST_SEM_COURSES.clear()
         SECOND_SEM_COURSES.clear()
-        for code, title, credit, _ in first_sem_courses:
-            FIRST_SEM_COURSES[code] = [title, credit]
-        for code, title, credit, _ in second_sem_courses:
-            SECOND_SEM_COURSES[code] = [title, credit]
+
+        if 'course_reg_new' in resp.request.path_url:
+            for code, title, credit, _ in first_sem_courses:
+                FIRST_SEM_COURSES[code] = [title, credit]
+            for code, title, credit, _ in second_sem_courses:
+                SECOND_SEM_COURSES[code] = [title, credit]
 
         self.first_sem_view.course_codes = FIRST_SEM_COURSES.keys()
         self.first_sem_view.course_details = FIRST_SEM_COURSES.values()
@@ -202,9 +210,8 @@ class CourseRegistration(FormTemplate):
         self.max_credits = data['max_credits']
 
         # populate compulsory courses field
-        courses = data.pop('courses')
-        comp_first_sem_courses = courses['first_sem']
-        comp_second_sem_courses = courses['second_sem']
+        comp_first_sem_courses = carryovers['first_sem']
+        comp_second_sem_courses = carryovers['second_sem']
 
         Clock.schedule_once(lambda dt: self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses))
         Clock.schedule_once(lambda dt: self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses))

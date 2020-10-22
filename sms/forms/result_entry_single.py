@@ -69,16 +69,20 @@ class ResultEntrySingle(FormTemplate):
             self.search()
 
     def search(self):
-        url = urlTo('results_single')
+        url = urlTo('results')
         session = get_current_session() if not self.ids['session'].text else int(self.ids['session'].text)
         params = {
             'mat_no': self.ids['mat_no'].text,
-            'acad_session': session
+            'acad_session': session,
+            'include_reg': True
         }
         AsyncRequest(url, method='GET', params=params, on_success=self.get_grading_rules)
 
     def get_grading_rules(self, resp):
         data = resp.json()
+        flatten_dict = lambda dic: [[key]+list(val[:4]) for key, val in {**dic['first_sem'], **dic['second_sem']}.items()]
+        data['regular_courses'] = flatten_dict(data['regular_courses'])
+        data['carryovers'] = flatten_dict(data['carryovers'])
         self.data = data
 
         url = urlTo('grading_rules')
@@ -95,16 +99,16 @@ class ResultEntrySingle(FormTemplate):
     def populate_fields(self, resp):
         self.set_grading_rules(resp.json())
 
-        self.ids['name'].text = self.data['name']
-        self.ids['level'].text = str(self.data['level'])
-        self.ids['session'].text = str(self.data['session'])
+        self.ids['name'].text = self.data['personal_info']["surname"] + " " + self.data['personal_info']["othernames"]
+        self.ids['level'].text = str(self.data['level_written'])
+        self.ids['session'].text = str(self.data['session_written'])
         self.ids['level_gpa'].text = str(self.data['level_gpa'])
         self.ids['cgpa'].text = str(self.data['cgpa'])
 
-        results = self.data['result']
+        regular_courses = self.data['regular_courses']
         carryovers = self.data['carryovers']
 
-        self.results_view.set_data(results)
+        self.results_view.set_data(regular_courses)
         self.carryovers_result_view.set_data(carryovers)
 
     def clear_fields(self, *args):
@@ -129,7 +133,7 @@ class ResultEntrySingle(FormTemplate):
         if not self.data:
             return
 
-        results_diff = self.compute_diff(results_list, self.data['result'])
+        results_diff = self.compute_diff(results_list, self.data['regular_courses'])
         carryovers_diff = self.compute_diff(carryovers_list, self.data['carryovers'])
 
         data = {

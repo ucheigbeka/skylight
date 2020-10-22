@@ -112,8 +112,8 @@ def session_timer(url, params):
             logged_in = False
         elif url == urlTo('login'):
             logged_in = True
-    log_filter_params = ['time', 'title', 'operation', 'reverse']
     # don't update last_request_timestamp if logs is called w/o filters (from main menu)
+    log_filter_params = ['time', 'operation', 'reverse']
     if url != urlTo('logs') or any(map(lambda param: param in params, log_filter_params)):
         last_request_timestamp = curr_timestamp
 
