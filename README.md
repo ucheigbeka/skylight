@@ -15,7 +15,9 @@ This project represents the client side of the **Student Management System**
     ```
     python -m pip install -r requirements.txt
     ```
-  
+
+  + The project uses a dependency `pdf2image` for converting PDFs to PIL image objects. Visit their [github repository](https://github.com/Belval/pdf2image) for more info on how to set it up.
+
 + Run the app with 
   ```
   python run.py
