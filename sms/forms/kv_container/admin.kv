@@ -9,10 +9,6 @@
             orientation: 'vertical'
             size_hint_x: .4
             MenuButton:
-                text:"Start new academic session"
-            MenuButton:
-                text:"Open result edit"
-            MenuButton:
                 text:"Accounts"
                 on_press:
                     root.manager.current = 'accounts'
@@ -20,4 +16,12 @@
                 text:"Manage courses"
                 on_press:
                     root.manager.current = 'course_mgmt'
+            MenuButton:
+                text:"Backups"
+                on_press:
+                    root.manager.current = 'backups'
+            MenuButton:
+                text:"Start new academic session"
+            MenuButton:
+                text:"Open result edit"
             Label:

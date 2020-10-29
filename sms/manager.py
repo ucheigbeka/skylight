@@ -77,11 +77,13 @@ class Manager(ScreenManager):
     def set_screens_for_hod(self):
         logs = self.import_form('logs')
         accounts = self.import_form('accounts')
+        backups = self.import_form('backups')
 
         self.set_screens_for_exam_officer()
         screens = {
             'logs': logs.Logs,
-            'accounts': accounts.Accounts
+            'accounts': accounts.Accounts,
+            'backups': backups.Backups
         }
         self.forms_dict.update(screens)
         self.is_admin = 1
