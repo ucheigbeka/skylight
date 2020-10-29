@@ -38,4 +38,4 @@ class SenateVersionPopup(Popup):
         root.sm.current = 'reports'
 
     def show_error(self, resp):
-        ErrorPopup('Error generating senete version')
+        ErrorPopup('Error generating senate version')
