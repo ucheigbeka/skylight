@@ -10,8 +10,8 @@ cache_dir = os.path.join(os.path.expanduser('~'), 'sms', 'cache')
 if not os.path.exists(cache_dir):
     os.makedirs(cache_dir)
 else:
-    shutil.rmtree(cache_dir)
-    os.makedirs(cache_dir)
+    shutil.rmtree(cache_dir, ignore_errors=True)
+    os.makedirs(cache_dir, exist_ok=True)
 
 
 def generate_preview_screens(resp):
