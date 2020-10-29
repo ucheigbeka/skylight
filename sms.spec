@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 import os
-from kivy.deps import sdl2, glew
+from kivy_deps import sdl2, glew
 
 block_cipher = None
 

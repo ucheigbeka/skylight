@@ -3,8 +3,8 @@ from threading import Thread
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 
-from sms import urlTo
-from sms.scripts import generate_preview_screens
+from sms import urlTo, start_loading, stop_loading
+from sms.scripts import generate_preview
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
 
@@ -24,20 +24,31 @@ class BroadsheetPopup(Popup):
             ErrorPopup('Field cannot be empty')
             return
         params = {'acad_session': acad_session, 'level': level, 'raw_score': raw_score, 'to_print': True}
-        AsyncRequest(url, params=params, on_success=self.generate_broadsheet)
+        AsyncRequest(url, params=params, on_success=self.generate_broadsheet, on_failure=self.show_error)
 
     def generate_broadsheet(self, resp):
-        Thread(target=self._generate_broadsheet, args=(resp,)).start()
+        start_loading(text='Generating preview...')
+        try:
+            Thread(target=self._generate_broadsheet, args=(resp,)).start()
+        except:
+            stop_loading()
+            self.show_error(resp)
 
     def _generate_broadsheet(self, resp):
         from sms import root
         reports = root.sm.get_screen('reports')
-        screens = generate_preview_screens(resp)
+        screens = generate_preview(resp)
         acad_session = int(self.ids['acad_session'].text)
-        tab_title = '{}/{} broadsheet'.format(acad_session, acad_session + 1)
+        level = int(self.ids['level'].text)
+        tab_title = '{}L {} broadsheet'.format(level, acad_session)
         reports.generate_report(screens, tab_title)
         self.dismiss()
         root.sm.current = 'reports'
+        stop_loading()
 
     def show_error(self, resp):
-        ErrorPopup('Error generating senete version')
+        try:
+            msg = resp.json()
+        except:
+            msg = 'Something went wrong'
+        ErrorPopup(msg)
