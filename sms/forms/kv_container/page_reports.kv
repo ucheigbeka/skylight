@@ -9,39 +9,17 @@
             orientation: 'vertical'
             size_hint_x: .4
             MenuButton:
-                text:"Raw Score Broad Sheet"
+                text:"Broad Sheet"
                 on_press:
-                    root.manager.transition.direction = 'left'
                     on_press: root.open_broadsheet_popup()
-            MenuButton:
-                text: "Letter Grade Broad Sheet"
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
             MenuButton:
                 text:"Senate Version"
                 on_press:
-                    root.manager.transition.direction = 'left'
                     on_press: root.open_senate_version_popup()
-            MenuButton:
-                text:"Summary of Failed Courses"
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
-            MenuButton:
-                text:"Summary of Absent Cases"
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
             MenuButton:
                 text: "Students\' Update"
                 on_press: root.open_student_update_popup()
             MenuButton:
                 text:"Level GPA Cards"
                 on_press: root.open_gpa_cards_popup()
-            MenuButton:
-                text:"Summary of Course Registration"
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'error'
             Label:

@@ -118,7 +118,7 @@ class ResultEntry(FormTemplate):
             }
             insert_extra(params)
             self.persist_data = True
-            self.manager.transition.direction = 'left'
+            # self.manager.transition.direction = 'left'
             self.manager.current = 'result_entry_single'
             self.dv2.dv.deselect(value[0])
 

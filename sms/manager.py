@@ -3,7 +3,7 @@ from importlib import reload
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import ScreenManager, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
@@ -24,6 +24,7 @@ class Manager(ScreenManager):
     is_admin = BooleanProperty(False)
     assigned_level = NumericProperty(0)
     imported_modules = DictProperty()
+    transition = NoTransition()  # comment this to default to slide transition
 
     forms_dict = DictProperty()
     persistent_screens = ListProperty(['reports', 'main_page'])
@@ -183,9 +184,9 @@ class Root(BoxLayout):
         self.menu_bar.add_widget(self.view_ins)
 
     def switch_screen(self, name):
-        self.sm.transition = NoTransition()
+        # self.sm.transition = NoTransition()
         self.sm.current = name
-        self.sm.transition = SlideTransition()
+        # self.sm.transition = SlideTransition()
 
     def goto_previous_screen(self, instance):
         if len(self.screen_names) == 1:    # main_page
@@ -193,7 +194,7 @@ class Root(BoxLayout):
         else:
             self.screen_names.pop()
             screen_name = self.sm.get_screen(self.screen_names.pop()).name
-            self.sm.transition.direction = 'right'
+            # self.sm.transition.direction = 'right'
             self.sm.current = screen_name
 
     def login(self, dt):
@@ -205,6 +206,7 @@ class Root(BoxLayout):
         self.set_menu_view(MainActionView)
         self.sm.transition.direction = 'left'
         self.sm.current = 'main_page'
+        self.sm.transition = NoTransition()
 
         self.sm.load_screens()
 

@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.uix.screenmanager import SlideTransition
 
 from sms import urlTo, get_token, set_details
 from sms.forms.signin import SigninWindow
@@ -30,6 +31,7 @@ def reset(resp=None):
         if hasattr(module, 'unload') and not hasattr(module, 'SigninWindow'):
             module.unload()
 
+    sm.transition = SlideTransition()
     sm.transition.direction = 'right'
     sm.current = 'signin'
     root.set_menu_view(LoginActionView)
