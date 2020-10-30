@@ -20,10 +20,11 @@ class BroadsheetPopup(Popup):
             acad_session = int(self.ids['acad_session'].text)
             level = int(self.ids['level'].text)
             raw_score = self.ids['raw_score'].text == 'Yes'
+            semester = self.ids['semester'].text == 'First Only'
         except ValueError:
             ErrorPopup('Field cannot be empty')
             return
-        params = {'acad_session': acad_session, 'level': level, 'raw_score': raw_score, 'to_print': True}
+        params = {'acad_session': acad_session, 'level': level, 'first_sem_only': semester, 'raw_score': raw_score}
         AsyncRequest(url, params=params, on_success=self.generate_broadsheet, on_failure=self.show_error)
 
     def generate_broadsheet(self, resp):

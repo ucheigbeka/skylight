@@ -7,11 +7,13 @@ from pdf2image import convert_from_bytes, convert_from_path
 from sms.utils.preview import Preview
 
 cache_dir = os.path.join(os.path.expanduser('~'), 'sms', 'cache')
-if not os.path.exists(cache_dir):
-    os.makedirs(cache_dir)
-else:
-    shutil.rmtree(cache_dir, ignore_errors=True)
-    os.makedirs(cache_dir, exist_ok=True)
+BACKUP_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups')
+for _dir in cache_dir, BACKUP_DIR:
+    if not os.path.exists(_dir):
+        os.makedirs(_dir)
+    else:
+        shutil.rmtree(_dir, ignore_errors=True)
+        os.makedirs(_dir, exist_ok=True)
 
 
 def generate_preview_screens(resp):
