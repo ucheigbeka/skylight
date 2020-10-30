@@ -13,15 +13,24 @@
                 on_press:
                     root.manager.current = 'accounts'
             MenuButton:
-                text:"Manage courses"
-                on_press:
-                    root.manager.current = 'course_mgmt'
-            MenuButton:
                 text:"Backups"
                 on_press:
                     root.manager.current = 'backups'
             MenuButton:
-                text:"Start new academic session"
+                text:"Manage courses"
+                on_press:
+                    root.manager.current = 'course_mgmt'
+            GridLayout:
+                id: grid
+                cols: 2
+                padding: dp(20)
+                size_hint_y: .1
+                CustomLabel:
+                    text: 'Result Edit'
+                    halign: 'left'
+                Switch:
+                    id: result_switch
+                    on_active: root.set_results_edit()
             MenuButton:
-                text:"Open result edit"
+                text: "Start new academic session"
             Label:
