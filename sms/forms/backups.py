@@ -8,8 +8,9 @@ from kivy.properties import ListProperty, StringProperty, ObjectProperty
 
 from sms import urlTo
 from sms.forms.template import FormTemplate
+from sms.scripts import BACKUP_DIR
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import YesNoPopup, ErrorPopup
+from sms.utils.popups import YesNoPopup, ErrorPopup, SuccessPopup
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'backups.kv')
@@ -75,22 +76,36 @@ class ActionMenuPopup(Popup):
 
     def confirm(self, callback):
         callback = callback.lower()
-        YesNoPopup(message=f'Do you want to {callback} this backup? \n\n{self.backup_name}',
-                   on_yes=getattr(self, callback + '_backup'))
+        if callback == 'restore':
+            restore_popup = RestoreBackupPopup(backup_name=self.backup_name)
+            restore_popup.bind(on_dismiss=self.dismiss)
+            restore_popup.open()
+        else:
+            YesNoPopup(message=f'Do you want to {callback} this backup? \n\n{self.backup_name}',
+                       on_yes=getattr(self, callback + '_backup'))
 
     def download_backup(self):
         url = urlTo('backup_download')
-        params = {'backup_names': [self.backup_name]}
-        AsyncRequest(url, method='GET', params=params, on_failure=self.show_error)
+        params = {'backup_name': self.backup_name}
+        AsyncRequest(url, method='GET', params=params, on_success=self._download_backup, on_failure=self.show_error)
 
-    def restore_backup(self):
-        restore_popup = RestoreBackupPopup(backup_name=self.backup_name)
-        restore_popup.open()
+    def _download_backup(self, resp):
+        attachment = resp.headers['Content-Disposition']
+        filename = attachment[attachment.find('=') + 1:]
+        pdf_content = resp.content
+        filepaths = [os.path.join(download_dir, filename) for download_dir in (get_download_path(), BACKUP_DIR)]
+        [open(filepath, 'wb').write(pdf_content) for filepath in filepaths]
+        SuccessPopup('Backup downloaded to ' + get_download_path())
+        self.dismiss()
 
     def delete_backup(self):
         url = urlTo('backups')
         params = {'backup_name': self.backup_name}
-        AsyncRequest(url, method='DELETE', params=params, on_success=self.dismiss, on_failure=self.show_error)
+        AsyncRequest(url, method='DELETE', params=params, on_success=self.delete_success, on_failure=self.show_error)
+
+    def delete_success(self, resp):
+        self.dismiss()
+        SuccessPopup('Backup deleted')
 
     def show_error(self, resp):
         try:
@@ -111,7 +126,11 @@ class CreateBackupPopup(Popup):
     def backup(self):
         url = urlTo('backups')
         data = {'tag': self.ids['tag'].text}
-        AsyncRequest(url, method='POST', data=data, on_success=self.dismiss, on_failure=self.show_error)
+        AsyncRequest(url, method='POST', data=data, on_success=self.success, on_failure=self.show_error)
+
+    def success(self, resp):
+        self.dismiss()
+        SuccessPopup('Database Backup complete')
 
     def show_error(self, resp):
         try:
@@ -130,6 +149,10 @@ class RestoreBackupPopup(Popup):
         self.size_hint = (.3, .4)
         super(RestoreBackupPopup, self).__init__(**kwargs)
 
+    def confirm(self):
+        YesNoPopup(message=f'Are you sure you want to restore this backup? \n\n{self.backup_name}',
+                   on_yes=self.restore, on_no=self.dismiss)
+
     def restore(self):
         url = urlTo('backups')
         data = {
@@ -137,7 +160,11 @@ class RestoreBackupPopup(Popup):
             'include_accounts': self.ids['include_accounts'].text == 'Yes',
             'backup_current': self.ids['backup_current'].text == 'Yes',
         }
-        AsyncRequest(url, method='PATCH', data=data, on_success=self.dismiss, on_failure=self.show_error)
+        AsyncRequest(url, method='PATCH', data=data, on_success=self.success, on_failure=self.show_error)
+
+    def success(self, resp):
+        self.dismiss()
+        SuccessPopup('Database Backup Restored')
 
     def show_error(self, resp):
         try:
@@ -146,6 +173,10 @@ class RestoreBackupPopup(Popup):
             msg = 'Something went wrong'
         ErrorPopup(msg)
 
+
+# ==========================================================================
+#                               UTILS
+# ==========================================================================
 
 def fmt_size(num):
     """Human friendly file size"""
@@ -164,3 +195,23 @@ def fmt_size(num):
 def fmt_time(timestamp):
     ts = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %#e, %Y; %#I:%M%p")
     return ts.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
+
+
+def get_download_path():
+    """Returns the default downloads path for linux or windows"""
+    if os.name == 'nt':
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        return location
+    else:
+        return os.path.join(os.path.expanduser('~'), 'downloads')
+
+
+if __name__ == '__main__':
+    from kivy.app import runTouchApp
+
+    runTouchApp(RestoreBackupPopup())
+

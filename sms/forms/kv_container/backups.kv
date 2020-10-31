@@ -1,3 +1,32 @@
+<Backups>:
+    dv2: dv2
+    BoxLayout:
+        padding: dp(20)
+        spacing: dp(20)
+        orientation: 'horizontal'
+
+        DataViewer2:
+            id: dv2
+            cols: 3
+            size_hint_x: .85
+            weightings: [.5, .1, .2]
+            headers: ['File Name', 'File Size', 'Created']
+            _data: root._data
+            selectable: True
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: .15
+            spacing: dp(20)
+
+            MenuButton:
+                text: "Create New Backup"
+                on_press: root.backup_popup()
+            MenuButton:
+                text: "Refresh"
+                on_press: root.refresh()
+            Label:
+
 <ActionMenuPopup>:
     BoxLayout:
         orientation: "vertical"
@@ -33,56 +62,33 @@
             on_press: root.backup()
 
 <RestoreBackupPopup>:
-    GridLayout:
-        cols: 2
+    BoxLayout:
+        orientation: 'vertical'
         spacing: dp(20)
-        padding: dp(20)
-        row_force_default: True
-        CustomLabel:
-            text: 'Include account information?'
-            halign: 'left'
-        CustomSpinner:
-            id: include_accounts
-            width: 150
-            values: ['No', 'Yes']
-        CustomLabel:
-            text: 'Backup current data?'
-            halign: 'left'
-        CustomSpinner:
-            id: backup_current
-            width: 150
-            values: ['No', 'Yes']
+        padding: dp(30)
+        GridLayout:
+            cols: 2
+            spacing: dp(60)
+            row_default_height: dp(50)
+            row_force_default: True
+            CustomLabel:
+                text: 'Include old account information?'
+                halign: 'left'
+                valign: 'center'
+                size_hint_x: .7
+            CustomSpinner:
+                id: include_accounts
+                width: 200
+                values: ['No', 'Yes']
+            CustomLabel:
+                text: 'Backup current data?'
+                halign: 'left'
+                valign: 'center'
+                size_hint_x: .7
+            CustomSpinner:
+                id: backup_current
+                width: 200
+                values: ['No', 'Yes']
         MenuButton:
             text: "Restore"
-            on_press: root.restore()
-
-
-<Backups>:
-    dv2: dv2
-    BoxLayout:
-        padding: dp(20)
-        spacing: dp(20)
-        orientation: 'horizontal'
-
-        DataViewer2:
-            id: dv2
-            cols: 3
-            size_hint_x: .85
-            weightings: [.5, .1, .2]
-            headers: ['File Name', 'File Size', 'Created']
-            _data: root._data
-            selectable: True
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: .15
-            spacing: dp(20)
-
-            MenuButton:
-                text: "Create New Backup"
-                on_press: root.backup_popup()
-            MenuButton:
-                text: "Refresh"
-                on_press: root.refresh()
-            Label:
-
+            on_press: root.confirm()

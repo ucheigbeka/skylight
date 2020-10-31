@@ -11,7 +11,7 @@ BACKUP_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups')
 for _dir in cache_dir, BACKUP_DIR:
     if not os.path.exists(_dir):
         os.makedirs(_dir)
-    else:
+    elif _dir != BACKUP_DIR:
         shutil.rmtree(_dir, ignore_errors=True)
         os.makedirs(_dir, exist_ok=True)
 
