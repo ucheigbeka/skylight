@@ -15,16 +15,29 @@ def unload():
 class Administrator(FormTemplate):
     title = 'Administrator'
 
+    def on_enter(self, *args):
+        self.get_results_edit()
+        super(Administrator, self).on_enter(*args)
+
+    def get_results_edit(self):
+        url = urlTo('results_edit')
+        AsyncRequest(url, on_success=self.set_res_switch_state)
+
+    def set_res_switch_state(self, resp):
+        state = resp.json()
+        switch = self.ids['result_switch']
+        switch.active = bool(state)
+
     def set_results_edit(self):
         switch = self.ids['result_switch']
         url = urlTo('results_edit')
-        data = {'state': switch.active}
-        AsyncRequest(url, method='POST', data=data, on_success=self.sing_for_me, on_failure=self.show_error)
+        data = {'state': int(switch.active)}
+        AsyncRequest(url, method='POST', data=data)
 
-    def sing_for_me(self, resp):
-        state = resp.json()
-        msg = 'Result Edit {}'.format('opened' if state else 'closed')
-        SuccessPopup(message=msg)
+    # def success_popup(self, resp):
+    #     state = resp.json()
+    #     msg = 'Result Edit {}'.format('opened' if state else 'closed')
+    #     SuccessPopup(message=msg)
 
     def show_error(self, resp):
         try:

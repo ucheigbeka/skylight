@@ -6,11 +6,16 @@ from kivy.uix.actionbar import ActionBar, ActionView
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty,\
     ObjectProperty
 
+from sms import AsyncRequest, urlTo
+
 Builder.load_string('''
 #:import os os
 
 <Separator@Label+ActionItem>:
-    size_hint_x: .7
+    size_hint_x: .6
+
+<ActionSwitch@Switch+ActionItem>:
+    size_hint_x: .1
 
 <LoginActionView>:
     spacing: dp(20)
@@ -48,6 +53,11 @@ Builder.load_string('''
         on_press: root.dispatch('on_settings_btn_pressed')
     Separator:
         important: True
+    ActionSwitch:
+        id: result_switch
+        important: True
+        disabled: True
+        on_touch_down: root.get_results_edit()
     ActionButton:
         id: notification
         text: 'Notifications'
@@ -101,6 +111,7 @@ class MainActionView(ActionView):
 
         self.circular_bg = None
         self.notification.bind(pos=self.update_drawing, size=self.update_drawing)
+        self.get_results_edit()
 
         self.register_event_type('on_previous_btn_pressed')
         self.register_event_type('on_home_btn_pressed')
@@ -145,6 +156,15 @@ class MainActionView(ActionView):
             pos = self.compute_pos(instance)
             self.circular_bg.pos = pos
             self.not_text.pos = self.compute_text_pos(pos)
+
+    def get_results_edit(self):
+        url = urlTo('results_edit')
+        AsyncRequest(url, on_success=self.set_res_switch_state)
+
+    def set_res_switch_state(self, resp):
+        state = resp.json()
+        switch = self.ids['result_switch']
+        switch.active = bool(state)
 
     def add_notification(self):
         self.num_notifications += 1

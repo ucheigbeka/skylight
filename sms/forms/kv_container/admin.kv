@@ -20,17 +20,18 @@
                 text:"Manage courses"
                 on_press:
                     root.manager.current = 'course_mgmt'
-            GridLayout:
+            MenuGrid:
                 id: grid
                 cols: 2
-                padding: dp(20)
-                size_hint_y: .1
-                CustomLabel:
-                    text: 'Result Edit'
-                    halign: 'left'
+                text: 'Result Edit'
+                Label:
                 Switch:
                     id: result_switch
-                    on_active: root.set_results_edit()
+                    size_hint: .3, 1
+                    on_touch_down: root.set_results_edit()
             MenuButton:
                 text: "Start new academic session"
             Label:
+
+<MenuGrid@GridLayout+MenuButton>:
+    size_hint_y: None
