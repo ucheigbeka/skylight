@@ -18,10 +18,6 @@
             size_hint_x: .4
 
             MenuButton:
-                text:"Course Details"
-                on_press:
-                    root.manager.current = 'course_details'
-            MenuButton:
                 text: "Personal Data"
                 on_press:
                     root.manager.current = 'personal_info'
@@ -34,16 +30,19 @@
                 on_press:
                     root.manager.current = 'result_entry_menu'
             MenuButton:
+                text:"Course Details"
+                on_press:
+                    root.manager.current = 'course_details'
+            MenuButton:
                 text:"Reports"
                 on_press:
                     root.manager.current = 'page_reports'
             MenuButton:
-                text:"Administrator"
-                on_press:
-                    root.manager.current = 'admin'
-            MenuButton:
                 text:"Logs"
                 on_press:
                     root.manager.current = 'logs'
-
+            MenuButton:
+                text:"Administrator"
+                on_press:
+                    root.manager.current = 'admin'
             Label:
