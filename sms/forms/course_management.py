@@ -1,13 +1,12 @@
 import os
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, StringProperty
 
 from sms import urlTo, get_current_session
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import SuccessPopup, ErrorPopup
-
+from sms.utils.popups import SuccessPopup, ErrorPopup, YesNoPopup
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'course_management.kv')
@@ -32,18 +31,24 @@ class NewCoursePopup(Popup):
         self.ids['level'].text = str(course_level)
 
     def add(self):
-        data = {}
-        for key in keys[:-3]:
-            data[key] = self.ids[key].text
-        data['credit'] = int(data['credit'])
-        data['semester'] = [1, 2][data['semester'].strip().lower() == 'second']
-        data['level'] = int(self.ids['level'].text)
-        data['start_date'] = get_current_session() + 1
-        data['end_date'] = 2999
-        optional = self.ids['opt_yes'].active
-        data['options'] = [0, data['semester']][optional]
-        url = urlTo('course_details')
-        AsyncRequest(url, method='POST', data=data, on_success=self.success)
+        try:
+            data = {}
+            for key in keys[:-3]:
+                data[key] = self.ids[key].text
+            data['credit'] = int(data['credit'])
+            data['semester'] = [1, 2][data['semester'].strip().lower() == 'second']
+            data['level'] = int(self.ids['level'].text)
+            data['start_date'] = get_current_session() + 1
+            data['end_date'] = 2999
+            optional = self.ids['opt_yes'].active
+            data['options'] = [0, data['semester']][optional]
+
+            data['code'] = data['code'].upper()
+            data['teaching_dept'] = data['teaching_dept'].upper()
+            url = urlTo('course_details')
+            AsyncRequest(url, method='POST', data=data, on_success=self.success)
+        except:
+            ErrorPopup('Fields cannot be empty')
 
     def success(self, resp):
         self.dismiss()
@@ -53,19 +58,30 @@ class NewCoursePopup(Popup):
 
 class RemoveCoursePopup(Popup):
     course_details = ListProperty()
+    course_code = StringProperty()
+    action = StringProperty()
 
     def remove(self):
         course_code = self.ids['code'].text
         for course in self.course_details:
             if course['code'] == course_code:
+                self.course_code = course_code
                 break
         else:
             msg = '{} not found'.format(self.ids['code'].text)
             ErrorPopup(message=msg)
             return
+
+        self.action = ['disable', 'delete'][self.ids['delete'].text == 'Yes']
+        if self.action == 'delete':
+            YesNoPopup(f'Are you sure you want to Permanently delete {course_code}?', on_yes=self._remove)
+        else:
+            self._remove()
+
+    def _remove(self):
         params = {
-            'code': course_code,
-            'level': course['level']
+            'code': self.course_code,
+            'action': self.action
         }
         url = urlTo('course_details')
         AsyncRequest(url, method='DELETE', params=params, on_success=self.success)
@@ -154,6 +170,10 @@ class CourseManagement(FormTemplate):
             course['start_date'] = row[keys.index('start_date')]
             course['end_date'] = 2999 if not row[keys.index('end_date')] else row[keys.index('end_date')]
             course['options'] = [0, course['semester']][row[keys.index('options')] == 'Yes']
+
+            data['code'] = data['code'].upper()
+            data['teaching_dept'] = data['teaching_dept'].upper()
+
             data.append(course)
         AsyncRequest(url, method='PUT', data=data, on_success=self.update_callback)
 

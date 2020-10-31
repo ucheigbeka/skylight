@@ -18,35 +18,35 @@
             CustomLabel:
                 text: 'Course code'
             CustomTextInput:
-                id: course_code
+                id: code
                 width: dp(100)
             CustomLabel:
                 text: 'Course title'
             CustomTextInput:
-                id: course_title
+                id: title
             CustomLabel:
                 text: 'Course credit'
             CustomTextInput:
-                id: course_credit
+                id: credit
                 width: dp(50)
                 input_filter: 'int'
             CustomLabel:
                 text: 'Course semester'
             CustomSpinner:
-                id: course_semester
+                id: semester
                 width: dp(100)
                 values: ['First', 'Second']
             CustomLabel:
                 text: 'Course level'
             CustomTextInput:
-                id: course_level
+                id: level
                 width: dp(100)
                 disabled: True
             CustomLabel:
                 text: 'Teaching Department'
-            CustomSpinner:
+            CustomTextInput:
                 id: teaching_dept
-                values: ['MEE', 'EEE', 'PRE', 'CHE', 'PEE', 'MTH', 'CHM', 'GST', 'CED', 'CVE', 'PHY', 'CPE']
+                width: dp(100)
             CustomLabel:
                 text: 'Optional'
             BoxLayout:
@@ -82,14 +82,27 @@
         size_hint_y: None
         height: self.minimum_height
         spacing: dp(10)
-        BoxLayout:
+        GridLayout:
+            cols: 2
+            padding: dp(20)
+            spacing: [dp(10), dp(5)]
             size_hint_y: None
-            height: dp(30)
+            height: self.minimum_height
+            row_default_height: dp(30)
+            row_force_default: True
             CustomLabel:
                 text: 'Course code'
+                halign: 'left'
             CustomTextInput:
-                id: course_code
+                id: code
                 width: dp(100)
+            CustomLabel:
+                text: 'Permanently Remove'
+                halign: 'left'
+            CustomSpinner:
+                id: delete
+                width: dp(100)
+                values: ['No', 'Yes']
         Button:
             size_hint: .3, None
             height: dp(30)
