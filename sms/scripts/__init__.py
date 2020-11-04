@@ -40,7 +40,8 @@ def generate_preview(resp):
     filename = attachment[attachment.find('=') + 1:]
     pdf_content = resp.content
     output_dir = os.path.join(cache_dir, os.path.splitext(filename)[0])
-    os.makedirs(output_dir)
+    shutil.rmtree(output_dir, ignore_errors=True)
+    os.makedirs(output_dir, exist_ok=True)
     paths = convert_from_bytes(pdf_content, output_folder=output_dir, fmt='jpg', thread_count=5, paths_only=True)
     filepath = os.path.join(cache_dir, filename)
     with open(filepath, 'wb') as fd:
