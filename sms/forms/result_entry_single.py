@@ -100,8 +100,9 @@ class ResultEntrySingle(FormTemplate):
         self.ids['name'].text = self.data['personal_info']["surname"] + " " + self.data['personal_info']["othernames"]
         self.ids['level'].text = str(self.data['level_written'])
         self.ids['session'].text = str(self.data['session_written'])
-        self.ids['level_gpa'].text = str(self.data['level_gpa'])
-        self.ids['cgpa'].text = str(self.data['cgpa'])
+        self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
+        self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
+        self.ids['special_case'].text = self.data['special_case']
 
         regular_courses = self.data['regular_courses']
         carryovers = self.data['carryovers']
