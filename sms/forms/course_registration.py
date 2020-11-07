@@ -1,13 +1,16 @@
 import os
+import sys
+import json
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
-    ObjectProperty, BooleanProperty
+    ObjectProperty, BooleanProperty, StringProperty
 
 from sms import urlTo, get_current_session, get_assigned_level, root
 from sms.forms.template import FormTemplate
+from sms.scripts import cache_dir
 from sms.utils.popups import ErrorPopup, YesNoPopup
 from sms.utils.asyncrequest import AsyncRequest
 # from sms.utils.asynctask import  run_in_background
@@ -137,6 +140,9 @@ class CourseRegistration(FormTemplate):
     credits_to_register = NumericProperty()
     max_credits = NumericProperty()
     is_old_course_reg = BooleanProperty(False)
+
+    print_icon_dir = StringProperty(
+        os.path.join(os.path.dirname(__file__), '..', 'utils', 'icons', 'icons8-print-32.png'))
 
     title = 'Course Registration'
 
@@ -287,9 +293,39 @@ class CourseRegistration(FormTemplate):
     def show_error(self, resp):
         try:
             error = ': ' + resp.json()
-        except:
+        except json.decoder.JSONDecodeError:
             error = ''
         ErrorPopup('Record not found' + error)
 
     def show_reg_error(self, resp):
         ErrorPopup('Error registering courses: ' + resp.json())
+
+    def generate_course_form(self):
+        url = urlTo('course_form')
+        try:
+            params = {
+                'mat_no': self.ids['mat_no'].text,
+                'session': int(self.ids['reg_session'].text),
+                'to_print': True
+            }
+        except ValueError:
+            ErrorPopup('Fields cannot be empty')
+            return
+        AsyncRequest(url, params=params, method='GET', on_success=self.print_course_form)
+
+    def print_course_form(self, resp):
+        attachment = resp.headers['Content-Disposition']
+        filename = attachment[attachment.find('=') + 1:]
+        filepath = os.path.join(cache_dir, filename)
+        with open(filepath, 'wb') as fd:
+            fd.write(resp.content)
+        self.print_pdf(filepath)
+
+    def print_pdf(self, filepath):
+        if sys.platform == 'win32':
+            try:
+                os.startfile(filepath, 'print')
+            except OSError:
+                os.startfile(filepath)
+        else:
+            ErrorPopup(f'Error trying to print {filepath}\nOS currently not supported')
