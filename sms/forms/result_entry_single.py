@@ -27,20 +27,18 @@ def insert_extra(extra):
 class CustomDataViewerInput(DataViewerInput):
     def on_focus(self, instance, value):
         if not value:
-            string = self.text
-            if string and (string.isdecimal() or string == '-1'):
-                score = int(string)
-                grade = 'F'
-
-                for lower_limit in sorted(grading_rules):
-                    if score < lower_limit:
+            score_str = self.text
+            grade = ''
+            if score_str and (score_str.isdecimal() or (score_str[0] == '-' and score_str[1:].isdecimal())):
+                for cutoff in sorted(grading_rules, reverse=True):
+                    if 100 >= int(score_str) >= cutoff:
+                        grade = grading_rules[cutoff]
                         break
-                    grade = grading_rules[lower_limit]
-            else:
-                grade = ''
-
-            grad_view = self.root.get_view_by_cord(self.index, self.col_num + 1)
-            grad_view.text = grade
+            try:
+                grad_view = self.root.get_view_by_cord(self.index, self.col_num + 1)
+                grad_view.text = grade if grade else ''  # empty string to avoid errors on None
+            except:
+                pass
 
 
 class ResultEntrySingle(FormTemplate):
@@ -102,8 +100,9 @@ class ResultEntrySingle(FormTemplate):
         self.ids['name'].text = self.data['personal_info']["surname"] + " " + self.data['personal_info']["othernames"]
         self.ids['level'].text = str(self.data['level_written'])
         self.ids['session'].text = str(self.data['session_written'])
-        self.ids['level_gpa'].text = str(self.data['level_gpa'])
-        self.ids['cgpa'].text = str(self.data['cgpa'])
+        self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
+        self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
+        self.ids['special_case'].text = self.data['special_case']
 
         regular_courses = self.data['regular_courses']
         carryovers = self.data['carryovers']
@@ -160,7 +159,11 @@ class ResultEntrySingle(FormTemplate):
     def show_response(self, resp):
         resp = resp.json()
         if resp:
-            resp = [resp[idx][:resp[idx].find(' at index')] + resp[idx][resp[idx].find(';'):] for idx in range(len(resp))]
+            for idx in range(len(resp)):
+                trim_start = resp[idx].find(' at index')
+                trim_end = resp[idx].find(';')
+                if trim_start >= 0 and trim_end >= 0:
+                    resp[idx] = resp[idx][:trim_start] + resp[idx][trim_end:]
             err_msg = '\n'.join(resp)
             ErrorPopup(err_msg, title='Alert')
 
