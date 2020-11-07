@@ -1,4 +1,5 @@
 import os
+import json
 from datetime import datetime
 from math import log
 
@@ -110,7 +111,7 @@ class ActionMenuPopup(Popup):
     def show_error(self, resp):
         try:
             msg = resp.json()
-        except:
+        except json.decoder.JSONDecodeError:
             msg = 'Something went wrong'
         msg = msg['detail'] if 'detail' in msg else msg
         ErrorPopup(msg)
@@ -135,7 +136,7 @@ class CreateBackupPopup(Popup):
     def show_error(self, resp):
         try:
             msg = resp.json()
-        except:
+        except json.decoder.JSONDecodeError:
             msg = 'Something went wrong'
         ErrorPopup(msg)
 
@@ -169,7 +170,7 @@ class RestoreBackupPopup(Popup):
     def show_error(self, resp):
         try:
             msg = resp.json()
-        except:
+        except json.decoder.JSONDecodeError:
             msg = 'Something went wrong'
         ErrorPopup(msg)
 
@@ -214,4 +215,3 @@ if __name__ == '__main__':
     from kivy.app import runTouchApp
 
     runTouchApp(RestoreBackupPopup())
-
