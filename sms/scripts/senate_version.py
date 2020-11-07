@@ -3,7 +3,7 @@ from threading import Thread
 from kivy.lang import Builder
 from kivy.uix.popup import Popup
 
-from sms import urlTo
+from sms import urlTo, start_loading, stop_loading
 from sms.scripts import generate_preview
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup
@@ -25,6 +25,7 @@ class SenateVersionPopup(Popup):
         AsyncRequest(url, params=params, on_success=self.generate_senate_version)
 
     def generate_senate_version(self, resp):
+        start_loading(text='Generating preview...')
         Thread(target=self._generate_senate_version, args=(resp,)).start()
 
     def _generate_senate_version(self, resp):
@@ -36,6 +37,7 @@ class SenateVersionPopup(Popup):
         reports.generate_report(screens, tab_title)
         self.dismiss()
         root.sm.current = 'reports'
+        stop_loading()
 
     def show_error(self, resp):
         ErrorPopup('Error generating senate version')
