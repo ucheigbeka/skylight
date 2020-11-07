@@ -9,6 +9,14 @@
             orientation: 'vertical'
             size_hint_x: .4
             MenuButton:
+                text:"Broad Sheet"
+                on_press:
+                    on_press: root.open_broadsheet_popup()
+            MenuButton:
+                text:"Senate Version"
+                on_press:
+                    on_press: root.open_senate_version_popup()
+            MenuButton:
                 text: "Students\' Update"
                 on_press: root.open_student_update_popup()
             MenuButton:
