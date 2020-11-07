@@ -151,8 +151,15 @@
                     pos_hint: {'top': 1, 'x': 0}
                     on_touch_down: pass
                     source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
-            FloatLayout:
+            RelativeLayout:
                 size_hint_x: .3
+                ImageButton:
+                    source: root.print_icon_dir
+                    size_hint: None, None
+                    pos_hint: {'right': 1, 'top': 1}
+                    width: 50
+                    height: int(self.width / self.image_ratio)
+                    on_press: root.generate_course_form()
 
         BoxLayout:
             spacing: dp(10)
