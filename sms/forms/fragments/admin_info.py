@@ -1,74 +1,92 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from sms import urlTo
+from sms.utils.asyncrequest import AsyncRequest
+from sms.utils.popups import SuccessPopup
+
 Builder.load_string('''
 <AdminInfo>:
     BoxLayout:
         orientation: 'vertical'
         GridLayout:
-            padding: dp(50)
-            spacing: dp(40)
+            padding: dp(20)
+            spacing: dp(20)
+            pos_hint: {'center_x': .5}
             cols: 2
-            size_hint: 1, .7
+            size_hint: .6, None
             row_default_height: dp(40)
             row_force_default: True
+            height: self.minimum_height
             CustomLabel:
                 text: 'Vice Chancellor'
             CustomTextInput:
-                font_size: sp(17)
-                padding: dp(8)
-                size_hint_x: .5
+                id: vc
+                size_hint_x: 1
             CustomLabel:
                 text: 'Chairman, Sub-Committee BCS'
             CustomTextInput:
-                font_size: sp(17)
-                padding: dp(8)
-                size_hint_x: .5
+                id: chairman
+                size_hint_x: 1
             CustomLabel:
                 text: 'Dean'
             CustomTextInput:
-                font_size: sp(17)
-                padding: dp(8)
-                size_hint_x: .5
+                id: dean
+                size_hint_x: 1
             CustomLabel:
                 text: 'Faculty Exam Officer'
             CustomTextInput:
-                font_size: sp(17)
-                padding: dp(8)
-                size_hint_x: .5
-        FloatLayout:
+                id: exam_officer
+                size_hint_x: 1
+            CustomLabel:
+                text: 'Head of Department'
+            CustomTextInput:
+                id: hod
+                size_hint_x: 1
+            CustomLabel:
+                text: 'Number of prize winners'
+            CustomTextInput:
+                id: prize_winners
+                width: dp(200)
+                input_filter: 'int'
+        RelativeLayout:
             size_hint: 1, .3
             Button:
                 text: 'Submit'
-                size_hint: .3, .3
-                pos_hint: {'x': .35, 'y': .7}
-                font_size: 20
+                size_hint: .2, .15
+                pos_hint: {'center_x': .5, 'top': .9}
                 background_color: 0, 1, 0, .5
+                on_press: root.submit()
 ''')
 
 
 class AdminInfo(Screen):
-    pass
+    def on_enter(self):
+        url = urlTo('dynamic_props')
+        AsyncRequest(url, method='GET', on_success=self.populate_info)
 
+    def populate_info(self, resp):
+        data = resp.json()
 
-if __name__ == '__main__':
-    from kivy.app import runTouchApp
+        self.ids['vc'].text = '' if data['ViceChancellor'] is None else data['ViceChancellor']
+        self.ids['chairman'].text = '' if data['ChairmanSubCommitteeBCS'] is None else data['ChairmanSubCommitteeBCS']
+        self.ids['dean'].text = '' if data['Dean'] is None else data['Dean']
+        self.ids['exam_officer'].text = '' if data['FacultyExamOfficer'] is None else data['FacultyExamOfficer']
+        self.ids['hod'].text = '' if data['HOD'] is None else data['HOD']
+        self.ids['prize_winners'].text = '0' if data['NumPrizeWinners'] is None else str(data['NumPrizeWinners'])
 
-    Builder.load_string('''
-<CustomTextInput@TextInput>:
-    size_hint_x: None
-    width: 300
-    multiline: False
-    write_tab: False
-    use_bubble: True
-    on_text_validate:
-        if self.get_focus_next(): self.get_focus_next().focus = True
+    def submit(self):
+        data = dict()
 
-<CustomLabel@Label>:
-    text_size: self.size
-    size_hint_x: None
-    width: 200
-    halign: 'center'
-        ''')
+        data['ViceChancellor'] = self.ids['vc'].text
+        data['ChairmanSubCommitteeBCS'] = self.ids['chairman'].text
+        data['Dean'] = self.ids['dean'].text
+        data['FacultyExamOfficer'] = self.ids['exam_officer'].text
+        data['HOD'] = self.ids['hod'].text
+        data['NumPrizeWinners'] = int(self.ids['prize_winners'].text)
 
-    runTouchApp(AdminInfo())
+        url = urlTo('dynamic_props')
+        AsyncRequest(url, data=data, method='PATCH', on_success=self.submit_success)
+
+    def submit_success(self, resp):
+        SuccessPopup('Info updated')
