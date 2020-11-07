@@ -29,6 +29,7 @@ add_paths = list(zip(paths, [output_path] * len(paths)))
 add_paths.append(('README.md', '.'))
 add_paths.append(('skylight.png', '.'))
 add_paths.append(('next_release.txt', '.'))
+add_paths.append(('copyright.txt', '.'))
 
 
 a = Analysis(['main.py'],
