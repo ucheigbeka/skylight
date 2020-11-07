@@ -9,6 +9,8 @@
             orientation: 'vertical'
             size_hint_x: .4
             MenuButton:
+                text: "Start new academic session"
+            MenuButton:
                 text:"Accounts"
                 on_press:
                     root.manager.current = 'accounts'
@@ -30,7 +32,9 @@
                     size_hint: .3, 1
                     on_touch_down: root.set_results_edit()
             MenuButton:
-                text: "Start new academic session"
+                text:"Admin info"
+                on_press:
+                    root.manager.current = 'admin_info'
             Label:
 
 <MenuGrid@GridLayout+MenuButton>:
