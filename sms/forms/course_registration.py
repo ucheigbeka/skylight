@@ -73,9 +73,11 @@ class CourseRegView(BoxLayout):
 
     def remove_field(self):
         if len(self.fields) - 1 > self.num_compulsory_courses:
-            empty_field = self.fields.pop()
-            for wid in empty_field:
-                self.grid.remove_widget(wid)
+            # self.ids['btn_fill'].disabled = True
+            if self.total_credits != self.max_sememster_credits:
+                empty_field = self.fields.pop()
+                for wid in empty_field:
+                    self.grid.remove_widget(wid)
 
             widgets = self.fields.pop()
             course_code = widgets[0].text
