@@ -40,12 +40,22 @@
                     disabled: True
                     text: str(root.total_credits)
                     size_hint_x: root.size_hints[2]
-    Button:
-        id: btn
+    BoxLayout:
+        spacing: dp(10)
         size_hint_y: None
         height: dp(35)
-        text: '-'
-        on_press: root.remove_field()
+        Button:
+            id: btn_fill
+            text: 'Fill'
+            disabled: True
+            on_press: root.populate_regular_courses()
+        Button:
+            id: btn
+            text: 'Remove'
+            on_press: root.remove_field()
+        Button:
+            text: 'Clear'
+            on_press: root.remove_all_field()
 
 <CourseRegistration>:
     first_sem_view: first_sem_view
