@@ -87,12 +87,21 @@ class CourseRegView(BoxLayout):
             self.course_code_options.insert(idx, course_code)
             self.total_credits -= credit
             self.add_field()
+            return True
+
+    def remove_all_field(self):
+        Clock.schedule_once(self._remove_all_field)
+
+    def _remove_all_field(self, dt):
+        while self.remove_field():
+            continue
 
     def clear(self):
         self.total_credits = 0
         self.num_compulsory_courses = 0
         self.fields = []
         self.grid.clear_widgets()
+        self.ids['btn_fill'].disabled = True
 
     def set_course_details(self, instance, value):
         instance.disabled = True
@@ -112,6 +121,17 @@ class CourseRegView(BoxLayout):
         courses = [[code_wid.text, title_wid.text, int(credits_wid.text)] for code_wid, title_wid, credits_wid in self.fields[:-1]]
         return courses
 
+    def populate_regular_courses(self):
+        Clock.schedule_once(self._populate_regular_courses)
+
+    def _populate_regular_courses(self, dt):
+        course_codes = self.course_code_options[:]
+        for course_code in course_codes:
+            course_code_spinner = self.fields[-1][0]
+            if course_code_spinner.text:
+                break
+            course_code_spinner.text = course_code
+
     def insert_compulsory_courses(self, compulsory_courses):
         self.clear()
         self.num_compulsory_courses = len(compulsory_courses)
@@ -128,6 +148,9 @@ class CourseRegView(BoxLayout):
 
             self.total_credits += credit
         self.add_field()
+
+        if not self.num_compulsory_courses:
+            self.ids['btn_fill'].disabled = False
 
     def on_course_codes(self, instance, value):
         self.course_code_options = self.course_codes[:]
@@ -207,6 +230,9 @@ class CourseRegistration(FormTemplate):
                 FIRST_SEM_COURSES[code] = [title, credit]
             for code, title, credit, _ in second_sem_courses:
                 SECOND_SEM_COURSES[code] = [title, credit]
+
+        self.first_sem_view.course_codes = []
+        self.second_sem_view.course_codes = []
 
         self.first_sem_view.course_codes = FIRST_SEM_COURSES.keys()
         self.first_sem_view.course_details = FIRST_SEM_COURSES.values()
