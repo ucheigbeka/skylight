@@ -52,11 +52,11 @@ Builder.load_string('''
         RelativeLayout:
             size_hint: 1, .3
             Button:
-                text: 'Submit'
+                text: 'Update'
                 size_hint: .2, .15
                 pos_hint: {'center_x': .5, 'top': .9}
                 background_color: 0, 1, 0, .5
-                on_press: root.submit()
+                on_press: root.update()
 ''')
 
 
@@ -75,7 +75,7 @@ class AdminInfo(Screen):
         self.ids['hod'].text = '' if data['HOD'] is None else data['HOD']
         self.ids['prize_winners'].text = '0' if data['NumPrizeWinners'] is None else str(data['NumPrizeWinners'])
 
-    def submit(self):
+    def update(self):
         data = dict()
 
         data['ViceChancellor'] = self.ids['vc'].text
