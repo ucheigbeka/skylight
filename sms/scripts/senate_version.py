@@ -21,15 +21,16 @@ class SenateVersionPopup(Popup):
             level = int(self.ids['level'].text)
         except ValueError:
             ErrorPopup('Field cannot be empty')
+            return
         params = {'acad_session': acad_session, 'level': level}
         AsyncRequest(url, params=params, on_success=self.generate_senate_version)
 
     def generate_senate_version(self, resp):
-        start_loading(text='Generating preview...')
         Thread(target=self._generate_senate_version, args=(resp,)).start()
 
     def _generate_senate_version(self, resp):
         from sms import root
+        start_loading(text='Generating preview...')
         reports = root.sm.get_screen('reports')
         screens = generate_preview(resp)
         acad_session = int(self.ids['acad_session'].text)
