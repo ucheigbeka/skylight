@@ -37,6 +37,7 @@ class CourseRegView(BoxLayout):
     max_sememster_credits = NumericProperty(30)
     total_credits = NumericProperty()
     size_hints = [.35, .5, .15]
+    credits_left = 0
 
     def __init__(self, **kwargs):
         try:
@@ -46,7 +47,7 @@ class CourseRegView(BoxLayout):
         self.course_code_options = self.course_codes[:]
 
     def add_field(self, bind_spinner=True):
-        if self.total_credits != self.max_sememster_credits:
+        if self.credits_left and (self.course_code_options or not bind_spinner):
             course_code_spinner = Factory.CustomSpinner(
                 disabled=True,
                 size_hint_x=self.size_hints[0])
@@ -73,8 +74,12 @@ class CourseRegView(BoxLayout):
 
     def remove_field(self):
         if len(self.fields) - 1 > self.num_compulsory_courses:
-            # self.ids['btn_fill'].disabled = True
-            if self.total_credits != self.max_sememster_credits:
+            remove_empty_field = True
+            if not self.credits_left:
+                remove_empty_field = False
+            if not self.course_code_options:
+                remove_empty_field = False
+            if remove_empty_field:
                 empty_field = self.fields.pop()
                 for wid in empty_field:
                     self.grid.remove_widget(wid)
@@ -106,12 +111,18 @@ class CourseRegView(BoxLayout):
         self.ids['btn_fill'].disabled = True
 
     def set_course_details(self, instance, value):
+        if not value:
+            return
         instance.disabled = True
         course_title_textinput = self.fields[-1][1]
         course_credit_textinput = self.fields[-1][2]
 
         idx = self.course_codes.index(value)
         title, credit = self.course_details[idx]
+        if credit > self.credits_left:
+            instance.disabled = False
+            instance.text = ''
+            return
         course_title_textinput.text = title if title else ''
         course_credit_textinput.text = str(credit)
         self.total_credits += credit
@@ -165,6 +176,7 @@ class CourseRegistration(FormTemplate):
     credits_to_register = NumericProperty()
     max_credits = NumericProperty()
     is_old_course_reg = BooleanProperty(False)
+    credits_left = 0
 
     print_icon_dir = StringProperty(
         os.path.join(os.path.dirname(__file__), '..', 'utils', 'icons', 'icons8-print-32.png'))
@@ -189,6 +201,12 @@ class CourseRegistration(FormTemplate):
 
     def set_credits_to_register(self, *args):
         self.credits_to_register = self.first_sem_view.total_credits + self.second_sem_view.total_credits
+        self.set_sem_view_credits_left()
+
+    def set_sem_view_credits_left(self):
+        self.credits_left = self.max_credits - self.credits_to_register
+        self.first_sem_view.credits_left = self.credits_left
+        self.second_sem_view.credits_left = self.credits_left
 
     def search(self):
         acad_session = int(self.ids.reg_session.text)
@@ -242,6 +260,7 @@ class CourseRegistration(FormTemplate):
         self.second_sem_view.course_details = SECOND_SEM_COURSES.values()
 
         self.max_credits = data['max_credits']
+        self.set_sem_view_credits_left()
 
         # populate compulsory courses field
         comp_first_sem_courses = carryovers['first_sem']
@@ -302,6 +321,8 @@ class CourseRegistration(FormTemplate):
         self.first_sem_view.clear()
         self.second_sem_view.clear()
         self.max_credits = 0
+        self.credits_left = 0
+        self.set_sem_view_credits_left()
         self.is_old_course_reg = False
 
         FIRST_SEM_COURSES = {}
