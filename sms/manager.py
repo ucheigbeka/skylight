@@ -8,8 +8,9 @@ from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
 from sms import titles, MODE, stop_loading
-from sms.scripts.about import about
+from sms.scripts.about import AboutPopup
 from sms.scripts.logout import logout
+from sms.scripts.server import ServerConfigPopup
 from sms.utils.menubar import LoginActionView, MainActionView
 from sms.utils.popups import YesNoPopup
 # from sms.utils.asynctask import run_in_background
@@ -164,6 +165,7 @@ class Root(BoxLayout):
         if isinstance(self.view_ins, LoginActionView):
             self.view_ins.bind(on_exit_btn_pressed=self.exit)
             self.view_ins.bind(on_previous_btn_pressed=self.about)
+            self.view_ins.bind(on_triple_tap_action=lambda ins: ServerConfigPopup())
         else:
             self.view_ins.bind(on_previous_btn_pressed=self.goto_previous_screen)
             self.view_ins.bind(on_home_btn_pressed=self.home)
@@ -233,7 +235,7 @@ class Root(BoxLayout):
         YesNoPopup(message='Are you sure you want to logout?', on_yes=logout, title='Logout')
 
     def about(self, instance):
-        about()
+        AboutPopup()
 
     def exit(self, instance):
         App.get_running_app().stop()
