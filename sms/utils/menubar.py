@@ -82,8 +82,18 @@ class LoginActionView(ActionView):
     def __init__(self, **kwargs):
         super(LoginActionView, self).__init__(**kwargs)
 
+        self.register_event_type('on_triple_tap_action')
         self.register_event_type('on_previous_btn_pressed')
         self.register_event_type('on_exit_btn_pressed')
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos) and touch.is_triple_tap:
+            self.dispatch('on_triple_tap_action')
+            return True
+        return super(LoginActionView, self).on_touch_down(touch)
+
+    def on_triple_tap_action(ins):
+        pass
 
     def on_previous_btn_pressed(ins):
         pass
