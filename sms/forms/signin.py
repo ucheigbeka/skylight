@@ -9,7 +9,6 @@ from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
 from sms.forms.template import FormTemplate
-from sms.scripts.feedback import FeedbackPopup
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
 
@@ -73,9 +72,6 @@ class SigninWindow(FormTemplate):
     def auth_error(self, resp):
         stop_loading()
         ErrorPopup('Invalid username or password')
-
-    def feedback(self):
-        FeedbackPopup(username=self.username)
 
 
 class SigninPopupContent(BoxLayout):
