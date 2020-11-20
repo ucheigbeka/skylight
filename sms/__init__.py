@@ -5,7 +5,9 @@ from kivy.core.window import Window
 from sms.utils.popups import LoadPopup
 
 # Backend config
-base_url = 'http://127.0.0.1:1807/api/'
+host = '127.0.0.1'
+port = 1807
+# base_url = 'http://127.0.0.1:1807/api/'
 # base_url = 'http://ucheigbeka.pythonanywhere.com/api/'
 
 # Frontend config
@@ -34,7 +36,17 @@ def stop_loading():
 
 
 def urlTo(path):
+    base_url = f'http://{host}:{port}/api/'
     return base_url + path
+
+
+def get_addr():
+    return host, port
+
+
+def set_addr(addr):
+    global host, port
+    host, port = addr
 
 
 def get_current_session():
