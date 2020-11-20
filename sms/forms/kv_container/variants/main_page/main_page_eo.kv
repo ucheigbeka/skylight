@@ -42,15 +42,3 @@
                 on_press:
                     root.manager.current = 'admin'
             Label:
-            GridLayout:
-                valign: 'bottom'
-                cols: 2
-                spacing: dp(60)
-                padding: dp(20)
-                Label:
-                    size_hint_x: .7
-                ImageButtonWithBackground:
-                    size_hint: .3, .8
-                    width: dp(64)
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'feedback_64.png')
-                    on_press: root.feedback()

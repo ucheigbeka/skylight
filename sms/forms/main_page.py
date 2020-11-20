@@ -3,9 +3,8 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import ListProperty, ObjectProperty
 
-from sms import get_log, get_kv_path, username
+from sms import get_log, get_kv_path
 from sms.forms.template import FormTemplate
-from sms.scripts.feedback import FeedbackPopup
 
 kv_path = get_kv_path('main_page')
 Builder.load_file(kv_path)
@@ -35,9 +34,6 @@ class MainPage(FormTemplate):
     def query_logs(self, dt):
         title = self.manager.parent.title
         get_log(self.populate_dv, count=10, title=title)
-
-    def feedback(self):
-        FeedbackPopup(username=username)
 
     def populate_dv(self, resp):
         logs = resp.json()
