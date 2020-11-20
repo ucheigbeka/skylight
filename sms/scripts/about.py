@@ -44,7 +44,3 @@ class AboutPopup(PopupBase):
         self.content.bind(dismiss=lambda ins, val: self.dismiss())
         self.size_hint = (.4, .27)
         super(AboutPopup, self).__init__(title='Project Skylight', auto_dismiss=False, **kwargs)
-
-
-def about():
-    AboutPopup()
