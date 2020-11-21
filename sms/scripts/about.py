@@ -36,10 +36,7 @@ class AboutPopupContent(BoxLayout):
 
 class AboutPopup(PopupBase):
     def __init__(self, **kwargs):
-        msg = ''' Student Management System
-        
-        Feedback Icon made by Those Icons from www.flaticon.com
-        '''
+        msg = '''Student Management System\n\n...by the Skylight team'''
         self.content = AboutPopupContent(msg=msg)
         self.content.bind(dismiss=lambda ins, val: self.dismiss())
         self.size_hint = (.4, .27)
