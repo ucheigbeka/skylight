@@ -3,6 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import BooleanProperty
 
 from sms import get_addr, set_addr
+from sms.setup import Config
 from sms.utils.popups import PopupBase
 
 Builder.load_string('''
@@ -42,11 +43,14 @@ Builder.load_string('''
             max_length: 5
             size_hint_x: .6
     BoxLayout:
-        size_hint_y: .3
+        size_hint_y: .2
         spacing: dp(10)
         Button:
             text: 'Save'
             on_press: root.save()
+        Button:
+            text: 'Default'
+            on_press: root.restore_default()
         Button:
             text: 'Close'
             on_press: root.dismiss = True
@@ -69,13 +73,17 @@ class ServerConfigContent(BoxLayout):
         set_addr((protocol, host, port))
         self.dismiss = True
 
+    def restore_default(self):
+        Config.restore_default('backend')
+        self.populate_fields()
+
 
 class ServerConfigPopup(PopupBase):
     def __init__(self, **kwargs):
         self.content = ServerConfigContent()
         self.content.bind(dismiss=lambda ins, val: self.dismiss())
         super(ServerConfigPopup, self).__init__(title='Server Config', auto_dismiss=False, **kwargs)
-        self.size_hint = (.3, .35)
+        self.size_hint = (.3, .4)
 
     def on_open(self):
         self.content.populate_fields()

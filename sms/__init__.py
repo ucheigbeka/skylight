@@ -2,12 +2,11 @@ import os
 import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
+
+from sms.setup import Config
 from sms.utils.popups import LoadPopup
 
 # Backend config
-protocol = 'http'
-host = '127.0.0.1'
-port = 1807
 # addresses: '127.0.0.1:1807', 'ucheigbeka.pythonanywhere.com:80'
 
 # Frontend config
@@ -36,17 +35,19 @@ def stop_loading():
 
 
 def urlTo(path):
+    protocol, host, port = get_addr()
     base_url = f'{protocol}://{host}:{port}/api/'
     return base_url + path
 
 
 def get_addr():
-    return protocol, host, port
+    backend_config = Config.get('backend')
+    return backend_config['protocol'], backend_config['host'], backend_config['port']
 
 
 def set_addr(addr):
-    global protocol, host, port
-    protocol, host, port = addr
+    backend_config = dict(zip(['protocol', 'host', 'port'], addr))
+    Config.put('backend', backend_config)
 
 
 def get_current_session():
