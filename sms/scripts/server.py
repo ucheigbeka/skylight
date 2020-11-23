@@ -3,7 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import BooleanProperty
 
 from sms import get_addr, set_addr
-from sms.setup import Config
+from sms.config import Config
 from sms.utils.popups import PopupBase
 
 Builder.load_string('''

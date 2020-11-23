@@ -3,7 +3,7 @@ import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-from sms.setup import Config
+from sms.config import Config
 from sms.utils.popups import LoadPopup
 
 # Backend config
