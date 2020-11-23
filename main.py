@@ -1,3 +1,4 @@
+import os
 import sys
 import traceback
 
@@ -29,7 +30,10 @@ try:
 except FileNotFoundError:
     prev_log = ''
 
-fd = open('logs.txt', 'r+', buffering=1)
+try:
+    fd = open('logs.txt', 'r+', buffering=1)
+except FileNotFoundError:
+    fd = open('logs.txt', 'w', buffering=1)
 
 if __name__ == '__main__':
     with fd:
