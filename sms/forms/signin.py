@@ -8,6 +8,7 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
+from sms.setup import output_path, extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
@@ -38,6 +39,14 @@ class SigninWindow(FormTemplate):
     password = StringProperty()
     retain_session = BooleanProperty(False)
     title = 'Login'
+
+    def on_enter(self, *args):
+        super(SigninWindow, self).on_enter(*args)
+        if not os.path.exists(output_path):
+            start_loading(text="Extracting assets...")
+            extract_assets()
+            stop_loading()
+        setup_poppler()
 
     def signin(self):
         url = urlTo('login')
