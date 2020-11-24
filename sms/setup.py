@@ -22,9 +22,13 @@ def extract_assets():
             fname, ext = os.path.splitext(asset)
             if ext == '.zip':
                 extract_archived_asset(filepath)
+        else:
+            os.rmdir(output_path)
 
 
 def setup_poppler():
-    poppler_path = glob(os.path.join(output_path, 'poppler*'))[0]
+    poppler_path = glob(os.path.join(output_path, 'poppler*'))
+    if poppler_path: poppler_path = poppler_path[0]
+    else: return
     environ_sep = ';' if platform == 'win32' else ':'
     os.environ['PATH'] += environ_sep + os.path.join(poppler_path, 'bin')
