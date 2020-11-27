@@ -53,7 +53,8 @@ class Manager(ScreenManager):
         if idx in range(2, 8):
             self.assigned_level = (idx - 1) * 100
         if MODE == 'DEBUG':
-            print('Assigned level:', self.assigned_level)
+            # print('Assigned level:', self.assigned_level)
+            print("Running in debug mode")
 
     def remove_screen(self, name):
         screen = self.sm.get_screen(name)
@@ -80,13 +81,15 @@ class Manager(ScreenManager):
         accounts = self.import_form('accounts')
         backups = self.import_form('backups')
         info = self.import_form('admin_info')
+        handover = self.import_form('handover')
 
         self.set_screens_for_exam_officer()
         screens = {
             'logs': logs.Logs,
             'accounts': accounts.Accounts,
             'backups': backups.Backups,
-            'admin_info': info.Info
+            'admin_info': info.Info,
+            'handover': handover.Handover
         }
         self.forms_dict.update(screens)
         self.is_admin = 1
