@@ -1,0 +1,98 @@
+<AuthenticationPopup>:
+    title: 'Are you sure?'
+    size_hint: (.5, None)
+    height: self.content.height + dp(50)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: dp(10)
+        GridLayout:
+            cols: 2
+            padding: dp(20)
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: dp(30)
+            row_force_default: True
+            CustomLabel:
+                text: 'Username'
+                size_hint_x: 1
+            CustomTextInput:
+                id: username
+                size_hint_x: .8
+            CustomLabel:
+                text: 'Password'
+                size_hint_x: 1
+            CustomTextInput:
+                id: pwd
+                size_hint_x: .8
+            Button:
+                text: 'Confirm'
+                size_hint: .1, .3
+                pos_hint: {'center_x': .5}
+                on_press: root.confirm()
+            Button:
+                text: 'Close'
+                size_hint: .1, .3
+                on_press: root.dismiss()
+
+<Handover>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+
+        CustomLabel:
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            size_hint: 1, .2
+            text: 'New HOD\'s Details'
+            font_size: sp(20)
+            valign: 'middle'
+
+        GridLayout:
+            cols: 2
+            padding: dp(20)
+            spacing: (10, 5)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: dp(30)
+            row_force_default: True
+            CustomLabel:
+                text: 'Firstname'
+            CustomTextInput:
+                id: fname
+            CustomLabel:
+                text: 'Lastname'
+            CustomTextInput:
+                id: lname
+            CustomLabel:
+                text: 'Email'
+            CustomTextInput:
+                id: email
+            CustomLabel:
+                text: 'Username'
+            CustomTextInput:
+                id: username
+            CustomLabel:
+                text: 'Password'
+            CustomTextInput:
+                id: pwd
+                password: 'True'
+            CustomLabel:
+                text: 'Repeat Password'
+            CustomTextInput:
+                id: rpwd
+                password: 'True'
+                on_text_validate: root.submit()
+
+        Button:
+            text: 'Submit'
+            size_hint: .1, .2
+            pos_hint: {'center_x': .5}
+            on_press: root.submit()
+        Label
