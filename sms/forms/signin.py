@@ -8,7 +8,7 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
-from sms.setup import output_path, extract_assets, setup_poppler
+from sms.setup import ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
@@ -42,7 +42,7 @@ class SigninWindow(FormTemplate):
 
     def on_enter(self, *args):
         super(SigninWindow, self).on_enter(*args)
-        if not os.path.exists(output_path):
+        if not os.path.exists(ASSETS_OUTPUT_PATH):
             start_loading(text="Extracting assets...")
             extract_assets()
             stop_loading()

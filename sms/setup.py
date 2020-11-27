@@ -4,30 +4,28 @@ from glob import glob
 from zipfile import ZipFile
 
 platform = sys.platform
-assets_path = os.path.join(os.path.dirname(__file__), 'assets')
-output_path = os.path.join(os.getcwd(), 'assets')
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
+ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
 
 
 def extract_archived_asset(filepath):
     with ZipFile(filepath) as zf:
-        zf.extractall(output_path)
+        zf.extractall(ASSETS_OUTPUT_PATH)
 
 
 def extract_assets():
-    os.mkdir(output_path)
-    assets = os.listdir(assets_path)
+    os.mkdir(ASSETS_OUTPUT_PATH)
+    assets = os.listdir(ASSETS_PATH)
     for asset in assets:
         if platform in asset:
-            filepath = os.path.join(assets_path, asset)
+            filepath = os.path.join(ASSETS_PATH, asset)
             fname, ext = os.path.splitext(asset)
             if ext == '.zip':
                 extract_archived_asset(filepath)
-        else:
-            os.rmdir(output_path)
 
 
 def setup_poppler():
-    poppler_path = glob(os.path.join(output_path, 'poppler*'))
+    poppler_path = glob(os.path.join(ASSETS_OUTPUT_PATH, 'poppler*'))
     if poppler_path: poppler_path = poppler_path[0]
     else: return
     environ_sep = ';' if platform == 'win32' else ':'
