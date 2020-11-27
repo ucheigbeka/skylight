@@ -30,6 +30,7 @@ permissions = [
 ]
 
 titles_perm = dict(zip(titles, permissions))
+titles_perm['Developer'] = "{\"read\": true, \"write\": true, \"superuser\": true, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}"
 
 
 def unload():
@@ -50,9 +51,14 @@ class NewAccountPopup(PopupBase):
     available_titles = ListProperty(titles)
 
     def on_open(self, *args):
+        contains_developer = False
         for acct in self.accounts:
+            if acct['title'] == 'Developer':
+                contains_developer = True
             if acct['title'] in self.available_titles:
                 self.available_titles.remove(acct['title'])
+        if not contains_developer:
+            self.available_titles.append('Developer')
 
     def create(self):
         if not self.ids['cbox'].active and self.ids['pwd'].text != self.ids['rpwd'].text:
