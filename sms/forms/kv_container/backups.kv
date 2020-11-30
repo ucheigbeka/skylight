@@ -30,21 +30,29 @@
 <ActionMenuPopup>:
     BoxLayout:
         orientation: "vertical"
-        spacing: dp(20)
+        spacing: dp(10)
         padding: dp(20)
         CustomLabel:
             text: 'Select an action'
             halign: 'left'
-            font_size: sp(20)
-        MenuButton:
-            text: "Download"
-            on_press: root.confirm(self.text)
-        MenuButton:
-            text: "Restore"
-            on_press: root.confirm(self.text)
-        MenuButton:
-            text: "Delete"
-            on_press: root.confirm(self.text)
+            valign: 'top'
+            size_hint_y: .2
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(10)
+            size_hint_y: .8
+            MenuButton:
+                text: "Download"
+                size_hint_y: .98
+                on_press: root.confirm(self.text)
+            MenuButton:
+                text: "Restore"
+                size_hint_y: .98
+                on_press: root.confirm(self.text)
+            MenuButton:
+                text: "Delete"
+                size_hint_y: .98
+                on_press: root.confirm(self.text)
 
 <CreateBackupPopup>:
     BoxLayout:
@@ -65,12 +73,13 @@
     BoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
-        padding: dp(30)
+        padding: dp(20)
         GridLayout:
             cols: 2
-            spacing: dp(60)
-            row_default_height: dp(50)
+            spacing: dp(20)
+            row_default_height: dp(30)
             row_force_default: True
+            size_hint_y: .7
             CustomLabel:
                 text: 'Include old account information?'
                 halign: 'left'
@@ -79,6 +88,7 @@
             CustomSpinner:
                 id: include_accounts
                 width: 200
+                size_hint_x: .3
                 values: ['No', 'Yes']
             CustomLabel:
                 text: 'Backup current data?'
@@ -88,7 +98,9 @@
             CustomSpinner:
                 id: backup_current
                 width: 200
+                size_hint_x: .3
                 values: ['No', 'Yes']
         MenuButton:
             text: "Restore"
+            size_hint_y: .3
             on_press: root.confirm()
