@@ -214,4 +214,4 @@ def get_download_path():
 if __name__ == '__main__':
     from kivy.app import runTouchApp
 
-    runTouchApp(RestoreBackupPopup())
+    runTouchApp(ActionMenuPopup())

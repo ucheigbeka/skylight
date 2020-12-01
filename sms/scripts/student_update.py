@@ -17,7 +17,8 @@ class StudentUpdatePopup(Popup):
         url = urlTo('result_update')
         mat_no = self.ids['mat_no'].text
         raw_score = self.ids['raw_score'].text == 'Yes'
-        params = {'mat_no': mat_no, 'raw_score': raw_score, 'to_print': True}
+        clearance = self.ids['clearance'].text == 'Yes'
+        params = {'mat_no': mat_no, 'raw_score': raw_score, 'clearance': clearance}
         AsyncRequest(url, params=params, on_success=self.generate_result_update)
 
     def generate_result_update(self, resp):

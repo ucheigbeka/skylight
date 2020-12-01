@@ -222,3 +222,8 @@ operations_mapping = {
     # 'grading_rules.get': 'grading_rules.get',
 
 }
+
+if __name__ == '__main__':
+    from kivy.app import runTouchApp
+
+    runTouchApp(Logs())
