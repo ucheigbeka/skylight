@@ -18,7 +18,7 @@ add_paths.append(('copyright.txt', '.'))
 add_paths.append(('.version', '.'))
 
 # Hidden imports
-hidden_imports, exceptions = [], ['template', 'signin', 'os', 'kivy.core.window']
+hidden_imports, exceptions = ['win32timezone'], ['template', 'signin', 'os', 'kivy.core.window']
 
 ## hidden kv imports
 with open(kv_imports_path) as fd:
