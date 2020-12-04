@@ -6,6 +6,7 @@ from zipfile import ZipFile
 platform = sys.platform
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
+PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
 
 
 def extract_archived_asset(filepath):

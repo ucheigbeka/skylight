@@ -8,14 +8,17 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
-from sms.setup import ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
+from sms.setup import PROJECT_ROOT, ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
 
+from packaging import version
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 
 SESSION_KEY = ''
+SERVER_FE_VERSION = ''
+CLIENT_FE_VERSION = open(os.path.join(PROJECT_ROOT, '.version')).read()
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'signin.kv')
@@ -32,6 +35,17 @@ def hash_key():
 def tokenize(text):
     serializer = Serializer(hash_key())
     return serializer.dumps(text).decode('utf-8')
+
+
+def updates_exist():
+    server_fe = version.parse(SERVER_FE_VERSION)
+    client_fe = version.parse(CLIENT_FE_VERSION)
+    return server_fe > client_fe
+
+
+def upgrade():
+    print(f'Current version: {CLIENT_FE_VERSION}, Most recent version: {SERVER_FE_VERSION}')
+    pass
 
 
 class SigninWindow(FormTemplate):
@@ -57,12 +71,14 @@ class SigninWindow(FormTemplate):
                      on_failure=self.auth_error, data=data, method='POST')
 
     def get_session_key(self, *args):
-        url = urlTo('session_key')
+        url = urlTo('init')
         AsyncRequest(url, on_success=self.set_token_key)
 
     def set_token_key(self, resp):
-        global SESSION_KEY
-        SESSION_KEY = resp.json()
+        init_data = resp.json()
+        global SESSION_KEY, SERVER_FE_VERSION
+        SESSION_KEY = init_data.get('session_key', '')
+        SERVER_FE_VERSION = init_data.get('fe_version', '0.0.0')
         self.signin()
 
     def grant_access(self, resp):
@@ -71,6 +87,9 @@ class SigninWindow(FormTemplate):
         set_details(self.username, token, title)
         root = App.get_running_app().root
         root.title = title
+
+        if updates_exist():
+            YesNoPopup('A new version {} exists. Do you want to upgrade?', on_yes=upgrade)
 
         if not self.retain_session:
             Clock.schedule_once(root.login)
