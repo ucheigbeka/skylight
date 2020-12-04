@@ -15,6 +15,7 @@ add_paths.append(('README.md', '.'))
 add_paths.append(('skylight.png', '.'))
 add_paths.append(('next_release.txt', '.'))
 add_paths.append(('copyright.txt', '.'))
+add_paths.append(('.version', '.'))
 
 # Hidden imports
 hidden_imports, exceptions = [], ['template', 'signin', 'os', 'kivy.core.window']
