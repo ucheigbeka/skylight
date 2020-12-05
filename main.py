@@ -26,14 +26,14 @@ def start():
 
 
 try:
-    prev_log = open('logs.txt').read()
+    prev_log = open(os.path.join(os.path.dirname(__file__), 'logs.txt')).read()
 except FileNotFoundError:
     prev_log = ''
 
 try:
-    fd = open('logs.txt', 'r+', buffering=1)
+    fd = open(os.path.join(os.path.dirname(__file__), 'logs.txt'), 'r+', buffering=1)
 except FileNotFoundError:
-    fd = open('logs.txt', 'w', buffering=1)
+    fd = open(os.path.join(os.path.dirname(__file__), 'logs.txt'), 'w', buffering=1)
 
 if __name__ == '__main__':
     with fd:
