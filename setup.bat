@@ -1,7 +1,11 @@
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: SOME USEFUL VB SCRIPTS:
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-::::::::::::::::::::::::::::::::::::::::::::
-:: Automatically check & get admin rights V2
-::::::::::::::::::::::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: VBSCRIPT TO Automatically check & get admin rights V2
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 @echo off
 CLS
 ECHO.
@@ -40,15 +44,84 @@ exit /B
 setlocal & pushd .
 cd /d %~dp0
 if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
-
-::::::::::::::::::::::::::::
-::START
-::::::::::::::::::::::::::::
-
-MKDIR "C:\Program Files\SMS by Skylight\"
-cd /d %~dp0
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: VBSCRIPT TO CREATE SOFT LINKS
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+set SCRIPT=create_shortcut.vbs
+set EXECUTABLE=sms.exe
+set PROGRAM_NAME=Student Management System
+set INSTALL_PATH=C:\Program Files\SMS by Skylight
+
+echo Set oWS = WScript.CreateObject("WScript.Shell") >> %SCRIPT%
+
+echo sLinkFile = "%USERPROFILE%\Desktop\%PROGRAM_NAME%.lnk" >> %SCRIPT%
+echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %SCRIPT%
+echo oLink.TargetPath = "%INSTALL_PATH%\%EXECUTABLE%" >> %SCRIPT%
+echo oLink.Save >> %SCRIPT%
+
+echo sLinkFile_2 = "%USERPROFILE%\OneDrive\Desktop\%PROGRAM_NAME%.lnk" >> %SCRIPT%
+echo Set oLink_2 = oWS.CreateShortcut(sLinkFile_2) >> %SCRIPT%
+echo oLink_2.TargetPath = "%INSTALL_PATH%\%EXECUTABLE%" >> %SCRIPT%
+echo oLink_2.Save >> %SCRIPT%
+
+::oLink.Arguments
+::oLink.Description
+::oLink.HotKey
+::oLink.IconLocation
+::oLink.WindowStyle
+::oLink.WorkingDirectory
+
+
+::MOVE skylight_sms skylight_sms.zip
+cscript /nologo create_shortcut.vbs
+DEL create_shortcut.vbs
+
+::start program
+"%INSTALL_PATH%\%EXECUTABLE%"
+:::::::::::::::::::::::::::::::::::::::::
+
+
+
+:::::::::::::::::::::::::::::::::::::::::
+:: first stab at an updater
+:::::::::::::::::::::::::::::::::::::::::
+
+:::::::::::::::::::::::::::::::::::::::::
+:: HELPFUL TOKEN
+:: To get to dir of running batch script
+:: cd /d %~dp0
+:::::::::::::::::::::::::::::::::::::::::
+
+@ECHO OFF
+CLS
+CD /d %USERPROFILE%
+
+:::::::::::::::::::::::::::::::::::::::::
+:: KILL sms.exe
+:::::::::::::::::::::::::::::::::::::::::
+ECHO stopping sms.exe ...
+TASKKILL /F /IM sms.exe /T
+
+
+:::::::::::::::::::::::::::::::::::::::::
+:: BACKUP PREVIOUS VERSION
+:::::::::::::::::::::::::::::::::::::::::
+ECHO creating backup sms-bak\ ...
+MKDIR %USERPROFILE%\sms-bak
+move /Y sms sms-bak
+
+ECHO recreating sms\
+MKDIR %USERPROFILE%\sms
+
+
+:::::::::::::::::::::::::::::::::::::::::::::
+:: CScript to unzip files
+:::::::::::::::::::::::::::::::::::::::::::::
+ECHO creating cscript to unzip archive ...
 REM This script upzip's files...
 
     > j_unzip.vbs ECHO '
@@ -90,7 +163,7 @@ REM This script upzip's files...
     >> j_unzip.vbs ECHO If var2 = "" then
     >> j_unzip.vbs ECHO. outFolder = outFolder
     >> j_unzip.vbs ECHO Else
-    >> j_unzip.vbs ECHO. outFolder = var2
+    >> j_unzip.vbs ECHO. outFolder = sCurPath ^& "\" ^& var2 ^& "\"
     >> j_unzip.vbs ECHO End if
     >> j_unzip.vbs ECHO.
     >> j_unzip.vbs ECHO. WScript.Echo ( "Extracting file " ^& strFileZIP)
@@ -103,41 +176,25 @@ REM This script upzip's files...
     >> j_unzip.vbs ECHO.
     >> j_unzip.vbs ECHO. WScript.Echo ( "Extracted." )
     >> j_unzip.vbs ECHO.
-	
 
-set SCRIPT=create_shortcut.vbs
-set EXECUTABLE=sms.exe
-set PROGRAM_NAME=Student Management System
-set INSTALL_PATH=C:\Program Files\SMS by Skylight
-
-echo Set oWS = WScript.CreateObject("WScript.Shell") >> %SCRIPT%
-
-echo sLinkFile = "%USERPROFILE%\Desktop\%PROGRAM_NAME%.lnk" >> %SCRIPT%
-echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %SCRIPT%
-echo oLink.TargetPath = "%INSTALL_PATH%\%EXECUTABLE%" >> %SCRIPT%
-echo oLink.Save >> %SCRIPT%
-
-echo sLinkFile_2 = "%USERPROFILE%\OneDrive\Desktop\%PROGRAM_NAME%.lnk" >> %SCRIPT%
-echo Set oLink_2 = oWS.CreateShortcut(sLinkFile_2) >> %SCRIPT%
-echo oLink_2.TargetPath = "%INSTALL_PATH%\%EXECUTABLE%" >> %SCRIPT%
-echo oLink_2.Save >> %SCRIPT%
-
-::oLink.Arguments
-::oLink.Description
-::oLink.HotKey
-::oLink.IconLocation
-::oLink.WindowStyle
-::oLink.WorkingDirectory
+:::::::::::::::::::::::::::::::::::::::::
+:: UNZIP SMS.EXE
+:::::::::::::::::::::::::::::::::::::::::
+ECHO extracting sms.exe ...
+CSCRIPT /B %USERPROFILE%\j_unzip.vbs sms.zip sms
 
 
-::MOVE skylight_sms skylight_sms.zip
+:::::::::::::::::::::::::::::::::::::::::
+:: CLEAN-UP
+:::::::::::::::::::::::::::::::::::::::::
+ECHO removing temporary files ...
+DEL %USERPROFILE%\j_unzip.vbs
+DEL %USERPROFILE%\sms.zip
 
-cscript /B j_unzip.vbs skylight_sms.zip "%INSTALL_PATH%\"
-cscript /nologo create_shortcut.vbs
 
-DEL j_unzip.vbs
-DEL create_shortcut.vbs
-
-::start program
-"%INSTALL_PATH%\%EXECUTABLE%"
+:::::::::::::::::::::::::::::::::::::::::
+:: START sms.exe
+:::::::::::::::::::::::::::::::::::::::::
+ECHO restarting sms.exe ...
+START %USERPROFILE%\sms\sms.exe
 
