@@ -6,14 +6,15 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
+from packaging import version
 
 from sms import urlTo, set_details, start_loading, stop_loading, get_username
+from sms.scripts.updater import download_upgrade
 from sms.setup import PROJECT_ROOT, ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup
+from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup, SuccessPopup
 
-from packaging import version
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 
 SESSION_KEY = ''
@@ -37,15 +38,15 @@ def tokenize(text):
     return serializer.dumps(text).decode('utf-8')
 
 
-def updates_exist():
+def check_for_updates(user_initiated=False):
     server_fe = version.parse(SERVER_FE_VERSION)
     client_fe = version.parse(CLIENT_FE_VERSION)
-    return server_fe > client_fe
-
-
-def upgrade():
-    print(f'Current version: {CLIENT_FE_VERSION}, Most recent version: {SERVER_FE_VERSION}')
-    pass
+    if server_fe > client_fe:
+        YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
+                   f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater')
+    elif user_initiated:
+        SuccessPopup('You are on the latest version of "Student Management System"', title='Updater')
+    return
 
 
 class SigninWindow(FormTemplate):
@@ -88,14 +89,12 @@ class SigninWindow(FormTemplate):
         root = App.get_running_app().root
         root.title = title
 
-        if updates_exist():
-            YesNoPopup('A new version {} exists. Do you want to upgrade?', on_yes=upgrade)
-
         if not self.retain_session:
             Clock.schedule_once(root.login)
         else:
             self.retain_session = False
             stop_loading()
+        check_for_updates()
 
     def auth_error(self, resp):
         stop_loading()

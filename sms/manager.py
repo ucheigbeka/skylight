@@ -8,6 +8,7 @@ from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
 from sms import titles, MODE, stop_loading
+from sms.forms.signin import check_for_updates
 from sms.scripts.about import AboutPopup
 from sms.scripts.logout import logout
 from sms.scripts.server import ServerConfigPopup
@@ -229,7 +230,7 @@ class Root(BoxLayout):
         return
 
     def notification(self, instance):
-        return
+        check_for_updates(user_initiated=True)
 
     def profile(self, instance):
         self.switch_screen('profile')
