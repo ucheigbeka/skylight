@@ -16,6 +16,7 @@ add_paths.append(('skylight.png', '.'))
 add_paths.append(('next_release.txt', '.'))
 add_paths.append(('copyright.txt', '.'))
 add_paths.append(('.version', '.'))
+add_paths.append(('restarter.bat', '.'))
 
 # Hidden imports
 hidden_imports, exceptions = ['win32timezone'], ['template', 'signin', 'os', 'kivy.core.window']
