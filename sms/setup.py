@@ -3,9 +3,9 @@ import sys
 from glob import glob
 from zipfile import ZipFile
 
+from sms import ASSETS_OUTPUT_PATH, ASSETS_PATH
+
 platform = sys.platform
-ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
-ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
 
 
 def extract_archived_asset(filepath):

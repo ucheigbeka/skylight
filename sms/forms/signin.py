@@ -10,9 +10,9 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from packaging import version
 
-from sms import urlTo, set_details, start_loading, stop_loading, get_username, PROJECT_ROOT
+from sms import urlTo, set_details, start_loading, stop_loading, get_username, PROJECT_ROOT, ASSETS_OUTPUT_PATH
 from sms.scripts.updater import download_upgrade
-from sms.setup import ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
+from sms.setup import extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup, SuccessPopup

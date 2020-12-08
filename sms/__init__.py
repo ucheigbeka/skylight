@@ -13,12 +13,14 @@ from sms.utils.popups import LoadPopup
 # Frontend config
 MODE = 'DEBUG'
 KV_SURFIX = ''
-token, title, username = '', '', ''
-current_session = None
 DEPARTMENT = ''
+current_session = None
+token, title, username = '', '', ''
 
 # Directories
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
+ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
 TEMP_DIR, CACHE_DIR, BACKUP_DIR = '', '', ''
 
 # For auto logout; time is in seconds
