@@ -14,7 +14,7 @@ Builder.load_string('''
 <Separator@Label+ActionItem>:
     size_hint_x: .6
 
-<ActionSwitch@Switch+ActionItem>:
+<ActionSwitch@ActionButton+Switch>:
     size_hint_x: .1
     background_color: (0, 0, 0, 0)
 
@@ -58,7 +58,7 @@ Builder.load_string('''
         id: result_switch
         important: True
         disabled: True
-        on_touch_up: root.dispatch('on_results_edit_btn_pressed')
+        on_press: root.dispatch('on_results_edit_btn_pressed')
     ActionButton:
         id: notification
         text: 'Notifications'
