@@ -11,8 +11,11 @@ TASKKILL /F /IM sms.exe
 
 
 :::::::::::::::::::::::::::::::::::::::::
-:: BACKUP PREVIOUS VERSION
+:: MOVE DATA TO NEW VERSION
 :::::::::::::::::::::::::::::::::::::::::
+ECHO moving sms\backups
+MOVE /Y sms\backups sms_temp\backups
+
 ECHO removing sms\
 RMDIR /S /Q sms
 
