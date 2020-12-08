@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.properties import StringProperty, ListProperty,\
     DictProperty, ObjectProperty, BooleanProperty, NumericProperty
 
-from sms import titles, MODE, stop_loading
+from sms import titles, MODE, stop_loading, urlTo
 from sms.forms.signin import check_for_updates
 from sms.scripts.about import AboutPopup
 from sms.scripts.logout import logout
@@ -222,6 +222,19 @@ class Root(BoxLayout):
         self.sm.transition = NoTransition()
 
         self.sm.load_screens()
+        self.get_results_edit()
+
+    def get_results_edit(self, instance=None):
+        from sms import AsyncRequest
+        url = urlTo('results_edit')
+        AsyncRequest(url, on_success=self.set_res_switch_state)
+
+    def set_res_switch_state(self, resp):
+        state = resp.json()
+        menu_bar_ids = self.menu_bar.action_view.ids
+        if 'result_switch' in menu_bar_ids:
+            switch = menu_bar_ids['result_switch']
+            switch.active = bool(state)
 
     def home(self, instance):
         self.switch_screen('main_page')

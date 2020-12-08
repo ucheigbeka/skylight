@@ -16,6 +16,7 @@ Builder.load_string('''
 
 <ActionSwitch@Switch+ActionItem>:
     size_hint_x: .1
+    background_color: (0, 0, 0, 0)
 
 <LoginActionView>:
     spacing: dp(20)
@@ -57,7 +58,7 @@ Builder.load_string('''
         id: result_switch
         important: True
         disabled: True
-        on_touch_down: root.get_results_edit()
+        on_touch_up: root.dispatch('on_results_edit_btn_pressed')
     ActionButton:
         id: notification
         text: 'Notifications'
@@ -121,12 +122,12 @@ class MainActionView(ActionView):
 
         self.circular_bg = None
         self.notification.bind(pos=self.update_drawing, size=self.update_drawing)
-        self.get_results_edit()
 
         self.register_event_type('on_previous_btn_pressed')
         self.register_event_type('on_home_btn_pressed')
         self.register_event_type('on_reports_btn_pressed')
         self.register_event_type('on_settings_btn_pressed')
+        self.register_event_type('on_results_edit_btn_pressed')
         self.register_event_type('on_notification_btn_pressed')
         self.register_event_type('on_profile_btn_pressed')
         self.register_event_type('on_logout_btn_pressed')
@@ -167,15 +168,6 @@ class MainActionView(ActionView):
             self.circular_bg.pos = pos
             self.not_text.pos = self.compute_text_pos(pos)
 
-    def get_results_edit(self):
-        url = urlTo('results_edit')
-        AsyncRequest(url, on_success=self.set_res_switch_state)
-
-    def set_res_switch_state(self, resp):
-        state = resp.json()
-        switch = self.ids['result_switch']
-        switch.active = bool(state)
-
     def add_notification(self):
         self.num_notifications += 1
 
@@ -195,6 +187,9 @@ class MainActionView(ActionView):
         pass
 
     def on_settings_btn_pressed(ins):
+        pass
+
+    def on_results_edit_btn_pressed(ins):
         pass
 
     def on_notification_btn_pressed(ins):
