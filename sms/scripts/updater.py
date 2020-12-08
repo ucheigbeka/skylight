@@ -3,8 +3,7 @@ import shutil
 import subprocess
 from zipfile import ZipFile
 
-from sms import urlTo, AsyncRequest
-from sms.setup import PROJECT_ROOT, TEMP_DIR
+from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT
 from sms.utils.popups import ErrorPopup, YesNoPopup
 
 
@@ -39,7 +38,7 @@ def extract(resp):
 
 def restart():
     restarter_path = os.path.join(PROJECT_ROOT, 'restarter.bat')
-    temp_restarter_path = os.path.join(TEMP_DIR, 'sms_restarter.bat')
+    temp_restarter_path = os.path.join(get_dirs('TEMP_DIR'), 'sms_restarter.bat')
     shutil.rmtree(temp_restarter_path, ignore_errors=True)
     shutil.copyfile(restarter_path, temp_restarter_path)
     updater_logs_path = os.path.join(os.path.expanduser('~'), 'sms_updater_logs.txt')

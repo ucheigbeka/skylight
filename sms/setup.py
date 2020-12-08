@@ -1,15 +1,11 @@
 import os
 import sys
-import tempfile
 from glob import glob
 from zipfile import ZipFile
 
 platform = sys.platform
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
-PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
-TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms', 'mechanical')
-os.makedirs(TEMP_DIR, exist_ok=True)
 
 
 def extract_archived_asset(filepath):

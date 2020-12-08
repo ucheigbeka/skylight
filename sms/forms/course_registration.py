@@ -8,12 +8,10 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
     ObjectProperty, BooleanProperty, StringProperty
 
-from sms import urlTo, get_current_session, get_assigned_level, root
+from sms import urlTo, get_current_session, get_assigned_level, root, get_dirs
 from sms.forms.template import FormTemplate
-from sms.scripts import cache_dir
 from sms.utils.popups import ErrorPopup, YesNoPopup
 from sms.utils.asyncrequest import AsyncRequest
-# from sms.utils.asynctask import  run_in_background
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'course_registration.kv')
@@ -365,7 +363,7 @@ class CourseRegistration(FormTemplate):
     def print_course_form(self, resp):
         attachment = resp.headers['Content-Disposition']
         filename = attachment[attachment.find('=') + 1:]
-        filepath = os.path.join(cache_dir, filename)
+        filepath = os.path.join(get_dirs('CACHE_DIR'), filename)
         with open(filepath, 'wb') as fd:
             fd.write(resp.content)
         self.print_pdf(filepath)

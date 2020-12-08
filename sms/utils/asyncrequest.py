@@ -16,7 +16,7 @@ import json
 from threading import Thread
 from datetime import datetime
 from kivy.core.window import Window
-from sms import get_token, urlTo, allowable_idle_time
+from sms import get_token, urlTo, ALLOWABLE_IDLE_TIME
 from sms.utils.popups import ErrorPopup, YesNoPopup
 
 last_request_timestamp = datetime.now().timestamp()
@@ -100,7 +100,7 @@ def session_timer(url, params):
     global last_request_timestamp, logged_in
     curr_timestamp = datetime.now().timestamp()
 
-    if last_request_timestamp and curr_timestamp - last_request_timestamp > allowable_idle_time:
+    if last_request_timestamp and curr_timestamp - last_request_timestamp > ALLOWABLE_IDLE_TIME:
         if url not in [urlTo('logout'), urlTo('login')] and logged_in:  # if the request is logout or login, the let it pass
             # else logout silently
             requests.post(

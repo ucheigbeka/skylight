@@ -7,9 +7,8 @@ from kivy.lang import Builder
 from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, StringProperty, ObjectProperty
 
-from sms import urlTo
+from sms import urlTo, get_dirs
 from sms.forms.template import FormTemplate
-from sms.scripts import BACKUP_DIR
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import YesNoPopup, ErrorPopup, SuccessPopup
 
@@ -94,7 +93,7 @@ class ActionMenuPopup(Popup):
         attachment = resp.headers['Content-Disposition']
         filename = attachment[attachment.find('=') + 1:]
         pdf_content = resp.content
-        filepaths = [os.path.join(download_dir, filename) for download_dir in (get_download_path(), BACKUP_DIR)]
+        filepaths = [os.path.join(download_dir, filename) for download_dir in (get_download_path(), get_dirs('BACKUP_DIR'))]
         [open(filepath, 'wb').write(pdf_content) for filepath in filepaths]
         SuccessPopup('Backup downloaded to ' + get_download_path())
         self.dismiss()
