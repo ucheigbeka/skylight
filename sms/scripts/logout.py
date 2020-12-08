@@ -15,7 +15,8 @@ def logout():
 def reset(resp=None):
     root = App.get_running_app().root
     sm = root.sm
-    set_details('', '', '')
+    root.ids['title_bar_label'].text = 'Student Management System'
+    set_details('', '', '', '')
     root.title = ''
     root.is_admin = False
     root.assigned_level = 0

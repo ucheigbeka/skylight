@@ -1,6 +1,8 @@
 import os
 from base64 import b64encode
 from hashlib import md5
+from threading import Thread
+
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -8,9 +10,9 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from packaging import version
 
-from sms import urlTo, set_details, start_loading, stop_loading, get_username
+from sms import urlTo, set_details, start_loading, stop_loading, get_username, PROJECT_ROOT
 from sms.scripts.updater import download_upgrade
-from sms.setup import PROJECT_ROOT, ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
+from sms.setup import ASSETS_OUTPUT_PATH, extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup, SuccessPopup
@@ -54,6 +56,7 @@ class SigninWindow(FormTemplate):
     password = StringProperty()
     retain_session = BooleanProperty(False)
     title = 'Login'
+    department = ''
 
     def on_enter(self, *args):
         super(SigninWindow, self).on_enter(*args)
@@ -80,12 +83,13 @@ class SigninWindow(FormTemplate):
         global SESSION_KEY, SERVER_FE_VERSION
         SESSION_KEY = init_data.get('session_key', '')
         SERVER_FE_VERSION = init_data.get('fe_version', '0.0.0')
+        self.department = init_data.get('dept', '')
         self.signin()
 
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
-        set_details(self.username, token, title)
+        set_details(self.username, token, title, self.department)
         root = App.get_running_app().root
         root.title = title
 
@@ -94,7 +98,10 @@ class SigninWindow(FormTemplate):
         else:
             self.retain_session = False
             stop_loading()
-        check_for_updates()
+        try:
+            Thread(target=check_for_updates).start()
+        except:
+            pass
 
     def auth_error(self, resp):
         stop_loading()

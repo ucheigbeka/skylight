@@ -175,6 +175,7 @@ class Root(BoxLayout):
             self.view_ins.bind(on_home_btn_pressed=self.home)
             self.view_ins.bind(on_reports_btn_pressed=self.reports)
             self.view_ins.bind(on_settings_btn_pressed=self.settings)
+            self.view_ins.bind(on_results_edit_btn_pressed=self.get_results_edit)
             self.view_ins.bind(on_notification_btn_pressed=self.notification)
             self.view_ins.bind(on_profile_btn_pressed=self.profile)
             self.view_ins.bind(on_logout_btn_pressed=self.logout)
@@ -208,6 +209,8 @@ class Root(BoxLayout):
             self.sm.current = screen_name
 
     def login(self, dt):
+        from sms import DEPARTMENT
+        self.ids['title_bar_label'].text = f'Department of {DEPARTMENT}'
         main_page = self.sm.import_form('main_page')
 
         main_page = main_page.MainPage(name='main_page')
