@@ -377,6 +377,6 @@ class CourseRegistration(FormTemplate):
                 os.startfile(filepath)
         else:
             try:
-                subprocess.run(['xdg-open', self.filepath])
+                subprocess.run(['xdg-open', filepath])
             except:
-                ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
+                ErrorPopup(f'Error trying to print {filepath}\nOS currently not supported')
