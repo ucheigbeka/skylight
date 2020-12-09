@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import json
 from kivy.lang import Builder
@@ -375,4 +376,7 @@ class CourseRegistration(FormTemplate):
             except OSError:
                 os.startfile(filepath)
         else:
-            ErrorPopup(f'Error trying to print {filepath}\nOS currently not supported')
+            try:
+                subprocess.run(['xdg-open', self.filepath])
+            except:
+                ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')

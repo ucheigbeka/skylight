@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 from kivy.app import App
 from kivy.lang import Builder
@@ -74,7 +75,10 @@ class Preview(Screen):
             except OSError:
                 os.startfile(self.filepath)
         else:
-            ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
+            try:
+                subprocess.run(['xdg-open', self.filepath])
+            except:
+                ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
 
     def on_touch_down(self, touch):
         self.box.size_hint = (None, None)
