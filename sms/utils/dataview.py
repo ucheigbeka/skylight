@@ -1,5 +1,6 @@
 import os
 from kivy.lang import Builder
+from kivy.metrics import sp
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
@@ -313,12 +314,17 @@ class DataViewer(BoxLayout):
             if len(row) != self.cols:
                 ErrorPopup('Error parsing data')
             for col_num, col in enumerate(row):
+                halign = 'center'
+                padding = [0, 0]
                 if bool(self.weightings):
                     width = self.width * self.weightings[col_num]
+                    if self.weightings[col_num] >= 0.35:
+                        halign = 'left'
+                        padding = [sp(20), 0]
                 else:
                     width = self.widths[col_num]
-                prop = {'index': index, 'col_num': col_num, 'text': str(
-                    col), 'width': width, 'root': self}
+                prop = {'index': index, 'col_num': col_num, 'text': str(col), 'width': width,
+                        'halign': halign, 'padding': padding, 'root': self}
                 for attr, val in self.prop.items():
                     if isinstance(val, list) and len(val) == self.cols:
                         prop[attr] = val[col_num]
