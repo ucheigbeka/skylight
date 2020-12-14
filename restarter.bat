@@ -1,7 +1,10 @@
 @ECHO OFF
 ECHO.
+:::::::::::::::::::::::::::::::::::::::::
+:: PRINT DATE & TIME, CD TO USER_HOME
+:::::::::::::::::::::::::::::::::::::::::
 ECHO %date:~0,2%/%date:~3,2%/%date:~-4%, %time:~0,2%:%time:~3,2%:%time:~6,2%
-CD /d %USERPROFILE%
+CD /D %USERPROFILE%
 
 :::::::::::::::::::::::::::::::::::::::::
 :: KILL sms.exe
@@ -9,22 +12,35 @@ CD /d %USERPROFILE%
 ECHO stopping sms.exe ...
 TASKKILL /F /IM sms.exe
 
-
 :::::::::::::::::::::::::::::::::::::::::
-:: MOVE DATA TO NEW VERSION
+:: REMOVE OLD sms DIR
 :::::::::::::::::::::::::::::::::::::::::
-ECHO moving sms\backups
-MOVE /Y sms\backups sms_temp\backups
-
 ECHO removing sms\
 RMDIR /S /Q sms
 
-ECHO recreating sms\
+:::::::::::::::::::::::::::::::::::::::::
+:: ERROR CHECKING 1
+:::::::::::::::::::::::::::::::::::::::::
+ECHO find sms ...
+DIR | FINDSTR sms
+
+:::::::::::::::::::::::::::::::::::::::::
+:: MOVE sms_temp TO sms
+:::::::::::::::::::::::::::::::::::::::::
+ECHO moving sms_temp\ to sms\
 MOVE /Y sms_temp sms
 
+ECHO cd to sms ...
+CD /d %USERPROFILE%\sms
+
+:::::::::::::::::::::::::::::::::::::::::
+:: ERROR CHECKING 2
+:::::::::::::::::::::::::::::::::::::::::
+ECHO find sms.exe ...
+DIR | FINDSTR sms.exe
 
 :::::::::::::::::::::::::::::::::::::::::
 :: START sms.exe
 :::::::::::::::::::::::::::::::::::::::::
 ECHO restarting sms.exe ...
-START %USERPROFILE%\sms\sms.exe
+START sms.exe
