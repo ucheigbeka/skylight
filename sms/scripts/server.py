@@ -88,8 +88,9 @@ class ServerConfigContent(BoxLayout):
         self.ids['protocol'].text = protocol
         self.ids['host'].text = host
         self.ids['profile'].values = self.profiles.keys()
-        self.ids['profile'].text = 'Mechanical'
         self.ids['port'].text = str(port)
+        dept = [k for k, v in self.profiles.items() if v == port]
+        self.ids['profile'].text = dept[0] if dept else ''
 
     def update_port(self):
         profile = self.ids['profile'].text
