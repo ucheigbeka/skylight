@@ -26,11 +26,12 @@
                 id: grid
                 cols: 2
                 text: 'Result Edit'
+                on_press: root.set_results_edit()
                 Label:
                 Switch:
                     id: result_switch
                     size_hint: .3, 1
-                    on_touch_down: root.set_results_edit()
+                    disabled: True
             MenuButton:
                 text:"Admin info"
                 on_press:

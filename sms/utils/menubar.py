@@ -6,8 +6,6 @@ from kivy.uix.actionbar import ActionBar, ActionView
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty,\
     ObjectProperty
 
-from sms import AsyncRequest, urlTo
-
 Builder.load_string('''
 #:import os os
 
