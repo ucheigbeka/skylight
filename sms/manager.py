@@ -151,7 +151,6 @@ class Root(BoxLayout):
     screen_names = ListProperty()
 
     def __init__(self, **kwargs):
-        self.first = True
         from sms.forms.signin import SigninWindow
 
         super(Root, self).__init__(**kwargs)
@@ -235,9 +234,8 @@ class Root(BoxLayout):
         menu_bar_ids = self.menu_bar.action_view.ids
         if 'result_switch' in menu_bar_ids:
             switch = menu_bar_ids['result_switch']
+            color_disabled_switch(switch)
             switch.active = bool(state)
-            if self.first:
-                self.first = not color_disabled_switch(switch)
 
     def home(self, instance):
         self.switch_screen('main_page')
