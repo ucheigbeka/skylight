@@ -1,4 +1,6 @@
 import os
+
+from kivy.graphics.vertex_instructions import Rectangle
 from kivy.lang import Builder
 from kivy.graphics import Color, Ellipse
 from kivy.core.text import Label as CoreLabel
@@ -202,6 +204,17 @@ class MainActionView(ActionView):
 
 class MenuBar(ActionBar):
     title = StringProperty()
+
+
+def color_disabled_switch(switch):
+    # give the disabled switch the colors of an enabled one
+    try:
+        rem_dis = lambda obj: setattr(obj, 'source', obj.source.replace('_disabled', '') if obj.source else None)
+        [rem_dis(obj) for obj in switch.canvas.children if isinstance(obj, Rectangle)]
+        [rem_dis(obj) for obj in switch.canvas.after.children if isinstance(obj, Rectangle)]
+    except:
+        return False
+    return True
 
 
 if __name__ == '__main__':
