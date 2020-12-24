@@ -57,6 +57,7 @@ class SigninWindow(FormTemplate):
     retain_session = BooleanProperty(False)
     title = 'Login'
     department = ''
+    current_session = None
 
     def on_enter(self, *args):
         super(SigninWindow, self).on_enter(*args)
@@ -84,12 +85,13 @@ class SigninWindow(FormTemplate):
         SESSION_KEY = init_data.get('session_key', '')
         SERVER_FE_VERSION = init_data.get('fe_version', '0.0.0')
         self.department = init_data.get('dept', '')
+        self.current_session = init_data.get('current_session', '')
         self.signin()
 
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
-        set_details(self.username, token, title, self.department)
+        set_details(self.username, token, title, self.department, self.current_session)
         root = App.get_running_app().root
         root.title = title
 

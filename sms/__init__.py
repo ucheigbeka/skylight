@@ -62,6 +62,8 @@ def set_addr(addr):
 def get_current_session():
     global current_session
     if not current_session:
+        # This block may no longer be required as "current_session" is now set on init
+        # leaving this in case current_session somehow loses its value --highly unlikely IMO
         url = urlTo('current_session')
         # AsyncRequest not used as the session is needed immediately to draw pages
         resp = requests.get(url)
@@ -96,11 +98,12 @@ def setup_dirs():
     [os.makedirs(path, exist_ok=True) for path in (TEMP_DIR, CACHE_DIR, BACKUP_DIR)]
 
 
-def set_details(_username, _token, _title, _department):
-    global username, token, title, DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
+def set_details(_username, _token, _title, _department, _current_session):
+    global username, token, title, current_session, DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
     username = _username
     token = _token
     title = _title
+    current_session = _current_session
     DEPARTMENT = ' '.join(map(str.capitalize, _department.split(' ')))
 
     setup_dirs()
