@@ -29,7 +29,7 @@ class MainPage(FormTemplate):
 
     def on_leave(self):
         Clock.unschedule(self.event)
-        self.logs = [['', '', '']]
+        # self.logs = [['', '', '']]
 
     def query_logs(self, dt):
         title = self.manager.parent.title
