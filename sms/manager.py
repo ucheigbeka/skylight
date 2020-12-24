@@ -12,7 +12,7 @@ from sms.forms.signin import check_for_updates
 from sms.scripts.about import AboutPopup
 from sms.scripts.logout import logout
 from sms.scripts.server import ServerConfigPopup
-from sms.utils.menubar import LoginActionView, MainActionView
+from sms.utils.menubar import LoginActionView, MainActionView, color_disabled_switch
 from sms.utils.popups import YesNoPopup
 # from sms.utils.asynctask import run_in_background
 
@@ -151,6 +151,7 @@ class Root(BoxLayout):
     screen_names = ListProperty()
 
     def __init__(self, **kwargs):
+        self.first = True
         from sms.forms.signin import SigninWindow
 
         super(Root, self).__init__(**kwargs)
@@ -235,6 +236,8 @@ class Root(BoxLayout):
         if 'result_switch' in menu_bar_ids:
             switch = menu_bar_ids['result_switch']
             switch.active = bool(state)
+            if self.first:
+                self.first = not color_disabled_switch(switch)
 
     def home(self, instance):
         self.switch_screen('main_page')
