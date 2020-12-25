@@ -21,6 +21,7 @@ token, title, username = '', '', ''
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
+BACKUPS_BASE_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups')
 TEMP_DIR, CACHE_DIR, BACKUP_DIR = '', '', ''
 
 # For auto logout; time is in seconds
@@ -93,7 +94,7 @@ def setup_dirs():
     
     TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms')
     CACHE_DIR = os.path.join(TEMP_DIR, 'cache', dept)
-    BACKUP_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups', dept)
+    BACKUP_DIR = os.path.join(BACKUPS_BASE_DIR, dept)
     shutil.rmtree(CACHE_DIR, ignore_errors=True)
     [os.makedirs(path, exist_ok=True) for path in (TEMP_DIR, CACHE_DIR, BACKUP_DIR)]
 

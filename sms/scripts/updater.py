@@ -3,7 +3,7 @@ import shutil
 import subprocess
 from zipfile import ZipFile
 
-from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT
+from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT, BACKUPS_BASE_DIR
 from sms.utils.popups import ErrorPopup, YesNoPopup
 
 
@@ -13,7 +13,7 @@ def download_upgrade():
 
 
 def extract(resp):
-    filepath = os.path.join(os.path.expanduser('~'), 'sms.zip')
+    filepath = os.path.join(get_dirs('TEMP_DIR'), 'sms.zip')
     if os.path.exists(filepath):
         os.unlink(filepath)
     output_dir = os.path.join(os.path.expanduser('~'), 'sms_temp')
@@ -35,11 +35,10 @@ def extract(resp):
         shutil.copyfile(config_path, os.path.join(output_dir, 'config.json'))
 
     # copy backups
-    backups_path = os.path.join(PROJECT_ROOT, 'backups')
-    if os.path.exists(backups_path):
+    if os.path.exists(BACKUPS_BASE_DIR):
         new_backups_path = os.path.join(output_dir, 'backups')
         shutil.rmtree(new_backups_path, ignore_errors=True)
-        shutil.copytree(backups_path, new_backups_path)
+        shutil.copytree(BACKUPS_BASE_DIR, new_backups_path)
 
     YesNoPopup('Click "Yes" to restart with the new version', on_yes=restart, title='Updater')
 
