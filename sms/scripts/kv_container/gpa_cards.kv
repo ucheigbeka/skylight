@@ -28,11 +28,11 @@
                 valign: 'middle'
             CustomSpinner:
                 id: level
-                size_hint_x: 1
+                size_hint_x: .4
                 values: ['100', '200', '300', '400', '500', '600']
+                valign: 'middle'
         Button:
             text: 'Search'
-            on_press: root.get()
-            size_hint: .5, None
-            pos_hint: {'center_x': .5}
+            size_hint: 1, None
             height: dp(35)
+            on_press: root.get()
