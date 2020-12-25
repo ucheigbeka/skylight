@@ -44,8 +44,12 @@ def check_for_updates(user_initiated=False):
     server_fe = version.parse(SERVER_FE_VERSION)
     client_fe = version.parse(CLIENT_FE_VERSION)
     if server_fe > client_fe:
-        YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
-                   f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater')
+        if not user_initiated:
+            YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
+                       f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater')
+        else:
+            SuccessPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
+                         'Restart the program to upgrade', title='Updater')
     elif user_initiated:
         SuccessPopup('You are on the latest version of "Student Management System"', title='Updater')
     return
