@@ -26,6 +26,12 @@ DIR | FINDSTR sms
 
 :::::::::::::::::::::::::::::::::::::::::
 :: MOVE sms_temp TO sms
+::
+:: Suggestion
+:: ==========
+:: use copy - overwrite to avoid
+:: possible problems with files open
+:: in other processes
 :::::::::::::::::::::::::::::::::::::::::
 ECHO moving sms_temp\ to sms\
 MOVE /Y sms_temp sms

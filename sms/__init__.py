@@ -91,8 +91,8 @@ def setup_dirs():
     global DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
     dept = DEPARTMENT.split(' ')[0].lower()
     
-    TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms', dept)
-    CACHE_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'cache', dept)
+    TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms')
+    CACHE_DIR = os.path.join(TEMP_DIR, 'cache', dept)
     BACKUP_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups', dept)
     shutil.rmtree(CACHE_DIR, ignore_errors=True)
     [os.makedirs(path, exist_ok=True) for path in (TEMP_DIR, CACHE_DIR, BACKUP_DIR)]
