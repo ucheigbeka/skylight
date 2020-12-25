@@ -370,6 +370,8 @@ class CourseRegistration(FormTemplate):
         self.print_pdf(filepath)
 
     def print_pdf(self, filepath):
+        cwd = os.getcwd()
+        os.chdir(os.path.expanduser('~'))
         if sys.platform == 'win32':
             try:
                 os.startfile(filepath, 'print')
@@ -380,3 +382,4 @@ class CourseRegistration(FormTemplate):
                 subprocess.run(['xdg-open', filepath])
             except:
                 ErrorPopup(f'Error trying to print {filepath}\nOS currently not supported')
+        os.chdir(cwd)
