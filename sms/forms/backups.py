@@ -93,8 +93,11 @@ class ActionMenuPopup(Popup):
         attachment = resp.headers['Content-Disposition']
         filename = attachment[attachment.find('=') + 1:]
         pdf_content = resp.content
-        filepaths = [os.path.join(download_dir, filename) for download_dir in (get_download_path(), get_dirs('BACKUP_DIR'))]
-        [open(filepath, 'wb').write(pdf_content) for filepath in filepaths]
+        download_path, safety_download_path = get_download_path(), get_dirs('BACKUP_DIR')
+        filepaths = [os.path.join(_dir, filename) for _dir in (download_path, safety_download_path)]
+        for filepath in filepaths:
+            if not os.path.exists(filepath):
+                open(filepath, 'wb').write(pdf_content)
         SuccessPopup('Backup downloaded to ' + get_download_path())
         self.dismiss()
 
