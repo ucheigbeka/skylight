@@ -49,7 +49,7 @@ class BroadsheetPopup(Popup):
 
     def show_error(self, resp):
         try:
-            msg = resp.json()
+            msg = resp.text
         except:
             msg = 'Something went wrong'
         ErrorPopup(msg)
