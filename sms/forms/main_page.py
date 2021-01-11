@@ -39,10 +39,10 @@ class MainPage(FormTemplate):
         logs = resp.json()
         d_logs = []
         for log in logs:
-            timestamp, action = log
+            timestamp, action, user = log
             formatted_time = datetime.fromtimestamp(float(timestamp)).strftime("%a %b %#e, %Y; %#I:%M%p")
             formatted_time = formatted_time.replace('PM', 'pm').replace('AM', 'am').replace('  ', ' ')
             if len(action) > 35:
                 action = action[:35] + '...'
-            d_logs.append([action[: action.find(' ')], action, formatted_time])
+            d_logs.append([user, action, formatted_time])
         self.logs = d_logs

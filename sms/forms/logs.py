@@ -75,8 +75,8 @@ class Logs(FormTemplate):
         logs = resp.json()
         d_logs = []
         for log in logs:
-            timestamp, action = log
-            d_logs.append([action[: action.find(' ')], action, timestamp])
+            timestamp, action, user = log
+            d_logs.append([user, action, timestamp])
         self.logs = d_logs
         self.ufmt_displayed_logs = self.logs    # Potentially dangerous
         self.log_step = 1
@@ -88,8 +88,8 @@ class Logs(FormTemplate):
             return
         old_disp_log_len = len(self.ufmt_displayed_logs)
         for log in logs:
-            timestamp, action = log
-            fmt_log = [action[: action.find(' ')], action, timestamp]
+            timestamp, action, user = log
+            fmt_log = [user, action, timestamp]
             self.logs.append(fmt_log)
             self.ufmt_displayed_logs.append(fmt_log)
         self.log_step += 1
