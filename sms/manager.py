@@ -78,7 +78,6 @@ class Manager(ScreenManager):
         return module
 
     def set_screens_for_hod(self):
-        logs = self.import_form('logs')
         accounts = self.import_form('accounts')
         backups = self.import_form('backups')
         info = self.import_form('admin_info')
@@ -86,7 +85,6 @@ class Manager(ScreenManager):
 
         self.set_screens_for_exam_officer()
         screens = {
-            'logs': logs.Logs,
             'accounts': accounts.Accounts,
             'backups': backups.Backups,
             'admin_info': info.Info,
@@ -131,6 +129,7 @@ class Manager(ScreenManager):
         reports = self.import_form('reports')
         profile = self.import_form('profile')
         error = self.import_form('error')
+        logs = self.import_form('logs')
 
         screens = {
             'personal_info': personalinfo.PersonalInfo,
@@ -138,7 +137,8 @@ class Manager(ScreenManager):
             'page_reports': page_reports.PageReports,
             'reports': reports.Reports,
             'profile': profile.Profile,
-            'error': error.Error
+            'error': error.Error,
+            'logs': logs.Logs
         }
         self.forms_dict.update(screens)
 
