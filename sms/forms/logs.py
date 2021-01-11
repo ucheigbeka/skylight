@@ -138,7 +138,7 @@ class Logs(FormTemplate):
 
     def update_users(self, resp=None, bypass=False):
         data = resp.json() if not bypass else [{'username': username, 'title': title}]
-        self.users = []
+        self.users = [['SYSTEM', 'SYSTEM']]
         for row in data:
             self.users.append([row['username'], row['title']])
         self.ids['users_spinner'].values = [user[1] for user in self.users]
