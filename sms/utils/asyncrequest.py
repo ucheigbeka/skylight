@@ -103,13 +103,16 @@ def session_timer(url, params):
     if last_request_timestamp and curr_timestamp - last_request_timestamp > ALLOWABLE_IDLE_TIME:
         if url not in [urlTo('logout'), urlTo('login')] and logged_in:  # if the request is logout or login, the let it pass
             # else logout silently
-            requests.post(
-                url=urlTo('logout'),
-                headers={'Content-type': 'application/json',
-                         'token': get_token()},
-                json={'token': get_token()}
-            )
-            logged_in = False
+            try:
+                requests.post(
+                    url=urlTo('logout'),
+                    headers={'Content-type': 'application/json',
+                             'token': get_token()},
+                    json={'token': get_token()}
+                )
+                logged_in = False
+            except requests.exceptions.ConnectionError:
+                ErrorPopup('Server down')
         elif url == urlTo('login'):
             logged_in = True
     # don't update last_request_timestamp if logs is called w/o filters (from main menu)
