@@ -16,6 +16,7 @@ from sms.setup import extract_assets, setup_poppler
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.popups import ErrorPopup, PopupBase, YesNoPopup, SuccessPopup
+from sms.utils.menubar import MainActionView
 
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 
@@ -45,10 +46,17 @@ def check_for_updates(user_initiated=False):
     client_fe = version.parse(CLIENT_FE_VERSION)
     if server_fe > client_fe:
         YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
-                   f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater')
+                   f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater',
+                   on_no=lambda: None if user_initiated else queue_upgrade())
     elif user_initiated:
         SuccessPopup('You are on the latest version of "Student Management System"', title='Updater')
     return
+
+
+def queue_upgrade():
+    root = App.get_running_app().root
+    if isinstance(root.menu_bar, MainActionView):
+        root.menu_bar.add_notification()
 
 
 class SigninWindow(FormTemplate):

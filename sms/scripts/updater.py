@@ -3,13 +3,23 @@ import shutil
 import subprocess
 from zipfile import ZipFile
 
-from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT
+from kivy.app import App
+
+from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT, start_loading, stop_loading
 from sms.utils.popups import ErrorPopup, YesNoPopup
+from sms.utils.menubar import MainActionView
+
+
+def dequeue_upgrade():
+    root = App.get_running_app().root
+    if isinstance(root.menu_bar, MainActionView):
+        root.menu_bar.remove_notification()
 
 
 def download_upgrade():
     url = urlTo('download_fe')
     AsyncRequest(url, on_success=extract, on_failure=show_error)
+    start_loading('Updating...')
 
 
 def extract(resp):
@@ -24,6 +34,7 @@ def extract(resp):
     try:
         with ZipFile(filepath) as zf:
             zf.extractall(output_dir)
+        dequeue_upgrade()
     except Exception as e:
         show_error()
         return
@@ -33,6 +44,7 @@ def extract(resp):
     if os.path.exists(config_path):
         shutil.copyfile(config_path, os.path.join(output_dir, 'config.json'))
 
+    stop_loading()
     YesNoPopup('Click "Yes" to restart with the new version', on_yes=restart, title='Updater')
 
 
@@ -46,4 +58,5 @@ def restart():
 
 
 def show_error():
+    stop_loading()
     ErrorPopup('Something went wrong while updating')
