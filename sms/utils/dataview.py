@@ -324,7 +324,9 @@ class DataViewer(BoxLayout):
                 else:
                     width = self.widths[col_num]
                 prop = {'index': index, 'col_num': col_num, 'text': str(col), 'width': width,
-                        'halign': halign, 'padding': padding, 'root': self}
+                        'root': self}
+                if self.rv.viewclass == 'DataViewerLabel':
+                    prop.update({'halign': halign, 'padding': padding})
                 for attr, val in self.prop.items():
                     if isinstance(val, list) and len(val) == self.cols:
                         prop[attr] = val[col_num]
