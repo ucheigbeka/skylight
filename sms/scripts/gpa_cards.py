@@ -39,7 +39,7 @@ class GpaCardsPopup(Popup):
         from sms import root
         reports = root.sm.get_screen('reports')
         data = resp.json()
-        tab_title = self.ids['level'].text + ' Level Gpa Card'
+        tab_title = self.ids['level'].text + ' Level GPA Card'
         gpa_cards_view = GpaCardsView()
         gpa_cards_view.set_data(data)
         reports.generate_report([gpa_cards_view], tab_title)

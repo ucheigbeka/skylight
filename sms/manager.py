@@ -12,7 +12,7 @@ from sms.forms.signin import check_for_updates
 from sms.scripts.about import AboutPopup
 from sms.scripts.logout import logout
 from sms.scripts.server import ServerConfigPopup
-from sms.utils.menubar import LoginActionView, MainActionView
+from sms.utils.menubar import LoginActionView, MainActionView, color_disabled_switch
 from sms.utils.popups import YesNoPopup
 # from sms.utils.asynctask import run_in_background
 
@@ -78,7 +78,6 @@ class Manager(ScreenManager):
         return module
 
     def set_screens_for_hod(self):
-        logs = self.import_form('logs')
         accounts = self.import_form('accounts')
         backups = self.import_form('backups')
         info = self.import_form('admin_info')
@@ -86,7 +85,6 @@ class Manager(ScreenManager):
 
         self.set_screens_for_exam_officer()
         screens = {
-            'logs': logs.Logs,
             'accounts': accounts.Accounts,
             'backups': backups.Backups,
             'admin_info': info.Info,
@@ -131,6 +129,7 @@ class Manager(ScreenManager):
         reports = self.import_form('reports')
         profile = self.import_form('profile')
         error = self.import_form('error')
+        logs = self.import_form('logs')
 
         screens = {
             'personal_info': personalinfo.PersonalInfo,
@@ -138,7 +137,8 @@ class Manager(ScreenManager):
             'page_reports': page_reports.PageReports,
             'reports': reports.Reports,
             'profile': profile.Profile,
-            'error': error.Error
+            'error': error.Error,
+            'logs': logs.Logs
         }
         self.forms_dict.update(screens)
 
@@ -234,6 +234,7 @@ class Root(BoxLayout):
         menu_bar_ids = self.menu_bar.action_view.ids
         if 'result_switch' in menu_bar_ids:
             switch = menu_bar_ids['result_switch']
+            color_disabled_switch(switch)
             switch.active = bool(state)
 
     def home(self, instance):

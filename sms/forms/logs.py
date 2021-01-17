@@ -5,7 +5,7 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty, ListProperty, AliasProperty,\
     NumericProperty
 
-from sms import get_log, urlTo
+from sms import get_log, urlTo, root, username, title
 from sms.forms.template import FormTemplate
 from sms.utils.dataview import DataViewerLabel
 from sms.utils.asyncrequest import AsyncRequest
@@ -64,7 +64,8 @@ class Logs(FormTemplate):
         return displayed_logs if displayed_logs else [['', '', '']]
 
     def on_enter(self):
-        get_log(self.populate_dv, count=15)
+        kwargs = {} if root.sm.is_admin else {'title': title}
+        get_log(self.populate_dv, count=15, **kwargs)
         self.dv.dv.set_viewclass('CustomDataViewerLabel')
         self.ids['operations_spinner'].values = list(operations_mapping.keys())
         self.ids['time_sort_spinner'].values = ['Most Recent First', 'Oldest First']
@@ -74,8 +75,8 @@ class Logs(FormTemplate):
         logs = resp.json()
         d_logs = []
         for log in logs:
-            timestamp, action = log
-            d_logs.append([action[: action.find(' ')], action, timestamp])
+            timestamp, action, user = log
+            d_logs.append([user, action, timestamp])
         self.logs = d_logs
         self.ufmt_displayed_logs = self.logs    # Potentially dangerous
         self.log_step = 1
@@ -87,8 +88,8 @@ class Logs(FormTemplate):
             return
         old_disp_log_len = len(self.ufmt_displayed_logs)
         for log in logs:
-            timestamp, action = log
-            fmt_log = [action[: action.find(' ')], action, timestamp]
+            timestamp, action, user = log
+            fmt_log = [user, action, timestamp]
             self.logs.append(fmt_log)
             self.ufmt_displayed_logs.append(fmt_log)
         self.log_step += 1
@@ -96,7 +97,7 @@ class Logs(FormTemplate):
         if scroll_y_val: self.dv.dv.rv.scroll_y = scroll_y_val
 
     def fetch_all(self):
-        self.filter = {}
+        self.filter = {} if root.sm.is_admin else {'title': title}
         self.show_logs(reset_filter_text=True)
 
     def fetch_filtered(self):
@@ -105,6 +106,7 @@ class Logs(FormTemplate):
         operation = self.ids['operations_spinner'].text
         time_sort = self.ids['time_sort_spinner'].text
         self.filter = {'reverse': time_sort == 'Oldest First'}
+        if not root.sm.is_admin: self.filter['title'] = title
 
         if isinstance(date, str) and len(date.split('/')) == 3:
             self.filter['time'] = datetime.strptime(date, '%d/%m/%Y').timestamp()
@@ -129,11 +131,14 @@ class Logs(FormTemplate):
     def query_users(self):
         url = urlTo('accounts')
         params = {}
-        AsyncRequest(url, params=params, method='GET', on_success=self.update_users)
+        if root.sm.is_admin:
+            AsyncRequest(url, params=params, method='GET', on_success=self.update_users)
+        else:
+            self.update_users(bypass=True)
 
-    def update_users(self, resp):
-        data = resp.json()
-        self.users = []
+    def update_users(self, resp=None, bypass=False):
+        data = resp.json() if not bypass else [{'username': username, 'title': title}]
+        self.users = [['SYSTEM', 'SYSTEM']]
         for row in data:
             self.users.append([row['username'], row['title']])
         self.ids['users_spinner'].values = [user[1] for user in self.users]

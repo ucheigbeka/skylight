@@ -45,9 +45,13 @@ def check_for_updates(user_initiated=False):
     server_fe = version.parse(SERVER_FE_VERSION)
     client_fe = version.parse(CLIENT_FE_VERSION)
     if server_fe > client_fe:
-        YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
-                   f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater',
-                   on_no=lambda: None if user_initiated else queue_upgrade())
+        if not user_initiated:
+            YesNoPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
+                       f'Do you want to upgrade?', on_yes=download_upgrade, title='Updater',
+                       on_no=lambda: None if user_initiated else queue_upgrade())
+        else:
+            SuccessPopup(f'A new version, {SERVER_FE_VERSION} exists. Current version is {CLIENT_FE_VERSION}.\n\n'
+                         'Restart the program to upgrade', title='Updater')
     elif user_initiated:
         SuccessPopup('You are on the latest version of "Student Management System"', title='Updater')
     return
@@ -65,6 +69,7 @@ class SigninWindow(FormTemplate):
     retain_session = BooleanProperty(False)
     title = 'Login'
     department = ''
+    current_session = None
 
     def on_enter(self, *args):
         super(SigninWindow, self).on_enter(*args)
@@ -92,12 +97,13 @@ class SigninWindow(FormTemplate):
         SESSION_KEY = init_data.get('session_key', '')
         SERVER_FE_VERSION = init_data.get('fe_version', '0.0.0')
         self.department = init_data.get('dept', '')
+        self.current_session = init_data.get('current_session', '')
         self.signin()
 
     def grant_access(self, resp):
         data = resp.json()
         token, title = data['token'], data['title']
-        set_details(self.username, token, title, self.department)
+        set_details(self.username, token, title, self.department, self.current_session)
         root = App.get_running_app().root
         root.title = title
 

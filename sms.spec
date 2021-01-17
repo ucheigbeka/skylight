@@ -13,7 +13,7 @@ kv_imports_path = os.path.join('sms', 'forms', 'kv_container', 'imports.kv')
 add_paths = []
 add_paths.append(('README.md', '.'))
 add_paths.append(('skylight.png', '.'))
-add_paths.append(('next_release.txt', '.'))
+#add_paths.append(('next_release.txt', '.'))
 add_paths.append(('copyright.txt', '.'))
 add_paths.append(('.version', '.'))
 add_paths.append(('restarter.bat', '.'))

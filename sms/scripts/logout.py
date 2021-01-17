@@ -16,7 +16,7 @@ def reset(resp=None):
     root = App.get_running_app().root
     sm = root.sm
     root.ids['title_bar_label'].text = 'Student Management System'
-    set_details('', '', '', '')
+    set_details('', '', '', '', None)
     root.title = ''
     root.is_admin = False
     root.assigned_level = 0

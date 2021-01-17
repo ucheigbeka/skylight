@@ -8,7 +8,7 @@
         _data: root.data
 
 <GpaCardsPopup>:
-    title: 'Gpa Cards'
+    title: 'GPA Cards'
     size_hint: .25, None
     height: box.height + dp(50)
     BoxLayout:
@@ -22,15 +22,17 @@
             size_hint_y: None
             height: dp(35)
             CustomLabel:
-                text: 'level'
-                size_hint_x: 1
+                text: 'Level'
+                size_hint_x: .6
+                halign: 'left'
+                valign: 'middle'
             CustomSpinner:
                 id: level
-                size_hint_x: 1
+                size_hint_x: .4
                 values: ['100', '200', '300', '400', '500', '600']
+                valign: 'middle'
         Button:
             text: 'Search'
-            on_press: root.get()
-            size_hint: .5, None
-            pos_hint: {'center_x': .5}
+            size_hint: 1, None
             height: dp(35)
+            on_press: root.get()

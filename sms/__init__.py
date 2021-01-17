@@ -21,6 +21,7 @@ token, title, username = '', '', ''
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 ASSETS_OUTPUT_PATH = os.path.join(os.getcwd(), 'assets')
+BACKUPS_BASE_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups')
 TEMP_DIR, CACHE_DIR, BACKUP_DIR = '', '', ''
 
 # For auto logout; time is in seconds
@@ -62,6 +63,8 @@ def set_addr(addr):
 def get_current_session():
     global current_session
     if not current_session:
+        # This block may no longer be required as "current_session" is now set on init
+        # leaving this in case current_session somehow loses its value --highly unlikely IMO
         url = urlTo('current_session')
         # AsyncRequest not used as the session is needed immediately to draw pages
         resp = requests.get(url)
@@ -89,18 +92,19 @@ def setup_dirs():
     global DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
     dept = DEPARTMENT.split(' ')[0].lower()
     
-    TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms', dept)
-    CACHE_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'cache', dept)
-    BACKUP_DIR = os.path.join(os.path.expanduser('~'), 'sms', 'backups', dept)
+    TEMP_DIR = os.path.join(tempfile.gettempdir(), 'sms')
+    CACHE_DIR = os.path.join(TEMP_DIR, 'cache', dept)
+    BACKUP_DIR = os.path.join(BACKUPS_BASE_DIR, dept)
     shutil.rmtree(CACHE_DIR, ignore_errors=True)
     [os.makedirs(path, exist_ok=True) for path in (TEMP_DIR, CACHE_DIR, BACKUP_DIR)]
 
 
-def set_details(_username, _token, _title, _department):
-    global username, token, title, DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
+def set_details(_username, _token, _title, _department, _current_session):
+    global username, token, title, current_session, DEPARTMENT, TEMP_DIR, CACHE_DIR, BACKUP_DIR
     username = _username
     token = _token
     title = _title
+    current_session = _current_session
     DEPARTMENT = ' '.join(map(str.capitalize, _department.split(' ')))
 
     setup_dirs()

@@ -1,8 +1,10 @@
 from kivy.lang import Builder
+from kivy.properties import BooleanProperty
 
-from sms import get_kv_path, urlTo, AsyncRequest
+from sms import get_kv_path, urlTo, AsyncRequest, root
 from sms.forms.template import FormTemplate
-from sms.utils.popups import ErrorPopup, SuccessPopup
+from sms.utils.menubar import color_disabled_switch
+from sms.utils.popups import ErrorPopup
 
 kv_path = get_kv_path('admin')
 Builder.load_file(kv_path)
@@ -14,30 +16,27 @@ def unload():
 
 class Administrator(FormTemplate):
     title = 'Administrator'
+    switch_active = BooleanProperty(False)
 
     def on_enter(self, *args):
-        self.get_results_edit()
+        # give the disabled switch the colors of an enabled one
+        switch = self.ids['result_switch']
+        color_disabled_switch(switch)
+        self.set_res_switch_state(state=root.menu_bar.action_view.ids['result_switch'].active)
         super(Administrator, self).on_enter(*args)
 
-    def get_results_edit(self):
-        url = urlTo('results_edit')
-        AsyncRequest(url, on_success=self.set_res_switch_state)
-
-    def set_res_switch_state(self, resp):
-        state = resp.json()
+    def set_res_switch_state(self, resp=None, state=None):
+        self.switch_active = bool(resp.json()) if resp else state
         switch = self.ids['result_switch']
-        switch.active = bool(state)
+        switch.active = self.switch_active
+        if resp:
+            root.set_res_switch_state(resp)  # sets the menu_bar switch state
 
     def set_results_edit(self):
         switch = self.ids['result_switch']
         url = urlTo('results_edit')
-        data = {'state': int(switch.active)}
-        AsyncRequest(url, method='POST', data=data)
-
-    # def success_popup(self, resp):
-    #     state = resp.json()
-    #     msg = 'Result Edit {}'.format('opened' if state else 'closed')
-    #     SuccessPopup(message=msg)
+        data = {'state': int(not switch.active)}
+        AsyncRequest(url, method='POST', data=data, on_success=self.set_res_switch_state)
 
     def show_error(self, resp):
         try:

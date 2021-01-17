@@ -21,27 +21,44 @@ Builder.load_string('''
         CustomLabel:
             text: 'Protocol'
             halign: 'left'
+            valign: 'center'
             size_hint_x: .3
         CustomSpinner:
             id: protocol
             size_hint_x: .6
+            valign: 'center'
             values: ['http', 'https']
         CustomLabel:
             text: 'Host'
             halign: 'left'
+            valign: 'center'
             size_hint_x: .3
         CustomTextInput:
             id: host
             size_hint_x: .6
+            valign: 'center'
         CustomLabel:
             text: 'Port'
             halign: 'left'
+            valign: 'center'
             size_hint_x: .3
-        CustomTextInput:
-            id: port
-            input_filter: 'int'
-            max_length: 5
-            size_hint_x: .6
+        GridLayout:
+            cols: 2
+            size_hint_x: .7
+            spacing: dp(15), dp(0)
+            row_default_height: dp(30)
+            row_force_default: True
+            CustomSpinner:
+                id: profile
+                size_hint_x: .7
+                valign: 'center'
+                on_text: root.update_port()
+            CustomTextInput:
+                id: port
+                input_filter: 'int'
+                valign: 'center'
+                max_length: 5
+                size_hint_x: .3
     BoxLayout:
         size_hint_y: .2
         spacing: dp(10)
@@ -59,12 +76,25 @@ Builder.load_string('''
 
 class ServerConfigContent(BoxLayout):
     dismiss = BooleanProperty(False)
+    profiles = {
+        'Mechanical': 1807,
+        'Mechatronics': 1808,
+        'Met and Mat': 1809,
+        'Marine': 1810
+    }
 
     def populate_fields(self):
         protocol, host, port = get_addr()
         self.ids['protocol'].text = protocol
         self.ids['host'].text = host
+        self.ids['profile'].values = self.profiles.keys()
         self.ids['port'].text = str(port)
+        dept = [k for k, v in self.profiles.items() if v == port]
+        self.ids['profile'].text = dept[0] if dept else ''
+
+    def update_port(self):
+        profile = self.ids['profile'].text
+        self.ids['port'].text = str(self.profiles.get(profile, 1807))
 
     def save(self):
         protocol = self.ids['protocol'].text

@@ -1,5 +1,5 @@
 # Skylight
-This project represents the client side of the **Student Management System** 
+This project represents the client side of **Student Management System** 
 
 ## Setup Instructions
 + Check out the [official kivy documentations](https://kivy.org/doc/stable/gettingstarted/installation.html) to install kivy

@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 from kivy.app import App
 
-from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT, start_loading, stop_loading
+from sms import urlTo, AsyncRequest, get_dirs, PROJECT_ROOT, BACKUPS_BASE_DIR, start_loading, stop_loading
 from sms.utils.popups import ErrorPopup, YesNoPopup
 from sms.utils.menubar import MainActionView
 
@@ -23,8 +23,9 @@ def download_upgrade():
 
 
 def extract(resp):
-    filepath = os.path.join(os.path.expanduser('~'), 'sms.zip')
-    if os.path.exists(filepath): os.unlink(filepath)
+    filepath = os.path.join(get_dirs('TEMP_DIR'), 'sms.zip')
+    if os.path.exists(filepath):
+        os.unlink(filepath)
     output_dir = os.path.join(os.path.expanduser('~'), 'sms_temp')
     shutil.rmtree(output_dir, ignore_errors=True)
     os.makedirs(output_dir, exist_ok=True)
@@ -44,6 +45,12 @@ def extract(resp):
     if os.path.exists(config_path):
         shutil.copyfile(config_path, os.path.join(output_dir, 'config.json'))
 
+    # copy backups
+    if os.path.exists(BACKUPS_BASE_DIR):
+        new_backups_path = os.path.join(output_dir, 'backups')
+        shutil.rmtree(new_backups_path, ignore_errors=True)
+        shutil.copytree(BACKUPS_BASE_DIR, new_backups_path)
+
     stop_loading()
     YesNoPopup('Click "Yes" to restart with the new version', on_yes=restart, title='Updater')
 
@@ -54,7 +61,7 @@ def restart():
     shutil.rmtree(temp_restarter_path, ignore_errors=True)
     shutil.copyfile(restarter_path, temp_restarter_path)
     updater_logs_path = os.path.join(os.path.expanduser('~'), 'sms_updater_logs.txt')
-    subprocess.run([temp_restarter_path, '>>', updater_logs_path])
+    subprocess.run([temp_restarter_path, '>>', updater_logs_path, '2>&1'])
 
 
 def show_error():

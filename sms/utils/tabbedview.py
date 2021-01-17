@@ -44,7 +44,7 @@ Builder.load_string('''
     close_lbl: close_lbl
     Label:
         id: close_lbl
-        text: 'X'
+        text: 'x'
         on_touch_down: root.close_tab(args[1])
         pos: self.parent.x + self.parent.width - self.width, self.parent.y
         size: self.texture_size[0], self.parent.height

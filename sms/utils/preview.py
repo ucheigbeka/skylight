@@ -72,6 +72,8 @@ class Preview(Screen):
             Window.set_system_cursor('arrow')
 
     def print_pdf(self):
+        cwd = os.getcwd()
+        os.chdir(os.path.expanduser('~'))
         if sys.platform == 'win32':
             try:
                 os.startfile(self.filepath, 'print')
@@ -82,6 +84,7 @@ class Preview(Screen):
                 subprocess.run(['xdg-open', self.filepath])
             except:
                 ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
+        os.chdir(cwd)
 
     def on_touch_down(self, touch):
         self.box.size_hint = (None, None)
