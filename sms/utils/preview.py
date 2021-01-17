@@ -11,6 +11,8 @@ from kivy.properties import ObjectProperty, StringProperty
 from sms.utils.popups import ErrorPopup
 
 Builder.load_string('''
+#:import os os
+
 <Preview>:
     box: box
     sv: sv
@@ -27,7 +29,8 @@ Builder.load_string('''
                 size_hint_x: (box.height * self.image_ratio) / box.width
                 source: root.source
     ImageButton:
-        source: root.print_icon_dir
+        # source: root.print_icon_dir
+        source: os.path.join(os.getcwd(), 'sms', 'utils', 'icons', 'icons8-print-32.png')
         size_hint: None, None
         pos_hint: {'right': 1, 'top': 1}
         width: 50
