@@ -74,16 +74,17 @@ class Preview(Screen):
     def print_pdf(self):
         cwd = os.getcwd()
         os.chdir(os.path.expanduser('~'))
-        if sys.platform == 'win32':
-            try:
-                os.startfile(self.filepath, 'print')
-            except OSError:
+        try:
+            if sys.platform == 'win32':
                 os.startfile(self.filepath)
-        else:
-            try:
+                # try:
+                #     os.startfile(self.filepath, 'print')
+                # except OSError:
+                #     os.startfile(self.filepath)
+            else:
                 subprocess.run(['xdg-open', self.filepath])
-            except:
-                ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
+        except:
+            ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
         os.chdir(cwd)
 
     def on_touch_down(self, touch):
