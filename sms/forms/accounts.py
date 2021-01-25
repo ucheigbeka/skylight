@@ -18,15 +18,15 @@ Builder.load_file(kv_path)
 alphanumeric_chars = ascii_letters + digits
 
 permissions = [
-    "{\"read\": true, \"write\": true, \"superuser\": true, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}",
-    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": true, \"levels\": [100, 200, 300, 400, 500, -500, 600, -600], \"usernames\": [\"%s\"]}",
+    "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, -500, 600, -600], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [100], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [200], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [300], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [400], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [500], \"usernames\": [\"%s\"]}",
     "{\"read\": true, \"write\": true, \"superuser\": false, \"levels\": [600], \"usernames\": [\"%s\"]}",
-    "{\"read\": true, \"write\": false, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, 600], \"usernames\": [\"%s\"]}"
+    "{\"read\": true, \"write\": false, \"superuser\": false, \"levels\": [100, 200, 300, 400, 500, -500, 600, -600], \"usernames\": [\"%s\"]}"
 ]
 
 titles_perm = dict(zip(titles, permissions))
