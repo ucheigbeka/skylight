@@ -51,7 +51,7 @@ class NewAccountPopup(PopupBase):
 
     def on_open(self, *args):
         for acct in self.accounts:
-            if acct['title'] in self.available_titles:
+            if acct['title'] in self.available_titles and acct['title'] != 'Secretary':
                 self.available_titles.remove(acct['title'])
 
     def create(self):
