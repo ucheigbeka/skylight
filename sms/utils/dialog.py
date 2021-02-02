@@ -56,6 +56,7 @@ class OpenFileDialog(Popup):
 
         self.filter_dict = filter_dict if filter_dict else {'All Files': ['*']}
         self.filters = self.filter_dict.keys()
+        self.ids['fc'].path = os.path.expanduser('~')
         self.selected_path = ''
 
     def update_field(self, instance):
