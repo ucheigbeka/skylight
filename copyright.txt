@@ -7,7 +7,7 @@
 Copyright (c) 2019-2020, Skylight Development Team
 
 
-Skylight is licensed under the terms of the GNU General Public License
+Skylight is licensed under the terms of the GNU Affero General Public License
 as published by the Free Software Foundation, version 3.
 
 
