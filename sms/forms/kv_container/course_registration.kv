@@ -202,12 +202,12 @@
             PositiveActionButton:
                 size_hint_x: None
                 width: dp(250)
-                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                disabled: (root.max_credits < root.credits_to_register) or (root.is_old_course_reg and not root.manager.is_admin)
                 text: 'Register'
                 on_press: root.register_courses()
             NegativeActionButton:
                 size_hint_x: None
                 width: dp(250)
-                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                disabled: (root.max_credits < root.credits_to_register) or (root.is_old_course_reg and not root.manager.is_admin)
                 text: 'Delete'
                 on_press: root.delete_course_reg()
