@@ -3,6 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, BooleanProperty
 
 from sms import get_username
+from sms.forms.signin import CLIENT_FE_VERSION
 from sms.scripts.feedback import FeedbackPopup
 from sms.utils.popups import PopupBase
 
@@ -36,7 +37,7 @@ class AboutPopupContent(BoxLayout):
 
 class AboutPopup(PopupBase):
     def __init__(self, **kwargs):
-        msg = '''Student Management System\n\n...by the Skylight team'''
+        msg = f'''Student Management System {CLIENT_FE_VERSION}\n\n...by the Skylight team'''
         self.content = AboutPopupContent(msg=msg)
         self.content.bind(dismiss=lambda ins, val: self.dismiss())
         self.size_hint = (.4, .27)
