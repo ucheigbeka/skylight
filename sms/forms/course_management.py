@@ -171,8 +171,8 @@ class CourseManagement(FormTemplate):
             course['end_date'] = 2999 if not row[keys.index('end_date')] else row[keys.index('end_date')]
             course['options'] = [0, course['semester']][row[keys.index('options')] == 'Yes']
 
-            data['code'] = data['code'].upper()
-            data['teaching_dept'] = data['teaching_dept'].upper()
+            course['code'] = course['code'].upper()
+            course['teaching_dept'] = course['teaching_dept'].upper()
 
             data.append(course)
         AsyncRequest(url, method='PUT', data=data, on_success=self.update_callback)
