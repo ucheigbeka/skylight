@@ -2,6 +2,8 @@ import os
 import subprocess
 import sys
 import json
+from copy import deepcopy
+
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.factory import Factory
@@ -236,6 +238,10 @@ class CourseRegistration(FormTemplate):
         if 'course_reg_new' not in resp.request.path_url:
             [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
             regulars = {sem: [] for sem in ('first_sem', 'second_sem')}
+        elif personal_info.get("transfer", 0) == 1:
+            [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
+            regulars = deepcopy(carryovers)
+            carryovers = {sem: [] for sem in ('first_sem', 'second_sem')}
 
         # queues regular courses
         first_sem_courses = regulars['first_sem']
