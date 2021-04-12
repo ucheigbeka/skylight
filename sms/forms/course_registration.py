@@ -238,7 +238,8 @@ class CourseRegistration(FormTemplate):
         if 'course_reg_new' not in resp.request.path_url:
             [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
             regulars = {sem: [] for sem in ('first_sem', 'second_sem')}
-        elif personal_info.get("transfer", 0) == 1:
+        elif (personal_info.get("transfer", 0) == 1) or (data['co_credits'] > data['max_credits']):
+            # dont enforce carryover registration
             [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
             regulars = deepcopy(carryovers)
             carryovers = {sem: [] for sem in ('first_sem', 'second_sem')}
