@@ -159,7 +159,7 @@ class ResultEntryMultiple(FormTemplate):
 
         else:
             if idx != '':
-                ErrorPopup('Error parsing results at index ' + str(idx))
+                ErrorPopup('Error parsing results at index ' + str(idx + 1))
             else:
                 ErrorPopup('Error parsing results. Check your input')
 
