@@ -136,6 +136,11 @@ class ResultEntryMultiple(FormTemplate):
         self.edv.data.append([''] * 4)
         self.edv.data = [[''] * 4]
 
+    def _strip_data(self, data):
+        for idx in range(len(data)):
+            for idx2 in range(4):
+                data[idx][idx2] = data[idx][idx2].strip()
+
     def validate_data(self, data):
         if not data:
             return '', False
@@ -148,6 +153,7 @@ class ResultEntryMultiple(FormTemplate):
         url = urlTo('results')
         dv = self.edv.get_dataviewer()
         list_of_results = dv.get_data()
+        self._strip_data(list_of_results)
         idx, is_valid = self.validate_data(list_of_results)
         if is_valid:
             params = {'superuser': True} if root.sm.is_admin else None

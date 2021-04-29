@@ -224,7 +224,8 @@ class DataViewerInput(RecycleDataViewBehavior, TextInput):
 
     def refresh_view_attrs(self, rv, index, data):
         self._index = index
-        super(DataViewerInput, self).refresh_view_attrs(rv, index, data.strip())
+        data['text'] = data['text'].strip()
+        super(DataViewerInput, self).refresh_view_attrs(rv, index, data)
 
     def apply_selection(self, rv, index, is_selected):
         self.is_selected = is_selected
@@ -243,7 +244,7 @@ class DataViewerLabel(RecycleDataViewBehavior, Label):
 
     def refresh_view_attrs(self, rv, index, data):
         self._index = index
-        super(DataViewerLabel, self).refresh_view_attrs(rv, index, data.strip())
+        super(DataViewerLabel, self).refresh_view_attrs(rv, index, data)
 
     def apply_selection(self, rv, index, is_selected):
         self.is_selected = is_selected
