@@ -169,9 +169,18 @@ class ResultEntryMultiple(FormTemplate):
             else:
                 ErrorPopup('Error parsing results. Check your input')
 
+    def persist_failures(self, idxs):
+        dv = self.edv.get_dataviewer()
+        data = dv.get_data()
+        new_data = []
+        for idx in idxs:
+            new_data.append(data[idx - 1])
+        dv.set_data(new_data)
+
     def show_response(self, resp):
         resp = resp.json()
         if resp:
             idxs, err_msgs = zip(*resp)
             err_msg = '\n'.join(err_msgs)
+            self.persist_failures(idxs)
             ErrorPopup(err_msg, title='Alert', size_hint=(.4, .8))
