@@ -159,11 +159,13 @@ class ResultEntrySingle(FormTemplate):
     def show_response(self, resp):
         resp = resp.json()
         if resp:
-            for idx in range(len(resp)):
-                trim_start = resp[idx].find(' at index')
-                trim_end = resp[idx].find(';')
+            _, err_msgs = zip(*resp)
+            err_msgs = list(err_msgs)
+            for idx in range(len(err_msgs)):
+                trim_start = err_msgs[idx].find(' at index')
+                trim_end = err_msgs[idx].find(';')
                 if trim_start >= 0 and trim_end >= 0:
-                    resp[idx] = resp[idx][:trim_start] + resp[idx][trim_end:]
-            err_msg = '\n'.join(resp)
+                    err_msgs[idx] = err_msgs[idx][:trim_start] + err_msgs[idx][trim_end:]
+            err_msg = '\n'.join(err_msgs)
             ErrorPopup(err_msg, title='Alert')
 

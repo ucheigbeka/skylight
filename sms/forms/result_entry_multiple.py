@@ -172,5 +172,6 @@ class ResultEntryMultiple(FormTemplate):
     def show_response(self, resp):
         resp = resp.json()
         if resp:
-            err_msg = '\n'.join(resp)
-            ErrorPopup(err_msg, title='Alert')
+            idxs, err_msgs = zip(*resp)
+            err_msg = '\n'.join(err_msgs)
+            ErrorPopup(err_msg, title='Alert', size_hint=(.4, .8))
