@@ -101,7 +101,7 @@ class PopupBase(Popup):
             else:
                 self.content = DismissablePopupLabel(text=message)
                 self.content.bind(dismiss=lambda ins, val: self.dismiss())
-            self.size_hint = (.4, .2)
+            self.size_hint = (.4, .2) if not kwargs.get('size_hint') else kwargs.get('size_hint')
 
         self.open()
 
