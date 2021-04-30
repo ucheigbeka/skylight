@@ -6,3 +6,4 @@ dist/
 config.json
 assets/
 logs.txt
+venv/
