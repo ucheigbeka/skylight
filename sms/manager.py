@@ -123,6 +123,7 @@ class Manager(ScreenManager):
         self.forms_dict.update(screens)
 
     def set_screens_for_secretary(self):
+        student_summary = self.import_form('student_summary')
         personalinfo = self.import_form('personalinfo')
         course_details = self.import_form('course_details')
         page_reports = self.import_form('page_reports')
@@ -132,6 +133,7 @@ class Manager(ScreenManager):
         logs = self.import_form('logs')
 
         screens = {
+            'student_summary': student_summary.StudentSummary,
             'personal_info': personalinfo.PersonalInfo,
             'course_details': course_details.CourseDetails,
             'page_reports': page_reports.PageReports,

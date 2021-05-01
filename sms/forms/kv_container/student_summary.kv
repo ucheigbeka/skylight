@@ -1,0 +1,153 @@
+<StudentSummary>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+
+        BoxLayout:
+            padding: dp(20)
+            size_hint: .4, .12
+            height: self.minimum_height
+            pos_hint: {'top': 1, 'center_x': .5}
+            spacing: dp(5), dp(20)
+            row_default_height: dp(35)
+            row_force_default: True
+            CustomLabel:
+                text: 'Mat number'
+                valign: 'center'
+                width: dp(125)
+            CustomTextInput:
+                id: mat_no
+                width: dp(200)
+                text: 'ENG'
+                max_length: 10
+            ImageButton:
+                size_hint_x: None
+                width: dp(100)
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                on_press: root.search()
+            ImageButton:
+                size_hint_x: None
+                width: dp(50)
+                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                on_press: root.clear_fields()
+            CustomLabel:
+                text: 'Surname'
+                valign: 'center'
+                width: dp(125)
+            CustomTextInput:
+                id: surname_
+                width: dp(200)
+
+        ScrollView:
+            do_scroll: True
+
+            GridLayout:
+                id: grid
+                cols: 2
+                padding: dp(50)
+                size_hint: (1, None)
+                spacing: dp(20), dp(5)
+                height: self.minimum_height
+
+                # Personal Info
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(20)
+                    Label:
+                        text: 'Personal Information'
+                        texture_size: self.size
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        height: dp(40)
+                        font_size: sp(30)
+                    GridLayout:
+                        id: grid
+                        cols: 2
+                        padding: dp(20)
+                        height: self.minimum_height
+                        spacing: dp(10), dp(5)
+                        row_default_height: dp(30)
+                        row_force_default: True
+                        CustomLabel:
+                            text: 'Surname'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: surname
+                            disabled: True
+                        CustomLabel:
+                            text: 'Other names'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: othernames
+                            disabled: True
+                        CustomLabel:
+                            text: 'Mode of entry'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: mode_of_entry
+                            disabled: True
+                        CustomLabel:
+                            text: 'Session admitted'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: session_admit
+                            max_length: 4
+                            input_filter: 'int'
+                            width: dp(100)
+                            disabled: True
+                        CustomLabel:
+                            text: 'Current level'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: curr_level
+                            disabled: True
+                        CustomLabel:
+                            text: 'Sex'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: sex
+                            values: 'Male', 'Female'
+                            disabled: True
+                        CustomLabel:
+                            text: 'Phone number'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: phone_no
+                            max_length: 11
+                            width: dp(125)
+                            disabled: True
+                        CustomLabel:
+                            text: 'Graduated'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: grad_status
+                            text: 'No'
+                            values: ['Yes', 'No']
+                            disabled: True
+                        Button:
+                            width: dp(300)
+                            text: 'See More'
+                            on_press: root.open_pi_screen('personal_info', {'mat_no': mat_no.text})
+                        Label
+
+                BoxLayout:
+                    spacing: dp(20)
+                    Label:
+                        text: 'Passport'
+                        texture_size: self.size
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        height: dp(40)
+                        font_size: sp(30)
+                    FloatLayout:
+                        pos_hint: {'top': 1}
+                        Image:
+                            id: passport
+                            size_hint: (None, None)
+                            size: dp(300), dp(300)
+                            pos_hint: {'top': 1, 'x': 0}
+                    Label:
+                        size_hint_x: .4
+
