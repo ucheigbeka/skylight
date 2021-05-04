@@ -1,14 +1,11 @@
 import os
-import json
 from kivy.lang import Builder
 from kivy.properties import StringProperty
-from kivy.uix.gridlayout import GridLayout
 
-from sms import urlTo, get_assigned_level, root
+from sms import urlTo
 from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
-from sms.utils.popups import ErrorPopup, SuccessPopup
-from sms.utils.dialog import OpenFileDialog
+from sms.utils.popups import ErrorPopup
 
 from sms.forms.personalinfo import insert_extra as func_pi
 
@@ -71,6 +68,7 @@ class StudentSummary(FormTemplate):
     def clear_fields(self):
         if not self.persist_data:
             super(StudentSummary, self).clear_fields()
+
 
 if __name__ == '__main__':
     from kivy.app import runTouchApp
