@@ -4,6 +4,7 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.modalview import ModalView
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, BooleanProperty
 
 Builder.load_string('''
@@ -15,13 +16,28 @@ Builder.load_string('''
     halign: 'center'
     markup: True
 
+<ScrollablePopupLabel>
+    ScrollView:
+        do_scroll_x: False
+        size_hint_y: None
+        height: self.parent.height
+        BoxLayout:
+            size_hint_y: None
+            height: self.minimum_height
+            Label:
+                text: root.text
+                text_size: root.width, None
+                halign: 'center'
+                size: self.texture_size
+                size_hint_y: None
+
 <DismissablePopupLabel>:
     orientation: 'vertical'
-    PopupLabel:
+    ScrollablePopupLabel:
         text: root.text
         markup: True
     Button:
-        size_hint_x: .3
+        size_hint: .3, .1
         pos_hint: {'center_x': .5}
         text: 'Close'
         on_press: root.dismiss = True
@@ -59,6 +75,10 @@ Builder.load_string('''
 
 class PopupLabel(Label):
     pass
+
+
+class ScrollablePopupLabel(BoxLayout):
+    text = StringProperty()
 
 
 class DismissablePopupLabel(BoxLayout):
@@ -158,5 +178,9 @@ if __name__ == '__main__':
         # YesNoPopup('This is a test', on_yes=yes, on_no=no)
         LoadPopup().open()
 
-    btn = Button(text='Test', on_press=callback)
+    def open_popup(ins):
+        popup = PopupBase(message='Hello world by Uche Igbeka\n' * 40, size_hint=(.4, .8), auto_dismiss=False)
+        print(popup)
+
+    btn = Button(text='Test', on_press=open_popup)
     runTouchApp(btn)
