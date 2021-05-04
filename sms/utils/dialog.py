@@ -1,4 +1,5 @@
 from kivy.lang import Builder
+from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, ObjectProperty, ListProperty
 
@@ -40,6 +41,30 @@ Builder.load_string('''
             Button:
                 text: 'Cancel'
                 on_press: root.dismiss()
+
+<DragAndDropFileDialog>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: root.text_area_color
+                Line:
+                    rectangle: self.pos[0], self.pos[1], self.width, self.height
+                    dash_offset: 9
+                    dash_length: 8
+            id: drag_area
+            Label:
+                text: 'Drag Area'
+                font_size: sp(48)
+                opacity: .5
+        Button:
+            text: 'Select File'
+            size_hint: .4, .1
+            pos_hint: {'center_x': .5}
+            on_press: root.open_file_dialog()
 ''')
 
 
@@ -47,6 +72,7 @@ class OpenFileDialog(Popup):
     file_name = StringProperty()
     file_dialog = ObjectProperty()
     filters = ListProperty()
+    selected_path = StringProperty()
 
     def __init__(self, filter_dict=None, **kwargs):
         super(OpenFileDialog, self).__init__(**kwargs)
@@ -64,6 +90,9 @@ class OpenFileDialog(Popup):
             self.file_name = os.path.basename(instance.selection[0])
         else:
             self.file_name = ''
+
+    def on_selected_path(self, instance, value):
+        self.file_name = os.path.basename(value)
 
     def load(self, *args):
         if self.file_dialog.selection:
@@ -88,11 +117,50 @@ class OpenFileDialog(Popup):
         self.file_dialog.filters = self.filter_dict[key]
 
 
+class DragAndDropFileDialog(Popup):
+    text_area_color = ListProperty([])
+
+    def __init__(self, filter_dict=None, **kwargs):
+        super(DragAndDropFileDialog, self).__init__(**kwargs)
+        self.title = 'Open'
+        self.size_hint = (.6, .8)
+        self.selected_path = ''
+        self.filter_dict = filter_dict
+        self.text_area_color = (.2, .65, .83, 1)
+
+        self.dialog = OpenFileDialog(filter_dict=filter_dict)
+        self.dialog.bind(on_dismiss=self.select_path_from_file_dialog)
+
+        Window.bind(on_dropfile=self.validate_drop)
+        Window.bind(mouse_pos=self.change_text_area_color)
+
+    def validate_drop(self, instance, filepath):
+        if self.ids['drag_area'].collide_point(*instance.mouse_pos):
+            self.select_path(filepath)
+            self.dismiss()
+
+    def select_path(self, filepath):
+        self.selected_path = filepath.decode('utf-8')
+
+    def select_path_from_file_dialog(self, instance):
+        self.selected_path = instance.selected_path
+        self.dismiss()
+
+    def open_file_dialog(self, *args):
+        self.dialog.open()
+
+    def change_text_area_color(self, instance, pos):
+        if self.ids['drag_area'].collide_point(*pos):
+            self.text_area_color = (.2, .65, .83, 1)
+        else:
+            self.text_area_color = (.2, .65, .83, .5)
+
+
 if __name__ == '__main__':
     from kivy.app import runTouchApp
     from kivy.uix.button import Button
 
-    dialog = OpenFileDialog()
+    dialog = DragAndDropFileDialog()
     btn = Button(text='Open file dialog', on_press=dialog.open)
 
     runTouchApp(btn)
