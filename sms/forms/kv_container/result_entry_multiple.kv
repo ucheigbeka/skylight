@@ -4,6 +4,49 @@
     Button:
         text: 'Load'
 
+<XlPopupCheckBox>:
+    active: False
+
+<XlPopupContent>:
+    orientation: 'vertical'
+    Label:
+        text: '[b]' + root.title + '[/b]'
+        markup: True
+        font_size: sp(20)
+        size_hint_y: .2
+    BoxLayout:
+        RecycleView:
+            id: rv1
+            viewclass: 'XlPopupCheckBox'
+            data: [{'active': True}]
+            RecycleBoxLayout:
+                orientation: 'vertical'
+                default_size: None, dp(35)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+        RecycleView:
+            id: rv2
+            viewclass: 'Label'
+            data: [{'text': 'MEE211'}]
+            RecycleBoxLayout:
+                orientation: 'vertical'
+                default_size: None, dp(35)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+    BoxLayout:
+        size_hint_y: .2
+        spacing: dp(10)
+        padding: dp(10)
+        Button:
+            id: btn_open
+            text: 'Open'
+            on_press: root.open()
+        Button:
+            text: 'Close'
+            on_press: root.dismiss = True
+
 <ResultEntryMultiple>:
     edv: edv
     BoxLayout:
