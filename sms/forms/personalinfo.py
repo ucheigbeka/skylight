@@ -14,10 +14,15 @@ kv_path = os.path.join(form_root, 'kv_container', 'personalinfo.kv')
 Builder.load_file(kv_path)
 
 MODES_OF_ENTRY = ['PUTME', 'DE (200)', 'DE (300)']
+EXTRAS = {}
 
 
 def unload():
     Builder.unload_file(kv_path)
+
+
+def insert_extra(extra):
+    EXTRAS.update(extra)
 
 
 class PersonalInfo(FormTemplate):
@@ -44,6 +49,12 @@ class PersonalInfo(FormTemplate):
         else:
             self.ids['level'].values = [str(i) for i in range(100, 1000, 100)]
             self.ids['mode_of_entry'].values = MODES_OF_ENTRY
+
+    def on_enter(self, *args):
+        super(PersonalInfo, self).on_enter(*args)
+        if EXTRAS:
+            self.ids['mat_no'].text = EXTRAS.get('mat_no')
+            self.search()
 
     def add_update(self):
         method = ['POST', 'PATCH'][self.ids['btn_positive'].text == 'Update']
