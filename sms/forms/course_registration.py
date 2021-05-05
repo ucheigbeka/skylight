@@ -302,7 +302,7 @@ class CourseRegistration(FormTemplate):
         self.data['courses'] = courses
         url = urlTo('course_reg')
         params = {'superuser': True} if root.sm.is_admin else None
-        AsyncRequest(url, data=self.data, params=params, method='POST', on_failure=self.show_reg_error, on_success=self.clear_fields)
+        AsyncRequest(url, data=self.data, params=params, method='POST', on_failure=self.show_reg_error, on_success=self.resp_on_success)
 
     def delete_course_reg(self):
         YesNoPopup(message='Do you want to delete this course registration?', on_yes=self._delete_course_reg)
@@ -354,6 +354,10 @@ class CourseRegistration(FormTemplate):
 
     def show_reg_error(self, resp):
         ErrorPopup('Error registering courses: ' + resp.json())
+
+    def resp_on_success(self, resp):
+        ErrorPopup(resp.json(), title='Alert')
+        self.clear_fields()
 
     def generate_course_form(self):
         url = urlTo('course_form')

@@ -290,5 +290,8 @@ class ResultEntryMultiple(FormTemplate):
         if resp:
             idxs, err_msgs = zip(*resp)
             err_msg = '\n'.join(err_msgs)
-            self.persist_failures(idxs)
+            if err_msg == 'Done':
+                self.clear_dataview()
+            else:
+                self.persist_failures(idxs)
             self.show_error_popup(err_msg)
