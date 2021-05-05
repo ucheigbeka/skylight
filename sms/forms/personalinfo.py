@@ -116,6 +116,9 @@ class PersonalInfo(FormTemplate):
         self.ids['delete'].disabled = False if data['level'] == get_assigned_level() or root.sm.is_admin else True
 
     def show_error(self, resp):
+        if resp.status_code == 500:
+            ErrorPopup('Something went wrong')
+            return
         resp = '' if not resp.text else resp.json()
         ErrorPopup('Record not found: ' + resp)
 
