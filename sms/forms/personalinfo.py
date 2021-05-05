@@ -105,10 +105,10 @@ class PersonalInfo(FormTemplate):
         self.ids.transfer.text = 'Yes' if data['transfer'] else 'No'
         self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
         self.ids.dob.text = str(data['date_of_birth']) if data['date_of_birth'] else ''
-        self.ids.state_of_origin.text = str(data['state_of_origin'])
-        self.ids.lga_of_origin.text = str(data['lga'])
-        self.ids.phone_no.text = str(data['phone_no'])
-        self.ids.email.text = str(data['email_address'])
+        self.ids.state_of_origin.text = str(data['state_of_origin']) if data['state_of_origin'] else ''
+        self.ids.lga_of_origin.text = str(data['lga']) if data['lga'] else ''
+        self.ids.phone_no.text = str(data['phone_no']) if data['phone_no'] else ''
+        self.ids.email.text = str(data['email_address']) if data['email_address'] else ''
         self.ids.s_phone_no.text = str(data['sponsor_phone_no']) if data['sponsor_phone_no'] else ''
         self.ids.s_email.text = str(data['sponsor_email_address']) if data['sponsor_email_address'] else ''
         self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
