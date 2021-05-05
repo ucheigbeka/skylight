@@ -69,6 +69,7 @@ class PersonalInfo(FormTemplate):
             return
         data['session_admitted'] = int(self.ids.session_admit.text)
         data['level'] = int(self.ids.level.text)
+        data['transfer'] = int(self.ids.transfer.text == 'Yes')
         data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
         data['date_of_birth'] = self.ids.dob.text
         data['state_of_origin'] = self.ids.state_of_origin.text
@@ -101,6 +102,7 @@ class PersonalInfo(FormTemplate):
         self.ids.mode_of_entry.text = MODES_OF_ENTRY[data['mode_of_entry'] - 1]
         self.ids.session_admit.text = str(data['session_admitted'])
         self.ids.level.text = str(data['level'])
+        self.ids.transfer.text = 'Yes' if data['transfer'] else 'No'
         self.ids.sex.text = self.ids.sex.values[data['sex'] != 'M']
         self.ids.dob.text = str(data['date_of_birth']) if data['date_of_birth'] else ''
         self.ids.state_of_origin.text = str(data['state_of_origin'])

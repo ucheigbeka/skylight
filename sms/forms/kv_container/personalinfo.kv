@@ -72,6 +72,12 @@
                         id: level
                         disabled: False if not root.manager else not root.manager.is_admin
                     CustomLabel:
+                        text: 'Transfer'
+                        halign: 'left'
+                    CustomSpinner:
+                        id: transfer
+                        values: 'Yes', 'No'
+                    CustomLabel:
                         text: 'Sex'
                         halign: 'left'
                     CustomSpinner:
