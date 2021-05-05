@@ -387,14 +387,14 @@ class DataViewer(BoxLayout):
         str_list = Clipboard.paste().split(os.linesep)
         data, count = [], 0
         for row in str_list:
+            if row == '':
+                continue
             count += 1
             row_data = row.split('\t')
             if len(row_data) != self.cols:
                 ErrorPopup(f'Error parsing text on line {count}. Make sure each cell in the text is separated by tabs')
                 return
             data.append(row_data)
-        if data[-1] == ['']:
-            data.pop()
         if len(self._data) == 1 and self._data[0] == [''] * self.cols:
             self._data = data
         else:
