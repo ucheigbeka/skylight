@@ -153,7 +153,7 @@ class ResultEntrySingle(FormTemplate):
             data['list_of_results'].append([course_code, session, self.data['mat_no'], score])
 
         url = urlTo('results')
-        params = {'superuser': True} if root.sm.is_admin else None
+        params = {'superuser': True} if (root.sm.is_admin == 1) else None
         AsyncRequest(url, data=data, params=params, method='POST', on_success=self.show_response)
 
     def show_response(self, resp):

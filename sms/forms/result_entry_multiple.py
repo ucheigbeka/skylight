@@ -260,7 +260,7 @@ class ResultEntryMultiple(FormTemplate):
         self._strip_data(list_of_results)
         idx, is_valid = self.validate_data(list_of_results)
         if is_valid:
-            params = {'superuser': True} if root.sm.is_admin else None
+            params = {'superuser': True} if (root.sm.is_admin == 1) else None
             data = {
                 'level': get_assigned_level(),
                 'list_of_results': list_of_results
