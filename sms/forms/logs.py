@@ -64,7 +64,7 @@ class Logs(FormTemplate):
         return displayed_logs if displayed_logs else [['', '', '']]
 
     def on_enter(self):
-        kwargs = {} if root.sm.is_admin else {'title': title}
+        kwargs = {} if (root.sm.is_admin == 1) else {'title': title}
         get_log(self.populate_dv, count=15, **kwargs)
         self.dv.dv.set_viewclass('CustomDataViewerLabel')
         self.ids['operations_spinner'].values = list(operations_mapping.keys())
@@ -97,7 +97,7 @@ class Logs(FormTemplate):
         if scroll_y_val: self.dv.dv.rv.scroll_y = scroll_y_val
 
     def fetch_all(self):
-        self.filter = {} if root.sm.is_admin else {'title': title}
+        self.filter = {} if (root.sm.is_admin == 1) else {'title': title}
         self.show_logs(reset_filter_text=True)
 
     def fetch_filtered(self):
@@ -106,7 +106,7 @@ class Logs(FormTemplate):
         operation = self.ids['operations_spinner'].text
         time_sort = self.ids['time_sort_spinner'].text
         self.filter = {'reverse': time_sort == 'Oldest First'}
-        if not root.sm.is_admin: self.filter['title'] = title
+        if not (root.sm.is_admin == 1): self.filter['title'] = title
 
         if isinstance(date, str) and len(date.split('/')) == 3:
             self.filter['time'] = datetime.strptime(date, '%d/%m/%Y').timestamp()
@@ -131,7 +131,7 @@ class Logs(FormTemplate):
     def query_users(self):
         url = urlTo('accounts')
         params = {}
-        if root.sm.is_admin:
+        if root.sm.is_admin == 1:
             AsyncRequest(url, params=params, method='GET', on_success=self.update_users)
         else:
             self.update_users(bypass=True)

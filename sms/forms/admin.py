@@ -20,9 +20,10 @@ class Administrator(FormTemplate):
 
     def on_enter(self, *args):
         # give the disabled switch the colors of an enabled one
-        switch = self.ids['result_switch']
-        color_disabled_switch(switch)
-        self.set_res_switch_state(state=root.menu_bar.action_view.ids['result_switch'].active)
+        switch = self.ids.get('result_switch', None)
+        if switch:
+            color_disabled_switch(switch)
+            self.set_res_switch_state(state=root.menu_bar.action_view.ids['result_switch'].active)
         super(Administrator, self).on_enter(*args)
 
     def set_res_switch_state(self, resp=None, state=None):
