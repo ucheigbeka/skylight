@@ -121,6 +121,7 @@ class Manager(ScreenManager):
             'result_entry': result_entry.ResultEntry
         }
         self.forms_dict.update(screens)
+        self.is_admin = 0
 
     def set_screens_for_secretary(self):
         student_summary = self.import_form('student_summary')
@@ -143,6 +144,7 @@ class Manager(ScreenManager):
             'logs': logs.Logs
         }
         self.forms_dict.update(screens)
+        self.is_admin = 0
 
 
 class Root(BoxLayout):
