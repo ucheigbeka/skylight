@@ -136,7 +136,7 @@ class ResultEntrySingle(FormTemplate):
         carryovers_diff = self.compute_diff(carryovers_list, self.data['carryovers'])
 
         data = {
-            'level': 100 if (root.sm.is_admin == 2) else get_assigned_level(),
+            'level': get_assigned_level(),
             'is_admin': root.sm.is_admin,
             'list_of_results': []
         }
