@@ -262,7 +262,7 @@ class ResultEntryMultiple(FormTemplate):
         if is_valid:
             params = {'superuser': True} if (root.sm.is_admin == 1) else None
             data = {
-                'level': 100 if (root.sm.is_admin == 2) else get_assigned_level(),
+                'level': get_assigned_level(),
                 'is_admin': root.sm.is_admin,
                 'list_of_results': list_of_results
             }

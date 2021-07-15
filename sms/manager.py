@@ -53,6 +53,8 @@ class Manager(ScreenManager):
 
         if idx in range(2, 8):
             self.assigned_level = (idx - 1) * 100
+        elif idx == 1:
+            self.assigned_level = 100
         if MODE == 'DEBUG':
             # print('Assigned level:', self.assigned_level)
             print("Running in debug mode")
