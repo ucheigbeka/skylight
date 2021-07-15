@@ -20,31 +20,37 @@ Builder.load_string('''
             height: self.minimum_height
             CustomLabel:
                 text: 'Vice Chancellor'
+                halign: 'left'
             CustomTextInput:
                 id: vc
                 size_hint_x: 1
             CustomLabel:
                 text: 'Chairman, Sub-Committee BCS'
+                halign: 'left'
             CustomTextInput:
                 id: chairman
                 size_hint_x: 1
             CustomLabel:
                 text: 'Dean'
+                halign: 'left'
             CustomTextInput:
                 id: dean
                 size_hint_x: 1
             CustomLabel:
                 text: 'Faculty Exam Officer'
+                halign: 'left'
             CustomTextInput:
                 id: exam_officer
                 size_hint_x: 1
             CustomLabel:
                 text: 'Head of Department'
+                halign: 'left'
             CustomTextInput:
                 id: hod
                 size_hint_x: 1
             CustomLabel:
                 text: 'Number of prize winners'
+                halign: 'left'
             CustomTextInput:
                 id: prize_winners
                 width: dp(200)
