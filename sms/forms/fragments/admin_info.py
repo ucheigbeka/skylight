@@ -31,6 +31,12 @@ Builder.load_string('''
                 id: chairman
                 size_hint_x: 1
             CustomLabel:
+                text: 'Faculty(Chairman, Sub-Committee BCS)'
+                halign: 'left'
+            CustomTextInput:
+                id: chairmanBCSFaculty
+                size_hint_x: 1
+            CustomLabel:
                 text: 'Dean'
                 halign: 'left'
             CustomTextInput:
@@ -59,7 +65,7 @@ Builder.load_string('''
             size_hint: 1, .3
             Button:
                 text: 'Update'
-                size_hint: .2, .15
+                size_hint: .2, .18
                 pos_hint: {'center_x': .5, 'top': .9}
                 background_color: 0, 1, 0, .5
                 on_press: root.update()
@@ -76,6 +82,7 @@ class AdminInfo(Screen):
 
         self.ids['vc'].text = '' if data['ViceChancellor'] is None else data['ViceChancellor']
         self.ids['chairman'].text = '' if data['ChairmanSubCommitteeBCS'] is None else data['ChairmanSubCommitteeBCS']
+        self.ids['chairmanBCSFaculty'].text = '' if data['ChairmanSubCommitteeBCS(Faculty)'] is None else data['ChairmanSubCommitteeBCS(Faculty)']
         self.ids['dean'].text = '' if data['Dean'] is None else data['Dean']
         self.ids['exam_officer'].text = '' if data['FacultyExamOfficer'] is None else data['FacultyExamOfficer']
         self.ids['hod'].text = '' if data['HOD'] is None else data['HOD']
@@ -86,6 +93,7 @@ class AdminInfo(Screen):
 
         data['ViceChancellor'] = self.ids['vc'].text
         data['ChairmanSubCommitteeBCS'] = self.ids['chairman'].text
+        data['ChairmanSubCommitteeBCS(Faculty)'] = self.ids['chairmanBCSFaculty'].text
         data['Dean'] = self.ids['dean'].text
         data['FacultyExamOfficer'] = self.ids['exam_officer'].text
         data['HOD'] = self.ids['hod'].text
