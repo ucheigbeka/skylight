@@ -5,74 +5,105 @@
         orientation: 'vertical'
         padding: dp(10)
         spacing: dp(10)
-        GridLayout:
-            cols: 2
-            spacing: dp(10), dp(5)
-            row_default_height: dp(30)
-            row_force_default: True
-            size_hint_y: None
-            height: self.minimum_height
-            CustomLabel:
-                text: 'Mat number'
-                halign: 'left'
-            BoxLayout:
+        BoxLayout:
+            padding: dp(10)
+            GridLayout:
+                cols: 2
+                spacing: dp(10), dp(5)
+                row_default_height: dp(30)
+                row_force_default: True
+                size_hint_y: None
+                height: self.minimum_height
+                CustomLabel:
+                    text: 'Mat number'
+                    halign: 'left'
+                BoxLayout:
+                    CustomTextInput:
+                        id: mat_no
+                        text: 'ENG'
+                        width: dp(125)
+                        max_length: 10
+                    ImageButton:
+                        size_hint_x: None
+                        width: dp(50)
+                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                        on_press: root.search()
+                    ImageButton:
+                        size_hint_x: None
+                        width: dp(50)
+                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                        on_press: root.clear_fields()
+                CustomLabel:
+                    text: 'Session'
+                    halign: 'left'
                 CustomTextInput:
-                    id: mat_no
-                    text: 'ENG'
+                    id: session
+                    width: dp(100)
+                    input_filter: 'int'
+                    max_length: 4
+                CustomLabel:
+                    text: 'Name'
+                    halign: 'left'
+                CustomTextInput:
+                    id: name
+                    disabled: True
+                CustomLabel:
+                    text: 'Level'
+                    halign: 'left'
+                CustomSpinner:
+                    id: level
                     width: dp(125)
-                    max_length: 10
-                ImageButton:
-                    size_hint_x: None
-                    width: dp(50)
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
-                    on_press: root.search()
-                ImageButton:
-                    size_hint_x: None
-                    width: dp(50)
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
-                    on_press: root.clear_fields()
-            CustomLabel:
-                text: 'Session'
-                halign: 'left'
-            CustomTextInput:
-                id: session
-                width: dp(100)
-                input_filter: 'int'
-                max_length: 4
-            CustomLabel:
-                text: 'Name'
-                halign: 'left'
-            CustomTextInput:
-                id: name
-                disabled: True
-            CustomLabel:
-                text: 'Level'
-                halign: 'left'
-            CustomSpinner:
-                id: level
-                width: dp(125)
-                values: [str(x) for x in range(100, 900, 100)]
-                disabled: False if not root.manager else not root.manager.is_admin
-            CustomLabel:
-                text: 'Level GPA'
-                halign: 'left'
-            CustomTextInput:
-                id: level_gpa
-                width: dp(100)
-                disabled: True
-            CustomLabel:
-                text: 'Current CGPA'
-                halign: 'left'
-            CustomTextInput:
-                id: cgpa
-                width: dp(100)
-                disabled: True
-            CustomLabel:
-                text: 'Special case'
-                halign: 'left'
-            CustomTextInput:
-                id: special_case
-                width: 150
+                    values: [str(x) for x in range(100, 900, 100)]
+                    disabled: False if not root.manager else not root.manager.is_admin
+                CustomLabel:
+                    text: 'Level GPA'
+                    halign: 'left'
+                CustomTextInput:
+                    id: level_gpa
+                    width: dp(100)
+                    disabled: True
+                CustomLabel:
+                    text: 'Current CGPA'
+                    halign: 'left'
+                CustomTextInput:
+                    id: cgpa
+                    width: dp(100)
+                    disabled: True
+                CustomLabel:
+                    text: 'Special case'
+                    halign: 'left'
+                CustomTextInput:
+                    id: special_case
+                    width: 150
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: dp(5)
+                BoxLayout:
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(30)
+                    CustomLabel:
+                        text: 'Category'
+                        halign: 'left'
+                    CustomSpinner:
+                        id: category
+                        width: dp(100)
+                    CustomTextInput:
+                        id: description
+                        disabled: True
+                        size_hint_x: 1
+                BoxLayout:
+                    spacing: dp(10)
+                    CustomLabel:
+                        id: extra_lbl
+                        text: 'Remark'
+                        halign: 'left'
+                        valign: 'middle'
+                    CustomTextInput:
+                        id: extra_txt
+                        size_hint_x: 1
+                        multiline: True
+                BoxLayout
 
         BoxLayout:
             spacing: dp(10)
