@@ -3,8 +3,9 @@ from kivy.properties import BooleanProperty
 
 from sms import get_kv_path, urlTo, AsyncRequest, root
 from sms.forms.template import FormTemplate
+from sms.scripts.migrate_session import SessionMigrationPopup
 from sms.utils.menubar import color_disabled_switch
-from sms.utils.popups import ErrorPopup
+from sms.utils.popups import ErrorPopup, YesNoPopup
 
 kv_path = get_kv_path('admin')
 Builder.load_file(kv_path)
@@ -17,6 +18,12 @@ def unload():
 class Administrator(FormTemplate):
     title = 'Administrator'
     switch_active = BooleanProperty(False)
+    
+    def migrate_session(self):
+        YesNoPopup('Are you sure you want to start a new academic session?', on_yes=self.open_session_migarion_popup)
+
+    def open_session_migarion_popup(self):
+        SessionMigrationPopup().open()
 
     def on_enter(self, *args):
         # give the disabled switch the colors of an enabled one
