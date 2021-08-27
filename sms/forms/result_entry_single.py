@@ -13,6 +13,7 @@ kv_path = os.path.join(form_root, 'kv_container', 'result_entry_single.kv')
 Builder.load_file(kv_path)
 
 grading_rules = {}
+category_details = []
 EXTRAS = {}
 
 
@@ -51,6 +52,7 @@ class ResultEntrySingle(FormTemplate):
 
         self.results_view.set_viewclass(CustomDataViewerInput)
         self.carryovers_result_view.set_viewclass(CustomDataViewerInput)
+        self.ids['category'].bind(text=self.update_category_fields)
 
     def setup(self):
         self.data = []
@@ -58,6 +60,9 @@ class ResultEntrySingle(FormTemplate):
         assigned_level = get_assigned_level()
         self.ids['level'].text = '' if not assigned_level else str(assigned_level)
         self.ids['session'].text = str(get_current_session())
+        self.ids['category'].disabled = False
+        self.ids['extra_txt'].disabled = False
+        self.ids['extra_lbl'].text = 'Remark'
 
     def on_enter(self, *args):
         super(ResultEntrySingle, self).on_enter(*args)
@@ -94,6 +99,12 @@ class ResultEntrySingle(FormTemplate):
         for rule in rules:
             grading_rules[rule[2]] = rule[0]
 
+    def update_category_fields(self, instance, value):
+        if value and category_details:
+            cat_dets = list(filter(lambda x: x['category'] == value, category_details))[0]
+            self.ids['description'].text = cat_dets['description']
+            self.ids['extra_lbl'].text = cat_dets['extra'] if cat_dets['extra'] else 'Remark'
+
     def populate_fields(self, resp):
         self.set_grading_rules(resp.json())
 
@@ -109,6 +120,28 @@ class ResultEntrySingle(FormTemplate):
 
         self.results_view.set_data(regular_courses)
         self.carryovers_result_view.set_data(carryovers)
+
+        params = {'level': self.data['level_written']}
+        AsyncRequest(urlTo('category'), params=params, method='GET', on_success=self.populate_category_fields)
+
+    def populate_category_fields(self, resp):
+        global category_details
+        category_details = resp.json()
+        cat_dets = list(filter(lambda x: x['category'] == self.data['category'], category_details))
+        if cat_dets:
+            cat_dets = cat_dets[0]
+            if not cat_dets['editable']:
+                self.ids['category'].disabled = True
+                self.ids['extra_txt'].disabled = True
+            else:
+                self.ids['category'].values = list(
+                    map(lambda x: x['category'], filter(lambda x: x['editable'], category_details)))
+            self.ids['category'].text = cat_dets['category']
+            self.ids['description'].text = cat_dets['description']
+            self.ids['extra_lbl'].text = cat_dets['extra'] if cat_dets['extra'] else 'Remark'
+        else:
+            self.ids['category'].values = list(
+                map(lambda x: x['category'], filter(lambda x: x['editable'], category_details)))
 
     def clear_fields(self, *args):
         global EXTRAS
