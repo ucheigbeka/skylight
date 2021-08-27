@@ -1,0 +1,16 @@
+<SessionMigrationPopup>:
+    size_hint: (.3, .5)
+    title: 'Session Migration'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(10)
+        Label:
+            text: '[b]Caution[/b]: This process make take a few minutes. Ensure you backup the database before proceeding\n\nThe program needs to be restarted after this to effect the changes'
+            text_size: self.size
+            markup: True
+            valign: 'middle'
+        Button:
+            text: 'Proceed'
+            size_hint_y: .2
+            on_press: root.migrate()
