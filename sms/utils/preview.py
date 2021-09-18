@@ -77,10 +77,8 @@ class Preview(Screen):
         try:
             if sys.platform == 'win32':
                 os.startfile(self.filepath)
-                # try:
-                #     os.startfile(self.filepath, 'print')
-                # except OSError:
-                #     os.startfile(self.filepath)
+            elif sys.platform == 'darwin':
+                subprocess.run(['open', self.filepath])
             else:
                 subprocess.run(['xdg-open', self.filepath])
         except:
