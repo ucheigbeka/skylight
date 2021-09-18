@@ -108,26 +108,33 @@
                     halign: 'left'
                 CustomTextInput:
                     id: surname
-                    disabled: root.disable_entries
+                    disabled: True
                 CustomLabel:
                     text: 'Othernames'
                     halign: 'left'
                 CustomTextInput:
                     id: othernames
-                    disabled: root.disable_entries
-                CustomLabel:
-                    text: 'Current level'
-                    halign: 'left'
-                CustomSpinner:
-                    id: cur_level
-                    disabled: root.disable_entries
+                    disabled: True
                 CustomLabel:
                     text: 'Phone number'
                     halign: 'left'
                 CustomTextInput:
                     id: phone_no
-                    input_filter: 'int'
                     max_length: 11
+                    disabled: True
+                CustomLabel:
+                    text: 'Current level'
+                    halign: 'left'
+                CustomTextInput:
+                    id: cur_level
+                    input_filter: 'int'
+                    width: dp(100)
+                    disabled: True
+                CustomLabel:
+                    text: 'Level'
+                    halign: 'left'
+                CustomSpinner:
+                    id: reg_level
                     disabled: root.disable_entries
                 CustomLabel:
                     text: 'Probation status'
@@ -143,6 +150,7 @@
                 CustomSpinner:
                     id: fees_stat
                     values: ['Unpaid', 'Paid']
+                    disabled: root.is_old_course_reg
             CustomLabel:
                 text: 'Passport'
                 size_hint: (None, None)

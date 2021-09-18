@@ -1,7 +1,6 @@
 import os
 import subprocess
 import sys
-import json
 from copy import deepcopy
 
 from kivy.lang import Builder
@@ -11,9 +10,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, NumericProperty,\
     ObjectProperty, BooleanProperty, StringProperty
 
-from sms import urlTo, get_current_session, get_assigned_level, root, get_dirs
+from sms import urlTo, get_current_session, get_assigned_level, get_dirs
 from sms.forms.template import FormTemplate
-from sms.utils.popups import ErrorPopup, YesNoPopup
+from sms.utils.popups import ErrorPopup, YesNoPopup, SuccessPopup
 from sms.utils.asyncrequest import AsyncRequest
 
 form_root = os.path.dirname(__file__)
@@ -132,7 +131,7 @@ class CourseRegView(BoxLayout):
         self.add_field()
 
     def get_courses_for_reg(self):
-        courses = [[code_wid.text, title_wid.text, int(credits_wid.text)] for code_wid, title_wid, credits_wid in self.fields if code_wid.text]
+        courses = [code_widget.text for code_widget, _, _ in self.fields if code_widget.text]
         return courses
 
     def populate_regular_courses(self):
@@ -149,7 +148,7 @@ class CourseRegView(BoxLayout):
     def insert_compulsory_courses(self, compulsory_courses):
         self.clear()
         self.num_compulsory_courses = len(compulsory_courses)
-        for code, title, credit, _ in compulsory_courses:
+        for code, title, credit in compulsory_courses:
             self.add_field(bind_spinner=False)
 
             course_code_spinner = self.fields[-1][0]
@@ -196,9 +195,9 @@ class CourseRegistration(FormTemplate):
 
         assigned_level = get_assigned_level()
         if assigned_level:
-            self.ids['cur_level'].values = [str(assigned_level)]
+            self.ids['reg_level'].values = [str(assigned_level)]
         else:
-            self.ids['cur_level'].values = [str(level) for level in range(100, 900, 100)]
+            self.ids['reg_level'].values = [str(level) for level in range(100, 900, 100)]
 
     def set_credits_to_register(self, *args):
         self.credits_to_register = self.first_sem_view.total_credits + self.second_sem_view.total_credits
@@ -210,18 +209,17 @@ class CourseRegistration(FormTemplate):
         self.second_sem_view.credits_left = self.credits_left
 
     def search(self):
-        acad_session = int(self.ids.reg_session.text)
-        url = urlTo('course_reg')
+        url = urlTo('course_reg_2')
         param = {
             'mat_no': self.ids.mat_no.text,
-            'acad_session': acad_session
+            'session': int(self.ids.reg_session.text)
         }
-        AsyncRequest(url, on_success=self.populate_fields_for_old_reg, on_failure=self.check_query_session, params=param)
+        AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
 
     def populate_fields(self, resp):
-        self.disable_entries = True
-        self.is_old_course_reg = False
         data = resp.json()
+        self.is_old_course_reg = data["session"] < get_current_session()
+        self.ids.fees_stat.text = self.ids.fees_stat.values[data.get('fees_paid', 0)]
 
         # populate personal info fields
         personal_info = data.pop('personal_info')
@@ -229,16 +227,17 @@ class CourseRegistration(FormTemplate):
         self.ids.othernames.text = personal_info['othernames']
         self.ids.cur_level.text = str(personal_info['level'])
         self.ids.phone_no.text = personal_info['phone_no']
-        self.ids.prob_stat.text = self.ids.prob_stat.values[data['probation_status']]
-        self.ids.fees_stat.text = self.ids.fees_stat.values[data['fees_status']]
 
+        # self.ids.prob_stat.text = self.ids.prob_stat.values[data.get('probation_status', 0)]  # todo
+        self.ids.reg_level.text = str(data["level"])
         regulars = data.pop('regulars')
-        carryovers = data.pop('carryovers')
+        carryovers = {sem: [] for sem in ('first_sem', 'second_sem')}
+        carryovers = data.pop('carryovers', carryovers)
 
-        if 'course_reg_new' not in resp.request.path_url:
+        if data.get("has_regd"):
             [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
             regulars = {sem: [] for sem in ('first_sem', 'second_sem')}
-        elif (personal_info.get("transfer", 0) == 1) or (data['co_credits'] > data['max_credits']):
+        elif personal_info.get("transfer", 0) == 1:
             # dont enforce carryover registration
             [carryovers[sem].extend(regulars[sem]) for sem in ('first_sem', 'second_sem')]
             regulars = deepcopy(carryovers)
@@ -251,10 +250,10 @@ class CourseRegistration(FormTemplate):
         FIRST_SEM_COURSES.clear()
         SECOND_SEM_COURSES.clear()
 
-        if 'course_reg_new' in resp.request.path_url:
-            for code, title, credit, _ in first_sem_courses:
+        if not data.get("has_regd"):
+            for code, title, credit in first_sem_courses:
                 FIRST_SEM_COURSES[code] = [title, credit]
-            for code, title, credit, _ in second_sem_courses:
+            for code, title, credit in second_sem_courses:
                 SECOND_SEM_COURSES[code] = [title, credit]
 
         self.first_sem_view.course_codes = []
@@ -265,27 +264,14 @@ class CourseRegistration(FormTemplate):
         self.second_sem_view.course_codes = SECOND_SEM_COURSES.keys()
         self.second_sem_view.course_details = SECOND_SEM_COURSES.values()
 
-        self.max_credits = data['max_credits']
+        self.max_credits = data.get('max_credits', 50)
         self.set_sem_view_credits_left()
 
         # populate compulsory courses field
-        comp_first_sem_courses = carryovers['first_sem']
-        comp_second_sem_courses = carryovers['second_sem']
+        Clock.schedule_once(lambda dt: self.first_sem_view.insert_compulsory_courses(carryovers['first_sem']))
+        Clock.schedule_once(lambda dt: self.second_sem_view.insert_compulsory_courses(carryovers['second_sem']))
 
-        Clock.schedule_once(lambda dt: self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses))
-        Clock.schedule_once(lambda dt: self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses))
-
-        # self.first_sem_view.insert_compulsory_courses(comp_first_sem_courses)
-        # self.second_sem_view.insert_compulsory_courses(comp_second_sem_courses)
-
-        data['mat_no'] = self.ids['mat_no'].text
         self.data = data
-
-    def populate_fields_for_old_reg(self, resp):
-        self.populate_fields(resp)
-        acad_session = int(self.ids.reg_session.text)
-        if acad_session < get_current_session():
-            self.is_old_course_reg = True
 
     def register_courses(self):
         if not self.data:
@@ -294,29 +280,29 @@ class CourseRegistration(FormTemplate):
         if not self.validate_inputs:
             ErrorPopup('Fees status field is empty')
             return
-        self.data['fees_status'] = int(self.ids['fees_stat'].text == 'Paid')
-        courses = {
-            'first_sem': self.first_sem_view.get_courses_for_reg(),
-            'second_sem': self.second_sem_view.get_courses_for_reg()
+
+        courses = self.first_sem_view.get_courses_for_reg() \
+                  + self.second_sem_view.get_courses_for_reg()
+
+        url = urlTo('course_reg_2')
+        params = {
+            "action": "overwrite",
+            "mat_no": self.ids.mat_no.text,
+            "session": self.ids.reg_session.text,
+            "level": self.ids.reg_level.text,
+            "fees_paid": int(self.ids['fees_stat'].text == 'Paid')
         }
-        self.data['courses'] = courses
-        url = urlTo('course_reg')
-        params = {'superuser': True} if root.sm.is_admin else None
-        AsyncRequest(url, data=self.data, params=params, method='POST', on_failure=self.show_reg_error, on_success=self.resp_on_success)
+        AsyncRequest(url, data=courses, params=params, method='POST', on_failure=self.show_reg_error, on_success=self.resp_on_success)
 
     def delete_course_reg(self):
         YesNoPopup(message='Do you want to delete this course registration?', on_yes=self._delete_course_reg)
 
     def _delete_course_reg(self):
-        if not self.data:
-            ErrorPopup('Delete error')
-            return
         params = {
-            'mat_no': self.data['mat_no'],
-            'acad_session': self.data['course_reg_session'],
-            'superuser': True if root.sm.is_admin else None
+            "mat_no": self.ids.mat_no.text,
+            "session": self.ids.reg_session.text
         }
-        url = urlTo('course_reg')
+        url = urlTo('course_reg_2')
         AsyncRequest(url, params=params, method='DELETE', on_failure=self.show_error, on_success=self.clear_fields)
 
     def clear_fields(self, *args):
@@ -334,29 +320,27 @@ class CourseRegistration(FormTemplate):
         FIRST_SEM_COURSES = {}
         SECOND_SEM_COURSES = {}
 
-    def check_query_session(self, resp):
-        acad_session = int(self.ids.reg_session.text)
-        if acad_session == get_current_session():
-            url = urlTo('course_reg_new')
-            param = {
-                'mat_no': self.ids.mat_no.text
-            }
-            AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
-        else:
-            self.show_error(resp)
-
     def show_error(self, resp):
         try:
-            error = ': ' + resp.json()
-        except json.decoder.JSONDecodeError:
-            error = ''
-        ErrorPopup('Record not found' + error)
+            error = resp.json()
+            if isinstance(error, dict):
+                error = error.get("detail", "")
+        except Exception as e:
+            error = ""
+        ErrorPopup(error or "Record not found")
 
     def show_reg_error(self, resp):
-        ErrorPopup('Error registering courses: ' + resp.json())
+        try:
+            message = resp.json()
+            if isinstance(message, dict):
+                message = message.get("detail", "")
+        except Exception as e:
+            message = ""
+        message = ": " + message if message else ""
+        ErrorPopup('Error registering courses' + message)
 
     def resp_on_success(self, resp):
-        ErrorPopup(resp.json(), title='Alert')
+        SuccessPopup(resp.json())
         self.clear_fields()
 
     def generate_course_form(self):
