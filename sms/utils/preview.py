@@ -72,8 +72,12 @@ class Preview(Screen):
             Window.set_system_cursor('arrow')
 
     def print_pdf(self):
+        # open the file from user home dir to prevent
+        # processes left open in program dir
+        # This causes problems during OTA upgrade on windows
         cwd = os.getcwd()
         os.chdir(os.path.expanduser('~'))
+
         try:
             if sys.platform == 'win32':
                 os.startfile(self.filepath)
@@ -83,6 +87,8 @@ class Preview(Screen):
                 subprocess.run(['xdg-open', self.filepath])
         except:
             ErrorPopup(f'Error trying to print {self.filepath}\nOS currently not supported')
+
+        # change back to working dir
         os.chdir(cwd)
 
     def on_touch_down(self, touch):

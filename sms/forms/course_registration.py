@@ -369,11 +369,12 @@ class CourseRegistration(FormTemplate):
         self.print_pdf(filepath)
 
     def print_pdf(self, filepath):
-        cwd = os.getcwd()
         # open the file from user home dir to prevent
         # processes left open in program dir
         # This causes problems during OTA upgrade on windows
+        cwd = os.getcwd()
         os.chdir(os.path.expanduser('~'))
+
         try:
             if sys.platform == 'win32':
                 os.startfile(filepath)
