@@ -104,6 +104,12 @@
                         source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
                         on_press: root.clear_fields()
                 CustomLabel:
+                    text: 'Level'
+                    halign: 'left'
+                CustomSpinner:
+                    id: reg_level
+                    disabled: root.is_old_course_reg
+                CustomLabel:
                     text: 'Surname'
                     halign: 'left'
                 CustomTextInput:
@@ -130,12 +136,6 @@
                     input_filter: 'int'
                     width: dp(100)
                     disabled: True
-                CustomLabel:
-                    text: 'Level'
-                    halign: 'left'
-                CustomSpinner:
-                    id: reg_level
-                    disabled: root.disable_entries
                 CustomLabel:
                     text: 'Probation status'
                     halign: 'left'
@@ -210,12 +210,12 @@
             PositiveActionButton:
                 size_hint_x: None
                 width: dp(250)
-                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                disabled: (root.max_credits < root.credits_to_register) or (root.is_old_course_reg and not root.manager.is_admin)
                 text: 'Register'
                 on_press: root.register_courses()
             NegativeActionButton:
                 size_hint_x: None
                 width: dp(250)
-                disabled: (root.max_credits < root.credits_to_register) or root.is_old_course_reg
+                disabled: (root.max_credits < root.credits_to_register) or (root.is_old_course_reg and not root.manager.is_admin)
                 text: 'Delete'
                 on_press: root.delete_course_reg()

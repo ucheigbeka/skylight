@@ -210,16 +210,22 @@ class CourseRegistration(FormTemplate):
 
     def search(self):
         url = urlTo('course_reg_2')
+        reg_lvl_text = self.ids.reg_level.text
         param = {
             'mat_no': self.ids.mat_no.text,
-            'session': int(self.ids.reg_session.text)
+            'session': int(self.ids.reg_session.text),
+            'level': int(reg_lvl_text) if reg_lvl_text else None
         }
         AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
 
     def populate_fields(self, resp):
+        self.disable_entries = True
         data = resp.json()
-        self.is_old_course_reg = data["session"] < get_current_session()
+
+        self.is_old_course_reg = data.get("has_regd") and (data["session"] < get_current_session())
         self.ids.fees_stat.text = self.ids.fees_stat.values[data.get('fees_paid', 0)]
+        self.ids.reg_level.text = str(data["level"])
+        # self.ids.prob_stat.text = self.ids.prob_stat.values[data.get('probation_status', 0)]  # todo
 
         # populate personal info fields
         personal_info = data.pop('personal_info')
@@ -228,8 +234,6 @@ class CourseRegistration(FormTemplate):
         self.ids.cur_level.text = str(personal_info['level'])
         self.ids.phone_no.text = personal_info['phone_no']
 
-        # self.ids.prob_stat.text = self.ids.prob_stat.values[data.get('probation_status', 0)]  # todo
-        self.ids.reg_level.text = str(data["level"])
         regulars = data.pop('regulars')
         carryovers = {sem: [] for sem in ('first_sem', 'second_sem')}
         carryovers = data.pop('carryovers', carryovers)
