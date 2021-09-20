@@ -47,20 +47,24 @@ jobs:
       - name: Install Mesa
         shell: cmd
         run: |
-          path
           mkdir tmp
           cd tmp
           curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z
           7z.exe x mesa.7z
           mklink opengl32.dll "x64\opengl32.dll"
           mklink libglapi.dll "x64\libglapi.dll"
+          dir
+          dir x64
+          echo ";" >> $GITHUB_PATH
+          echo %cd%\sms\assets\upx\ >> $GITHUB_PATH
 
       # Build package
       - name: Build with PyInstaller
         run: |
           echo "add upx dir to PATH"
-          echo ";" >> $GITHUBPATH
-          echo %cd%\sms\assets\upx\ >> $GITHUBPATH
+          echo ";" >> $GITHUB_PATH
+          echo %cd%\sms\assets\upx\ >> $GITHUB_PATH
+          path
           echo "Starting PyInstaller build"
           pipenv run pyinstaller --noconfirm sms.spec
 
