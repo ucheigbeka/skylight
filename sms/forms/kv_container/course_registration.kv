@@ -137,20 +137,20 @@
                     width: dp(100)
                     disabled: True
                 CustomLabel:
-                    text: 'Probation status'
-                    halign: 'left'
-                CustomSpinner:
-                    id: prob_stat
-                    disabled: root.disable_entries
-                    width: dp(150)
-                    values: ['Not on probation', 'On probation']
-                CustomLabel:
                     text: 'Fees status'
                     halign: 'left'
                 CustomSpinner:
                     id: fees_stat
                     values: ['Unpaid', 'Paid']
                     disabled: root.is_old_course_reg
+                CustomLabel:
+                    text: 'Last Session Summary'
+                    halign: 'left'
+                CustomTextInput:
+                    id: prev_summary
+                    disabled: True
+                    size_hint_x: 1
+
             CustomLabel:
                 text: 'Passport'
                 size_hint: (None, None)

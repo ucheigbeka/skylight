@@ -219,13 +219,23 @@ class CourseRegistration(FormTemplate):
         AsyncRequest(url, on_success=self.populate_fields, on_failure=self.show_error, params=param)
 
     def populate_fields(self, resp):
+        self.clear_fields()
         self.disable_entries = True
         data = resp.json()
 
         self.is_old_course_reg = data.get("has_regd") and (data["session"] < get_current_session())
+
+        self.ids.mat_no.text = data["mat_no"]
+        self.ids.reg_session.text = str(data["session"])
         self.ids.fees_stat.text = self.ids.fees_stat.values[data.get('fees_paid', 0)]
         self.ids.reg_level.text = str(data["level"])
-        # self.ids.prob_stat.text = self.ids.prob_stat.values[data.get('probation_status', 0)]  # todo
+
+        if data["prev_summary"]:
+            plvl, psess, pcatg = data["prev_summary"]
+            self.ids.prev_summary.text = f"{psess}/{psess+1} session; {plvl}L; Category: {pcatg}"
+
+            if pcatg not in ["A", "B"]:
+                self.ids.prev_summary.background_color = [1, 0.471, 0.306, 1]
 
         # populate personal info fields
         personal_info = data.pop('personal_info')
@@ -268,7 +278,7 @@ class CourseRegistration(FormTemplate):
         self.second_sem_view.course_codes = SECOND_SEM_COURSES.keys()
         self.second_sem_view.course_details = SECOND_SEM_COURSES.values()
 
-        self.max_credits = data.get('max_credits', 50)
+        self.max_credits = data['max_credits']
         self.set_sem_view_credits_left()
 
         # populate compulsory courses field
@@ -320,6 +330,7 @@ class CourseRegistration(FormTemplate):
         self.credits_left = 0
         self.set_sem_view_credits_left()
         self.is_old_course_reg = False
+        self.ids.prev_summary.background_color = [1, 1, 1, 1]
 
         FIRST_SEM_COURSES = {}
         SECOND_SEM_COURSES = {}
