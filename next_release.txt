@@ -13,3 +13,7 @@
 9,  A way to copy password to clipboard after auto-generation
 10, Add zoom and pan functionality to reports view
 11,
+
+
+==================
+setup Pipfile for each of Windows, Ubuntu and Mac
