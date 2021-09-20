@@ -55,6 +55,9 @@ jobs:
           mklink libglapi.dll "x64\libglapi.dll"
           dir
           dir x64
+          systemwidedeploy.cmd
+          cd ..
+          dir
           echo ";" >> $GITHUB_PATH
           echo %cd%\sms\assets\upx\ >> $GITHUB_PATH
 
