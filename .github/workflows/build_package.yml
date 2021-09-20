@@ -53,18 +53,14 @@ jobs:
           7z.exe x mesa.7z
           mklink opengl32.dll "x64\opengl32.dll"
           mklink libglapi.dll "x64\libglapi.dll"
-          set PATH=%PATH%;%cd%\
           cd ..
-          dir
-          echo ";" >> $GITHUB_PATH
-          echo %cd%\sms\assets\upx\ >> $GITHUB_PATH
-          path
 
       # Build package
       - name: Build with PyInstaller
         shell: cmd
         run: |
           echo "add upx dir to PATH"
+          set PATH=%PATH%;%cd%\
           set PATH=%PATH%;%cd%\sms\assets\upx\
           path
           echo "Starting PyInstaller build"
