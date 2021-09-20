@@ -59,8 +59,8 @@ jobs:
       - name: Build with PyInstaller
         run: |
           echo "add upx dir to PATH"
-          # setx PATH=%PATH%;%cd%\sms\assets\upx\
-          path
+          echo ";" >> $GITHUBPATH
+          echo %cd%\sms\assets\upx\ >> $GITHUBPATH
           echo "Starting PyInstaller build"
           pipenv run pyinstaller --noconfirm sms.spec
 
