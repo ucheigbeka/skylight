@@ -60,7 +60,7 @@ jobs:
         shell: cmd
         run: |
           echo "add upx dir to PATH"
-          set PATH=%PATH%;%cd%\
+          set PATH=%PATH%;%cd%\tmp\
           set PATH=%PATH%;%cd%\sms\assets\upx\
           path
           echo "Starting PyInstaller build"
