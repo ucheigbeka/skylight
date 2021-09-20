@@ -55,7 +55,7 @@ jobs:
           mklink libglapi.dll "x64\libglapi.dll"
           dir
           dir x64
-          echo 1 | systemwidedeploy.cmd
+          systemwidedeploy.cmd 1
           cd ..
           dir
           echo ";" >> $GITHUB_PATH
