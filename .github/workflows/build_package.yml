@@ -40,15 +40,15 @@ jobs:
           echo "Installing Pipenv"
           python -m pip install --upgrade pip setuptools wheel pipenv
           
+      - name: Install dependencies
+        run: |
+          pipenv install          
+          
       - name: Print Pipfile.lock
         run: |
           echo "========================"
           type Pipfile.lock
           echo "========================"
-          
-      - name: Install dependencies
-        run: |
-          pipenv install
 
       # Build package
       - name: Build with PyInstaller
