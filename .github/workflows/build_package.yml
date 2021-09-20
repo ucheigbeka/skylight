@@ -40,12 +40,6 @@ jobs:
           echo "Installing Pipenv"
           python -m pip install --upgrade pip setuptools wheel pipenv
           
-      - name: Print Pipfile.lock
-        run: |
-          echo "========================"
-          type Pipfile.lock
-          echo "========================"
-          
       - name: Install dependencies
         run: |
           pipenv install
@@ -54,7 +48,8 @@ jobs:
       - name: Build with PyInstaller
         run: |
           echo "add upx dir to PATH"
-          set PATH=%PATH%;%cd%\sms\assets\upx\
+          # setx PATH=%PATH%;%cd%\sms\assets\upx\
+          echo %PATH%
           echo "Starting PyInstaller build"
           pipenv run pyinstaller --noconfirm sms.spec
 
