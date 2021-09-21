@@ -5,10 +5,10 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     paths:
-      - "./Pipfile"
+      - ".\Pipfile"
   pull_request:
     paths:
-      - "./Pipfile"
+      - ".\Pipfile"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       # You can use PyPy versions in python-version.
       # For example, pypy2 and pypy3
@@ -44,18 +44,18 @@ jobs:
           
       - name: Install dependencies and Lock
         run: |
-          rm Pipfile.lock
+          del Pipfile.lock
           pipenv install
           
       - name: Print Pipfile.lock
         run: |
           echo "==============="
-          cat Pipfile.lock
+          type Pipfile.lock
           echo "==============="
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: ./Pipfile.lock
+          path: .\Pipfile.lock
           if-no-files-found: error
