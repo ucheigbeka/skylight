@@ -78,13 +78,6 @@ jobs:
           echo "Starting PyInstaller build"
           pipenv run pyinstaller --noconfirm sms.spec
 
-#       - name: Compress built files
-#         run: |
-#           echo "Add dist files to sms.zip"
-#           dir dist\sms\
-#           pipenv run tar -c -f sms.zip -C dist\sms\ *
-#           dir
-          
       - name: Upload Build files
         uses: actions/upload-artifact@v2
         with: 
