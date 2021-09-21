@@ -39,23 +39,23 @@ jobs:
           # Optional - x64 or x86 architecture, defaults to x64
           architecture: 'x64'
           
-#       - name: Install Pipenv
-#         run: |
-#           echo "Installing Pipenv"
-#           python -m pip install --upgrade pip setuptools wheel pipenv
+      - name: Install Pipenv
+        run: |
+          echo "Installing Pipenv"
+          python -m pip install --upgrade pip setuptools wheel pipenv
           
-#       - name: Install dependencies
-#         run: |
-#           pipenv install
+      - name: Install dependencies
+        run: |
+          pipenv install
           
-#       - name: Install Mesa
-#         shell: cmd
-#         run: |
-#           mkdir tmp\mesa
-#           cd tmp\mesa
-#           curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z
-#           7z.exe x mesa.7z
-#           cd ..\..
+      - name: Install Mesa
+        shell: cmd
+        run: |
+          mkdir tmp\mesa
+          cd tmp\mesa
+          curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z
+          7z.exe x mesa.7z
+          cd ..\..
 
       - name: Install UPX
         shell: cmd
@@ -63,33 +63,31 @@ jobs:
           mkdir tmp\upx
           cd tmp\upx
           curl.exe -L --output upx.zip --url https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
-          dir
           7z.exe x upx.zip
-          dir
           cd ..\..
           
-#       # Build package
-#       - name: Build with PyInstaller
-#         shell: cmd
-#         run: |
-#           echo set up environment"
-#           set PATH=%PATH%;%cd%\tmp\mesa\x64\
-#           set PATH=%PATH%;%cd%\tmp\upx\
-#           path
-#           set KIVY_GL_BACKEND=angle_sdl2
-#           echo "Starting PyInstaller build"
-#           pipenv run pyinstaller --noconfirm sms.spec
+      # Build package
+      - name: Build with PyInstaller
+        shell: cmd
+        run: |
+          echo set up environment"
+          set PATH=%PATH%;%cd%\tmp\mesa\x64\
+          set PATH=%PATH%;%cd%\tmp\upx\upx-3.96-win64\
+          path
+          set KIVY_GL_BACKEND=angle_sdl2
+          echo "Starting PyInstaller build"
+          pipenv run pyinstaller --noconfirm sms.spec
 
-# #       - name: Compress built files
-# #         run: |
-# #           echo "Add dist files to sms.zip"
-# #           dir dist\sms\
-# #           pipenv run tar -c -f sms.zip -C dist\sms\ *
-# #           dir
+#       - name: Compress built files
+#         run: |
+#           echo "Add dist files to sms.zip"
+#           dir dist\sms\
+#           pipenv run tar -c -f sms.zip -C dist\sms\ *
+#           dir
           
-#       - name: Upload Build files
-#         uses: actions/upload-artifact@v2
-#         with: 
-#           name: sms
-#           path: dist\sms\*
-#           if-no-files-found: error
+      - name: Upload Build files
+        uses: actions/upload-artifact@v2
+        with: 
+          name: sms
+          path: dist\sms\*
+          if-no-files-found: error
