@@ -6,11 +6,11 @@ on:
   push:
     branches: [ master ]
     paths: 
-      - .\.version
+      - ".version"
   pull_request:
     branches: [ master ]
     paths: 
-      - .\.version
+      - ".version"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
