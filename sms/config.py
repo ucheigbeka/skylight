@@ -5,7 +5,7 @@ store = JsonStore('config.json')
 # Default values
 backend_config = {
     'protocol': 'http',
-    'host': '192.168.4.1',
+    'host': '192.168.0.100',
     'port': 1807
 }
 
