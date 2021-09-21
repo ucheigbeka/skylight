@@ -84,6 +84,7 @@ jobs:
           set PATH=%PATH%;%cd%\tmp\mesa\x64\
           set PATH=%PATH%;%cd%\tmp\upx\upx-3.96-win64\
           set PATH=%PATH%;%cd%\tmp\dep\
+          set KIVY_SDL2_DEPENDENCY_WALKER=%PATH%;%cd%\tmp\dep\depends.exe
           path
           set KIVY_GL_BACKEND=angle_sdl2
           echo "Starting PyInstaller build"
