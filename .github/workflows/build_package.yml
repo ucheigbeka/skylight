@@ -66,6 +66,16 @@ jobs:
           7z.exe x upx.zip
           cd ..\..
           
+      
+      - name: "[Optional] Install Dependency Walker"
+        shell: cmd
+        run: |
+          mkdir tmp\dep
+          cd tmp\upx
+          curl.exe -L --output depends.zip https://www.dependencywalker.com/depends22_x64.zip
+          7z.exe x depends.zip
+          cd ..\..
+          
       # Build package
       - name: Build with PyInstaller
         shell: cmd
@@ -73,6 +83,7 @@ jobs:
           echo set up environment"
           set PATH=%PATH%;%cd%\tmp\mesa\x64\
           set PATH=%PATH%;%cd%\tmp\upx\upx-3.96-win64\
+          set PATH=%PATH%;%cd%\tmp\dep\
           path
           set KIVY_GL_BACKEND=angle_sdl2
           echo "Starting PyInstaller build"
