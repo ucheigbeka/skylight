@@ -54,6 +54,13 @@ jobs:
           type Pipfile.lock
           echo "==============="
           
+                
+      - name: Print requirements.txt
+        run: |
+          echo "==============="
+          type requirements.txt
+          echo "==============="
+          
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
