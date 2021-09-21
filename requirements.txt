@@ -20,5 +20,5 @@ PyInstaller==3.6
 pyparsing==2.4.7
 pywin32-ctypes==0.2.0
 requests==2.24.0
-urllib3==1.25.9
+urllib3==1.26.5
 xlrd==1.2.0
