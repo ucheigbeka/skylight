@@ -225,10 +225,10 @@ class CourseRegistration(FormTemplate):
 
         self.is_old_course_reg = data.get("has_regd") and (data["session"] < get_current_session())
 
-        self.ids.mat_no.text = data["mat_no"]
-        self.ids.reg_session.text = str(data["session"])
+        self.ids.mat_no.text = data["mat_no"] or ''
+        self.ids.reg_session.text = str(data["session"]) or ''
         self.ids.fees_stat.text = self.ids.fees_stat.values[data.get('fees_paid', 0)]
-        self.ids.reg_level.text = str(data["level"])
+        self.ids.reg_level.text = str(data["level"]) or ''
 
         if data["prev_summary"]:
             plvl, psess, pcatg = data["prev_summary"]
@@ -239,10 +239,10 @@ class CourseRegistration(FormTemplate):
 
         # populate personal info fields
         personal_info = data.pop('personal_info')
-        self.ids.surname.text = personal_info['surname']
-        self.ids.othernames.text = personal_info['othernames']
-        self.ids.cur_level.text = str(personal_info['level'])
-        self.ids.phone_no.text = personal_info['phone_no']
+        self.ids.surname.text = personal_info['surname'] or ''
+        self.ids.othernames.text = personal_info['othernames'] or ''
+        self.ids.cur_level.text = str(personal_info['level']) or ''
+        self.ids.phone_no.text = personal_info['phone_no'] or ''
 
         regulars = data.pop('regulars')
         carryovers = {sem: [] for sem in ('first_sem', 'second_sem')}
