@@ -6,11 +6,11 @@ on:
   push:
     branches: [ master ]
     paths: 
-      - .\.version
+      - ".version"
   pull_request:
     branches: [ master ]
     paths: 
-      - .\.version
+      - ".version"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -66,25 +66,30 @@ jobs:
           7z.exe x upx.zip
           cd ..\..
           
+      
+      - name: "[Optional] Install Dependency Walker"
+        shell: cmd
+        run: |
+          mkdir tmp\dep
+          cd tmp\upx
+          curl.exe -L --output depends.zip https://www.dependencywalker.com/depends22_x64.zip
+          7z.exe x depends.zip
+          cd ..\..
+          
       # Build package
       - name: Build with PyInstaller
         shell: cmd
         run: |
           echo set up environment"
           set PATH=%PATH%;%cd%\tmp\mesa\x64\
-          set PATH=%PATH%;%cd%\tmp\upx\
+          set PATH=%PATH%;%cd%\tmp\upx\upx-3.96-win64\
+          set PATH=%PATH%;%cd%\tmp\dep\
+          set KIVY_SDL2_DEPENDENCY_WALKER=%PATH%;%cd%\tmp\dep\depends.exe
           path
           set KIVY_GL_BACKEND=angle_sdl2
           echo "Starting PyInstaller build"
           pipenv run pyinstaller --noconfirm sms.spec
 
-#       - name: Compress built files
-#         run: |
-#           echo "Add dist files to sms.zip"
-#           dir dist\sms\
-#           pipenv run tar -c -f sms.zip -C dist\sms\ *
-#           dir
-          
       - name: Upload Build files
         uses: actions/upload-artifact@v2
         with: 
