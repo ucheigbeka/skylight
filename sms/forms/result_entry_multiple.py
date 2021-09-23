@@ -149,11 +149,16 @@ class ResultEntryMultiple(FormTemplate):
 
     def __init__(self, **kwargs):
         super(ResultEntryMultiple, self).__init__(**kwargs)
+        self.ids.action.text = self.ids.action.values[0]
         self.edv.get_dataviewer().bind(_data=self.data_changed)
 
     def data_changed(self, instance, value):
         if value == [[''] * 4]:
             self.err_msg = ''
+
+    def on_enter(self, *args):
+        self.ids.action.text = self.ids.action.values[0]
+        super(ResultEntryMultiple, self).on_enter(*args)
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos) and touch.is_double_tap and self.err_msg:
@@ -239,6 +244,7 @@ class ResultEntryMultiple(FormTemplate):
         self.edv.data = [[''] * 4]
         self.xl_workbook = None
         self.err_msg = ''
+        self.ids.action.text = self.ids.action.values[0]
 
     def _strip_data(self, data):
         for idx in range(len(data)):
@@ -254,19 +260,18 @@ class ResultEntryMultiple(FormTemplate):
         return '', True
 
     def upload(self, *args):
-        url = urlTo('results')
         dv = self.edv.get_dataviewer()
-        list_of_results = dv.get_data()
-        self._strip_data(list_of_results)
-        idx, is_valid = self.validate_data(list_of_results)
+        result_arr = dv.get_data()
+        self._strip_data(result_arr)
+        idx, is_valid = self.validate_data(result_arr)
+
         if is_valid:
-            params = {'superuser': True} if (root.sm.is_admin == 1) else None
-            data = {
-                'level': get_assigned_level(),
-                'is_admin': root.sm.is_admin,
-                'list_of_results': list_of_results
+            url = urlTo('results_2')
+            params = {
+                "action": self.ids.action.text.lower(),
+                "many": True
             }
-            AsyncRequest(url, data=data, params=params, method='POST', on_success=self.show_response)
+            AsyncRequest(url, data=result_arr, params=params, method='POST', on_success=self.show_response, on_failure=self.show_response)
 
         else:
             if idx != '':
@@ -287,12 +292,18 @@ class ResultEntryMultiple(FormTemplate):
         ErrorPopup(self.err_msg, title='Alert', size_hint=(.4, .8), auto_dismiss=False)
 
     def show_response(self, resp):
-        resp = resp.json()
-        if resp:
-            idxs, err_msgs = zip(*resp)
-            err_msg = '\n'.join(err_msgs)
-            if err_msg == 'Done':
+        try:
+            msgs = resp.json()
+        except Exception as e:
+            self.show_error_popup("Something went wrong")
+            return
+
+        if msgs is not None:
+            if not msgs:
                 self.clear_dataview()
+                err_msg = "Done"
             else:
+                idxs, err_msgs = zip(*msgs)
+                err_msg = '\n'.join(err_msgs)
                 self.persist_failures(idxs)
             self.show_error_popup(err_msg)

@@ -70,6 +70,15 @@
                     text:"Load from file"
                     on_press:
                         root.show_load()
+                MenuGrid:
+                    cols: 2
+                    text: "Action"
+                    on_release: setattr(action, "is_open", True)
+                    Label:
+                    MenuSpinner:
+                        size_hint_x: .35
+                        id: action
+                        values: ["Add", "Overwrite", "Delete"]
                 MenuButton:
                     text:"Upload"
                     on_press:
