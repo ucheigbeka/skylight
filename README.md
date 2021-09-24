@@ -1,4 +1,7 @@
 # Skylight
+
+[![Build](https://github.com/ucheigbeka/skylight/actions/workflows/build_package.yml/badge.svg?branch=master)](https://github.com/ucheigbeka/skylight/actions/workflows/build_package.yml)
+
 This project represents the client side of **Student Management System** 
 
 ## Setup Instructions
