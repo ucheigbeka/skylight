@@ -1,4 +1,5 @@
 import os
+
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 
@@ -44,27 +45,27 @@ class CustomDataViewerInput(DataViewerInput):
 
 class ResultEntrySingle(FormTemplate):
     title = 'Result Entry'
-    results_view = ObjectProperty()
-    carryovers_result_view = ObjectProperty()
+    first_sem_view = ObjectProperty()
+    second_sem_view = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(ResultEntrySingle, self).__init__(**kwargs)
 
-        self.results_view.set_viewclass(CustomDataViewerInput)
-        self.carryovers_result_view.set_viewclass(CustomDataViewerInput)
+        self.first_sem_view.set_viewclass(CustomDataViewerInput)
+        self.second_sem_view.set_viewclass(CustomDataViewerInput)
         self.ids['category'].bind(text=self.update_category_fields)
 
     def setup(self):
-        self.data = []
+        self.data = {}
         self.ids['mat_no'].text = 'ENG'
-        assigned_level = get_assigned_level()
-        self.ids['level'].text = '' if not assigned_level else str(assigned_level)
+        self.ids['level'].text = str(get_assigned_level() or '')
         self.ids['session'].text = str(get_current_session())
         self.ids['category'].disabled = False
         self.ids['extra_txt'].disabled = False
         self.ids['extra_lbl'].text = 'Remark'
 
     def on_enter(self, *args):
+        self.ids.action.text = self.ids.action.values[0]
         super(ResultEntrySingle, self).on_enter(*args)
         if EXTRAS:
             self.ids['mat_no'].text = EXTRAS.get('mat_no')
@@ -72,24 +73,17 @@ class ResultEntrySingle(FormTemplate):
             self.search()
 
     def search(self):
-        url = urlTo('results')
-        session = get_current_session() if not self.ids['session'].text else int(self.ids['session'].text)
+        url = urlTo('results_2')
         params = {
             'mat_no': self.ids['mat_no'].text,
-            'acad_session': session,
-            'include_reg': True
+            'session': self.ids['session'].text
         }
         AsyncRequest(url, method='GET', params=params, on_success=self.get_grading_rules)
 
     def get_grading_rules(self, resp):
-        data = resp.json()
-        flatten_dict = lambda dic: [[key]+list(val[:4]) for key, val in {**dic['first_sem'], **dic['second_sem']}.items()]
-        data['regular_courses'] = flatten_dict(data['regular_courses'])
-        data['carryovers'] = flatten_dict(data['carryovers'])
-        self.data = data
-
+        self.data = resp.json()
         url = urlTo('grading_rules')
-        params = {'acad_session': self.data['entry_session']}
+        params = {'acad_session': self.data['personal_info']['session_admitted']}
         AsyncRequest(url, params=params, method='GET', on_success=self.populate_fields)
 
     def set_grading_rules(self, rules):
@@ -107,21 +101,24 @@ class ResultEntrySingle(FormTemplate):
 
     def populate_fields(self, resp):
         self.set_grading_rules(resp.json())
+        parse_unregd = lambda crs: [crs[0], crs[1]+"  --NOT REGISTERED", *crs[2:]]
+        sems = ("first_sem", "second_sem")
 
-        self.ids['name'].text = self.data['personal_info']["surname"] + " " + self.data['personal_info']["othernames"]
-        self.ids['level'].text = str(self.data['level_written'])
-        self.ids['session'].text = str(self.data['session_written'])
+        # join course lists from regd and unregd
+        regulars = self.data["regulars"]
+        unregd = {sem: map(parse_unregd, self.data["unregd"][sem]) for sem in sems}
+        [self.data.update({sem: regulars[sem] + list(unregd[sem])}) for sem in sems]
+
+        self.ids['name'].text = self.data['personal_info']["surname"] + ", " + self.data['personal_info']["othernames"]
+        self.ids['level'].text = str(self.data['level'])
+        self.ids['session'].text = str(self.data['session'])
         self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
         self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
-        self.ids['special_case'].text = self.data['special_case']
 
-        regular_courses = self.data['regular_courses']
-        carryovers = self.data['carryovers']
+        self.first_sem_view.set_data(self.data['first_sem'])
+        self.second_sem_view.set_data(self.data['second_sem'])
 
-        self.results_view.set_data(regular_courses)
-        self.carryovers_result_view.set_data(carryovers)
-
-        params = {'level': self.data['level_written']}
+        params = {'level': self.data['level']}
         AsyncRequest(urlTo('category'), params=params, method='GET', on_success=self.populate_category_fields)
 
     def populate_category_fields(self, resp):
@@ -147,8 +144,9 @@ class ResultEntrySingle(FormTemplate):
         global EXTRAS
         super(ResultEntrySingle, self).clear_fields()
 
-        self.results_view._data = []
-        self.carryovers_result_view._data = []
+        self.first_sem_view._data = []
+        self.second_sem_view._data = []
+        self.ids.action.text = self.ids.action.values[0]
         EXTRAS = {}
 
     def compute_diff(self, altered_list, original_list):
@@ -159,47 +157,38 @@ class ResultEntrySingle(FormTemplate):
         return diff
 
     def update(self):
-        results_list = self.results_view.get_data()
-        carryovers_list = self.carryovers_result_view.get_data()
-
         if not self.data:
             return
+        first_sem = self.first_sem_view.get_data(), self.data['first_sem']
+        second_sem = self.second_sem_view.get_data(), self.data['second_sem']
+        diff = []
+        [diff.extend(self.compute_diff(*ls)) for ls in (first_sem, second_sem)]
 
-        results_diff = self.compute_diff(results_list, self.data['regular_courses'])
-        carryovers_diff = self.compute_diff(carryovers_list, self.data['carryovers'])
-
-        data = {
-            'level': get_assigned_level(),
-            'is_admin': root.sm.is_admin,
-            'list_of_results': []
-        }
-
+        result_arr = []
+        mat_no = self.data['mat_no']
         session = int(self.ids['session'].text)
+        action = self.ids.action.text.lower()
 
-        for course_list in results_diff:
-            course_code = course_list[0]
-            score = course_list[-2]
-            data['list_of_results'].append([course_code, session, self.data['mat_no'], score])
+        for course in diff:
+            code, score = course[0], course[3]
+            result_arr.append([code, session, mat_no, score])
 
-        for course_list in carryovers_diff:
-            course_code = course_list[0]
-            score = course_list[-2]
-            data['list_of_results'].append([course_code, session, self.data['mat_no'], score])
-
-        url = urlTo('results')
-        params = {'superuser': True} if (root.sm.is_admin == 1) else None
-        AsyncRequest(url, data=data, params=params, method='POST', on_success=self.show_response)
+        url = urlTo('results_2')
+        params = {"action": action, "many": True}
+        # todo update params with catg and level if they change
+        AsyncRequest(url, data=result_arr, params=params, method='POST', on_success=self.show_response, on_failure=self.show_response)
 
     def show_response(self, resp):
-        resp = resp.json()
-        if resp:
-            _, err_msgs = zip(*resp)
-            err_msgs = list(err_msgs)
-            for idx in range(len(err_msgs)):
-                trim_start = err_msgs[idx].find(' at index')
-                trim_end = err_msgs[idx].find(';')
-                if trim_start >= 0 and trim_end >= 0:
-                    err_msgs[idx] = err_msgs[idx][:trim_start] + err_msgs[idx][trim_end:]
-            err_msg = '\n'.join(err_msgs)
-            ErrorPopup(err_msg, title='Alert')
-
+        try:
+            msgs = resp.json()
+        except Exception as e:
+            err_msg = "Something went wrong"
+        else:
+            if msgs is None:
+                err_msg = "None"
+            elif not msgs:
+                err_msg = "Done"
+            else:
+                idxs, err_msgs = zip(*msgs)
+                err_msg = '\n'.join(err_msgs)
+        ErrorPopup(err_msg, title='Alert', size_hint=(.4, .5), auto_dismiss=False)

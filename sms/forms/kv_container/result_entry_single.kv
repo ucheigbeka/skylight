@@ -1,18 +1,18 @@
 <ResultEntrySingle>:
-    results_view: results_view
-    carryovers_result_view: carryovers_result_view
+    first_sem_view: first_sem_view
+    second_sem_view: second_sem_view
     BoxLayout:
         orientation: 'vertical'
         padding: dp(10)
         spacing: dp(10)
         BoxLayout:
             padding: dp(10)
+            size_hint_y: .4
             GridLayout:
                 cols: 2
                 spacing: dp(10), dp(5)
                 row_default_height: dp(30)
                 row_force_default: True
-                size_hint_y: None
                 height: self.minimum_height
                 CustomLabel:
                     text: 'Mat number'
@@ -69,12 +69,7 @@
                     id: cgpa
                     width: dp(100)
                     disabled: True
-                CustomLabel:
-                    text: 'Special case'
-                    halign: 'left'
-                CustomTextInput:
-                    id: special_case
-                    width: 150
+
             BoxLayout:
                 orientation: 'vertical'
                 spacing: dp(5)
@@ -103,19 +98,18 @@
                         id: extra_txt
                         size_hint_x: 1
                         multiline: True
-                BoxLayout
 
         BoxLayout:
             spacing: dp(10)
             BoxLayout: 
                 orientation: 'vertical'
                 CustomLabel:
-                    text: 'Regular Courses'
+                    text: 'First Semester'
                     size_hint: 1, .1
                     font_size: sp(20)
 
                 DataViewer:
-                    id: results_view
+                    id: first_sem_view
                     cols: 5
                     pos_hint: {'center_x': .5}
                     weightings: [.2, .5, .1, .1, .1]
@@ -125,20 +119,43 @@
             BoxLayout: 
                 orientation: 'vertical'
                 CustomLabel:
-                    text: 'Carryover Courses'
+                    text: 'Second Semester'
                     size_hint: 1, .1
                     font_size: sp(20)
 
                 DataViewer:
-                    id: carryovers_result_view
+                    id: second_sem_view
                     cols: 5
                     pos_hint: {'center_x': .5}
                     weightings: [.2, .5, .1, .1, .1]
                     headers: ['Course code', 'Course title', 'Credits', 'Score', 'Grade']
                     prop: {'disabled': [True, True, True, False, True]}
 
-        PositiveActionButton:
-            size_hint: .2, .1
+        BoxLayout:
+            padding: dp(10)
+            spacing: dp(10)
+            size_hint: .4, .1
             pos_hint: {'center_x': .5}
-            text: 'Update'
-            on_press: root.update()
+            MenuGrid:
+                size_hint_y: 1
+                cols: 2
+                on_release: setattr(action, "is_open", True)
+                Label:
+                    text: "Select Action"
+                    halign: "left"
+                Spinner:
+                    size_hint_x: .35
+                    id: action
+                    values: ["Add", "Overwrite", "Delete"]
+                    on_text: setattr(pab, "text", "Upload"+" ("+self.text+")")
+#            CustomLabel:
+#                text: "Select Action"
+#                valign: "middle"
+#            Spinner:
+#                id: action
+#                values: ["Add", "Overwrite", "Delete"]
+#                on_text: setattr(pab, "text", "Upload"+" ("+self.text+")")
+            PositiveActionButton:
+                id: pab
+                text: "Upload" + " ()"
+                on_press: root.update()
