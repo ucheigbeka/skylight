@@ -113,9 +113,9 @@ class ActionMenuPopup(Popup):
     def show_error(self, resp):
         try:
             msg = resp.json()
+            msg = msg['detail'] if 'detail' in msg else msg
         except json.decoder.JSONDecodeError:
             msg = 'Something went wrong'
-        msg = msg['detail'] if 'detail' in msg else msg
         ErrorPopup(msg)
 
 
