@@ -81,8 +81,7 @@ class PersonalInfo(FormTemplate):
         data['grad_status'] = int(self.ids.grad.text == 'YES')
 
         url = urlTo('personal_info')
-        params = {'superuser': True} if root.sm.is_admin else None
-        AsyncRequest(url, method=method, data=data, params=params, on_success=self.record_added, on_failure=self.show_add_error)
+        AsyncRequest(url, method=method, data=data, on_success=self.record_added, on_failure=self.show_add_error)
 
     def delete(self):
         pass
