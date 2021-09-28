@@ -1,4 +1,6 @@
 import os
+import typing as t
+from re import findall
 
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
@@ -8,6 +10,8 @@ from sms.forms.template import FormTemplate
 from sms.utils.asyncrequest import AsyncRequest
 from sms.utils.dataview import DataViewerInput
 from sms.utils.popups import ErrorPopup
+
+get_dv2_idx = lambda dv2, codes: [idx for (idx, crs) in enumerate(dv2.dv.get_data()) if crs[0] in codes]
 
 form_root = os.path.dirname(__file__)
 kv_path = os.path.join(form_root, 'kv_container', 'result_entry_single.kv')
@@ -51,9 +55,10 @@ class ResultEntrySingle(FormTemplate):
     def __init__(self, **kwargs):
         super(ResultEntrySingle, self).__init__(**kwargs)
 
-        self.first_sem_view.set_viewclass(CustomDataViewerInput)
-        self.second_sem_view.set_viewclass(CustomDataViewerInput)
+        self.first_sem_view.dv.set_viewclass(CustomDataViewerInput)
+        self.second_sem_view.dv.set_viewclass(CustomDataViewerInput)
         self.ids['category'].bind(text=self.update_category_fields)
+        self.err_msg =  ""
 
     def setup(self):
         self.data = {}
@@ -72,7 +77,7 @@ class ResultEntrySingle(FormTemplate):
             self.ids['session'].text = str(EXTRAS.get('acad_session'))
             self.search()
 
-    def search(self):
+    def search(self, instance=None):
         url = urlTo('results_2')
         params = {
             'mat_no': self.ids['mat_no'].text,
@@ -84,7 +89,7 @@ class ResultEntrySingle(FormTemplate):
         self.data = resp.json()
         url = urlTo('grading_rules')
         params = {'acad_session': self.data['personal_info']['session_admitted']}
-        AsyncRequest(url, params=params, method='GET', on_success=self.populate_fields)
+        AsyncRequest(url, params=params, method='GET', on_success=self.populate_fields, on_failure=self.show_response)
 
     def set_grading_rules(self, rules):
         global grading_rules
@@ -115,8 +120,8 @@ class ResultEntrySingle(FormTemplate):
         self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
         self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
 
-        self.first_sem_view.set_data(self.data['first_sem'])
-        self.second_sem_view.set_data(self.data['second_sem'])
+        self.first_sem_view._data = self.data['first_sem']
+        self.second_sem_view._data = self.data['second_sem']
 
         params = {'level': self.data['level']}
         AsyncRequest(urlTo('category'), params=params, method='GET', on_success=self.populate_category_fields)
@@ -144,51 +149,73 @@ class ResultEntrySingle(FormTemplate):
         global EXTRAS
         super(ResultEntrySingle, self).clear_fields()
 
+        self.clear_selection()
         self.first_sem_view._data = []
         self.second_sem_view._data = []
+        self.err_msg = ""
+
         self.ids.action.text = self.ids.action.values[0]
         EXTRAS = {}
 
-    def compute_diff(self, altered_list, original_list):
-        diff = []
-        for idx in range(len(original_list)):
-            if str(original_list[idx][-2]) != str(altered_list[idx][-2]):
-                diff.append(altered_list[idx])
-        return diff
-
     def update(self):
-        if not self.data:
-            return
-        first_sem = self.first_sem_view.get_data(), self.data['first_sem']
-        second_sem = self.second_sem_view.get_data(), self.data['second_sem']
-        diff = []
-        [diff.extend(self.compute_diff(*ls)) for ls in (first_sem, second_sem)]
+        first_sem = self.first_sem_view.dv.get_selected_items()
+        second_sem = self.second_sem_view.dv.get_selected_items()
 
-        result_arr = []
-        mat_no = self.data['mat_no']
+        mat_no = self.data.get('mat_no')
         session = int(self.ids['session'].text)
         action = self.ids.action.text.lower()
+        result_arr = []
 
-        for course in diff:
+        for course in (first_sem + second_sem):
             code, score = course[0], course[3]
             result_arr.append([code, session, mat_no, score])
 
         url = urlTo('results_2')
         params = {"action": action, "many": True}
         # todo update params with catg and level if they change
-        AsyncRequest(url, data=result_arr, params=params, method='POST', on_success=self.show_response, on_failure=self.show_response)
+        AsyncRequest(url, data=result_arr, params=params, method='POST', on_success=self.success_fn, on_failure=self.failure_fn)
+
+    def success_fn(self, resp):
+        self.clear_selection()
+        self.show_error_popup("Done", bind_search=True)
+
+    def failure_fn(self, resp):
+        try:
+            _, err_msgs = zip(*resp.json())
+            err_msg = '\n'.join(err_msgs)
+            problem_crs_codes = sorted(map(lambda x: x[:-1], findall("[A-Z][A-Z][A-Z][0-9][0-9][0-9][.]", err_msg)))
+            idxs = [
+                set(self.first_sem_view.dv.selected_indexes) - set(get_dv2_idx(self.first_sem_view, problem_crs_codes)),
+                set(self.second_sem_view.dv.selected_indexes) - set(get_dv2_idx(self.second_sem_view, problem_crs_codes)),
+            ]
+        except Exception as e:
+            idxs, err_msg = None, "Something went wrong"
+
+        self.clear_selection(idxs)
+        self.show_error_popup(err_msg)
+
+    def clear_selection(self, idxs: t.Iterable[t.Iterable] = None):
+        if not idxs:
+            idxs = [self.first_sem_view.dv.selected_indexes,
+                    self.second_sem_view.dv.selected_indexes]
+        list(map(self.first_sem_view.dv.toggle_row_selection_state, list(idxs[0])))
+        list(map(self.second_sem_view.dv.toggle_row_selection_state, list(idxs[1])))
 
     def show_response(self, resp):
         try:
-            msgs = resp.json()
+            err_msg = resp.json()
         except Exception as e:
             err_msg = "Something went wrong"
-        else:
-            if msgs is None:
-                err_msg = "None"
-            elif not msgs:
-                err_msg = "Done"
-            else:
-                idxs, err_msgs = zip(*msgs)
-                err_msg = '\n'.join(err_msgs)
-        ErrorPopup(err_msg, title='Alert', size_hint=(.4, .5), auto_dismiss=False)
+        self.show_error_popup(err_msg)
+
+    def show_error_popup(self, err_msg=None, bind_search=False):
+        self.err_msg = err_msg if err_msg else self.err_msg
+        error_popup = ErrorPopup(self.err_msg, title='Alert', size_hint=(.4, .6), auto_dismiss=False)
+        if bind_search:
+            error_popup.bind(on_dismiss=self.search)
+        error_popup.open()
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos) and touch.is_double_tap and self.err_msg:
+            self.show_error_popup()
+        return super(ResultEntrySingle, self).on_touch_down(touch)

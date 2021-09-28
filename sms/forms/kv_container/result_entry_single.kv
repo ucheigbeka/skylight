@@ -108,13 +108,15 @@
                     size_hint: 1, .1
                     font_size: sp(20)
 
-                DataViewer:
+                DataViewer2:
                     id: first_sem_view
                     cols: 5
                     pos_hint: {'center_x': .5}
                     weightings: [.2, .5, .1, .1, .1]
                     headers: ['Course code', 'Course title', 'Credits', 'Score', 'Grade']
                     prop: {'disabled': [True, True, True, False, True]}
+                    selectable: True
+                    multiselection: True
 
             BoxLayout: 
                 orientation: 'vertical'
@@ -123,13 +125,15 @@
                     size_hint: 1, .1
                     font_size: sp(20)
 
-                DataViewer:
+                DataViewer2:
                     id: second_sem_view
                     cols: 5
                     pos_hint: {'center_x': .5}
                     weightings: [.2, .5, .1, .1, .1]
                     headers: ['Course code', 'Course title', 'Credits', 'Score', 'Grade']
                     prop: {'disabled': [True, True, True, False, True]}
+                    selectable: True
+                    multiselection: True
 
         BoxLayout:
             padding: dp(10)
@@ -148,13 +152,6 @@
                     id: action
                     values: ["Add", "Overwrite", "Delete"]
                     on_text: setattr(pab, "text", "Upload"+" ("+self.text+")")
-#            CustomLabel:
-#                text: "Select Action"
-#                valign: "middle"
-#            Spinner:
-#                id: action
-#                values: ["Add", "Overwrite", "Delete"]
-#                on_text: setattr(pab, "text", "Upload"+" ("+self.text+")")
             PositiveActionButton:
                 id: pab
                 text: "Upload" + " ()"
