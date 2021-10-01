@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: Lock Environment
+name: Dependency Resolution 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
@@ -42,7 +42,7 @@ jobs:
           echo "Installing Pipenv"
           python -m pip install --upgrade pip setuptools wheel pipenv
           
-      - name: Install dependencies and Lock
+      - name: Resolve Dependencies
         run: |
           del Pipfile.lock
           pipenv lock
