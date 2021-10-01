@@ -134,6 +134,15 @@
                         text: 'No'
                         values: ['Yes', 'No']
                         disabled: False if not root.manager else not (root.manager.is_admin == 1)
+                    CustomLabel:
+                        text: 'Session graduated'
+                        halign: 'left'
+                    CustomTextInput:
+                        id: session_grad
+                        max_length: 4
+                        input_filter: 'int'
+                        width: dp(100)
+                        disabled: True if (not root.manager) else (not root.manager.is_admin)
 
             CustomLabel:
                 text: 'Passport'
