@@ -1,7 +1,6 @@
 # Skylight
 
 [![Build](https://github.com/ucheigbeka/skylight/actions/workflows/build_package.yml/badge.svg?branch=master)](https://github.com/ucheigbeka/skylight/actions/workflows/build_package.yml)
-[![Build](https://github.com/ucheigbeka/skylight/actions/workflows/run_pipfile_lock.yml/badge.svg?branch=master)](https://github.com/ucheigbeka/skylight/actions/workflows/run_pipfile_lock.yml)
 
 This project represents the client side of **Student Management System** 
 
