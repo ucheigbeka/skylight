@@ -81,7 +81,7 @@ class PersonalInfo(FormTemplate):
         self.ids.grad.text = self.ids.grad.values[not bool(data['grad_status'])]
         self.ids.session_grad.text = str(data['session_grad']) if data['session_grad'] else ''
 
-        option = data["option"].partition(',')
+        option = (data["option"] or '').partition(',')
         self.ids.option_1.text = option[0].partition(' ')[2]
         self.ids.option_2.text = option[2].partition(' ')[2]
 
@@ -105,7 +105,10 @@ class PersonalInfo(FormTemplate):
         data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
         data['phone_no'] = self.ids.phone_no.text
         data['email_address'] = self.ids.email.text
-        option = f"1 {self.ids.option_1.text.strip()},2 {self.ids.option_2.text.strip()}"
+
+        opt = [self.ids.option_1.text.strip(), self.ids.option_2.text.strip()]
+        if any(opt):
+            data['option'] = f"1 {opt[0]},2 {opt[1]}"
 
         # not required
         optionals = {
@@ -116,8 +119,7 @@ class PersonalInfo(FormTemplate):
             'sponsor_email_address': self.ids.s_email.text,
             'transfer': int(self.ids.transfer.text == 'Yes'),
             'session_grad': int(self.ids.session_grad.text or 0),
-            'grad_status': int(self.ids.grad.text == 'YES'),
-            'option': option
+            'grad_status': int(self.ids.grad.text == 'YES')
         }
         [data.update({k:v}) for (k,v) in optionals.items() if v is not None]
         url = urlTo('personal_info')
