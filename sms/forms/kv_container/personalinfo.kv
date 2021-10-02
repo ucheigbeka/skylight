@@ -143,6 +143,19 @@
                         input_filter: 'int'
                         width: dp(100)
                         disabled: True if (not root.manager) else (not root.manager.is_admin)
+                    CustomLabel:
+                        text: 'Optional Courses'
+                        halign: 'left'
+                    BoxLayout:
+                        spacing: dp(10)
+                        CustomTextInput:
+                            id: option_1
+                            width: dp(125)
+                            disabled: True if (not root.manager) else (not root.manager.is_admin)
+                        CustomTextInput:
+                            id: option_2
+                            width: dp(125)
+                            disabled: True if (not root.manager) else (not root.manager.is_admin)
 
             CustomLabel:
                 text: 'Passport'
