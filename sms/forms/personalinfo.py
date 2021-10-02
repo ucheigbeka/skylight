@@ -90,7 +90,7 @@ class PersonalInfo(FormTemplate):
         data = dict()
         data['mat_no'] = self.ids.mat_no.text
         data['surname'] = self.ids.surname.text.upper()
-        data['othernames'] = ' '.join([self.ids.fname.text.capitalize(), self.ids.mname.text.capitalize()])
+        data['othernames'] = ' '.join([self.ids.fname.text.capitalize(), self.ids.mname.text.capitalize()]).strip()
         try:
             data['mode_of_entry'] = MODES_OF_ENTRY.index(self.ids.mode_of_entry.text) + 1
         except ValueError:
