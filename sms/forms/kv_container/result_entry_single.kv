@@ -83,6 +83,7 @@
                     CustomSpinner:
                         id: category
                         width: dp(100)
+                        disabled: True if not root.manager else not root.manager.is_admin
                     CustomTextInput:
                         id: description
                         disabled: True
@@ -98,6 +99,7 @@
                         id: extra_txt
                         size_hint_x: 1
                         multiline: True
+                        disabled: True if not root.manager else not root.manager.is_admin
 
         BoxLayout:
             spacing: dp(10)
@@ -148,9 +150,9 @@
                     text: "Select Action"
                     halign: "left"
                 Spinner:
-                    size_hint_x: .35
+                    size_hint_x: .45
                     id: action
-                    values: ["Add", "Overwrite", "Delete"]
+                    values: ["Add", "Overwrite", "Delete", "Category/Level"]
                     on_text: setattr(pab, "text", "Upload"+" ("+self.text+")")
             PositiveActionButton:
                 id: pab

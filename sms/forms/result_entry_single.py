@@ -129,21 +129,13 @@ class ResultEntrySingle(FormTemplate):
     def populate_category_fields(self, resp):
         global category_details
         category_details = resp.json()
+        self.ids['category'].values = list(map(lambda x: x['category'], filter(lambda x: x['editable'], category_details)))
         cat_dets = list(filter(lambda x: x['category'] == self.data['category'], category_details))
         if cat_dets:
             cat_dets = cat_dets[0]
-            if not cat_dets['editable']:
-                self.ids['category'].disabled = True
-                self.ids['extra_txt'].disabled = True
-            else:
-                self.ids['category'].values = list(
-                    map(lambda x: x['category'], filter(lambda x: x['editable'], category_details)))
             self.ids['category'].text = cat_dets['category']
             self.ids['description'].text = cat_dets['description']
             self.ids['extra_lbl'].text = cat_dets['extra'] if cat_dets['extra'] else 'Remark'
-        else:
-            self.ids['category'].values = list(
-                map(lambda x: x['category'], filter(lambda x: x['editable'], category_details)))
 
     def clear_fields(self, *args):
         global EXTRAS
@@ -158,21 +150,28 @@ class ResultEntrySingle(FormTemplate):
         EXTRAS = {}
 
     def update(self):
-        first_sem = self.first_sem_view.dv.get_selected_items()
-        second_sem = self.second_sem_view.dv.get_selected_items()
-
-        mat_no = self.data.get('mat_no')
-        session = int(self.ids['session'].text)
         action = self.ids.action.text.lower()
+        mat_no = self.data.get('mat_no').strip()
+        session = int(self.ids['session'].text.strip())
+        category = self.ids.category.text
+        level = self.ids.level.text
         result_arr = []
 
-        for course in (first_sem + second_sem):
-            code, score = course[0], course[3]
-            result_arr.append([code, session, mat_no, score])
+        if action == "category/level":
+            params = {
+                "mat_no": mat_no, "session": session, "action": "add",
+                "category": category, "level": level
+            }
+        else:
+            params = {"action": action, "many": True}
+            first_sem = self.first_sem_view.dv.get_selected_items()
+            second_sem = self.second_sem_view.dv.get_selected_items()
+
+            for course in (first_sem + second_sem):
+                code, score = course[0], course[3]
+                result_arr.append([code, session, mat_no, score])
 
         url = urlTo('results_2')
-        params = {"action": action, "many": True}
-        # todo update params with catg and level if they change
         AsyncRequest(url, data=result_arr, params=params, method='POST', on_success=self.success_fn, on_failure=self.failure_fn)
 
     def success_fn(self, resp):
