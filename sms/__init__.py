@@ -63,10 +63,12 @@ def set_addr(addr):
 def get_current_session():
     global current_session
     if not current_session:
-        # This block may no longer be required as "current_session" is now set on init
-        # leaving this in case current_session somehow loses its value --highly unlikely IMO
+        # This block may no longer be required as "current_session"
+        # is now set on init. leaving this in case current_session
+        # somehow loses its value --highly unlikely IMO
         url = urlTo('current_session')
-        # AsyncRequest not used as the session is needed immediately to draw pages
+        # AsyncRequest not used as the session's value is needed
+        # immediately to draw pages
         resp = requests.get(url)
         if resp.status_code == 200:
             current_session = resp.json()
