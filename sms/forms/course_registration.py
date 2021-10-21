@@ -1,3 +1,4 @@
+import math
 import os
 import subprocess
 import sys
@@ -204,7 +205,8 @@ class CourseRegistration(FormTemplate):
         self.set_sem_view_credits_left()
 
     def set_sem_view_credits_left(self):
-        self.credits_left = self.max_credits - self.credits_to_register
+        # self.credits_left = self.max_credits - self.credits_to_register
+        self.credits_left = math.inf
         self.first_sem_view.credits_left = self.credits_left
         self.second_sem_view.credits_left = self.credits_left
 
