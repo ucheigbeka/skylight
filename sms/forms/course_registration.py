@@ -290,6 +290,17 @@ class CourseRegistration(FormTemplate):
         self.data = data
 
     def register_courses(self):
+        if self.credits_to_register > self.max_credits:
+            YesNoPopup(
+                message=f"You're registering {self.credits_to_register}"
+                        f" credits which exceeds the allowed maximum of"
+                        f" {self.max_credits}. \n\n"
+                        f"Do you wish to continue?",
+                on_yes=self.register_courses_)
+        else:
+            self.register_courses_()
+
+    def register_courses_(self):
         if not self.data:
             ErrorPopup('Registration error')
             return
