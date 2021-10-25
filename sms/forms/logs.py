@@ -184,21 +184,18 @@ operations_mapping = {
     'Login': 'users.login',
     'Logout': 'users.logout',
 
-    'Get Course Registration': 'course_reg.get',
-    'Start Course Registration': 'course_reg.init_new',
-    'Register Courses': 'course_reg.post',
-    'Delete Course Registration': 'course_reg.delete',
+    'Get/Start Course Reg': 'course_reg_2.get_exp',
+    # 'Start Course Registration': 'course_reg.init_new',
+    'Register Courses': 'course_reg_2.post_exp',
+    'Delete Course Reg': 'course_reg_2.delete',
 
-    'Get Results': 'results.get',
-    'Add Results': 'results.post',
-    'Set Result Edit': 'results.set_resultedit',
-    'Get Single Result': 'results.get_result_details',
-    'Get Result Entry Stats': 'results.get_multiple_results_stats',
+    'Get Results': 'results_2.get_exp',
+    'Add Results': 'results_2.post_exp',
 
-    'Get Personal Info': 'personal_info.get_exp',
-    'Add Personal Info': 'personal_info.post_exp',
-    'Edit Personal Info': 'personal_info.patch',
-    'Delete Personal Info': 'personal_info.delete',
+    'Get Personal Info': 'personal_info_2.get_exp',
+    'Add Personal Info': 'personal_info_2.post_exp',
+    'Edit Personal Info': 'personal_info_2.patch',
+    'Delete Personal Info': 'personal_info_2.delete',
 
     'Get Result Update': 'result_update.get',
     'Get Course Form': 'course_form.get',
@@ -211,20 +208,18 @@ operations_mapping = {
     'Edit Account': 'accounts.patch',
     'Delete Account': 'accounts.delete',
 
-    'List Backups': 'backups.get',
-    'Download Backups': 'backups.download',
     'Backup Database': 'backups.backup',
     'Restore Backup': 'backups.restore',
+    'List Backups': 'backups.get',
     'Delete Backups': 'backups.delete',
+    'Download Backups': 'backups.download',
+
+    'Set Result Edit': 'results.set_resultedit',
+    'Get Result Entry Stats': 'results.get_multiple_results_stats',
 
     'Add Course': 'course_details.post',
     'Edit Course': 'course_details.patch',
     'Delete Course': 'course_details.delete',
-
-    # 'results.get_single_results_stats': 'results.get_single_results_stats',
-    # 'logs.get': 'logs.get',
-    # 'logs.delete': 'logs.delete',
-    # 'grading_rules.get': 'grading_rules.get',
 
 }
 
