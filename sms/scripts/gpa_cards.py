@@ -32,14 +32,19 @@ class GpaCardsView(Screen):
 class GpaCardsPopup(Popup):
     def get(self):
         url = urlTo('level_gpa_cards')
-        params = {'level': int(self.ids['level'].text)}
+        sort_order = self.ids['order_by'].text.strip().replace(" ", "_").lower()
+        params = {
+            'level': int(self.ids['level'].text),
+            'session': int(self.ids['session'].text),
+            'sort_by_cgpa': sort_order == "cgpa"
+        }
         AsyncRequest(url, params=params, on_success=self.show_gpa_cards, on_failure=self.show_error)
 
     def _show_gpa_cards(self, resp):
         from sms import root
         reports = root.sm.get_screen('reports')
         data = resp.json()
-        tab_title = self.ids['level'].text + ' Level GPA Card'
+        tab_title = f"{self.ids['level'].text}L {self.ids['session'].text} GPA Card"
         gpa_cards_view = GpaCardsView()
         gpa_cards_view.set_data(data)
         reports.generate_report([gpa_cards_view], tab_title)
