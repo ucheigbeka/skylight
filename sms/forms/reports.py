@@ -16,7 +16,6 @@ def unload():
 
 class Reports(FormTemplate):
     tabbed_panel = ObjectProperty(None)
-
     title = 'Reports'
 
     def on_enter(self, *args):
