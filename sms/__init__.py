@@ -28,10 +28,15 @@ TEMP_DIR, CACHE_DIR, BACKUP_DIR = '', '', ''
 ALLOWABLE_IDLE_TIME = 20 * 60  # 20 minutes
 
 titles = [
-    'Head of Department', 'Exam officer', '100 level course adviser',
-    '200 level course adviser', '300 level course adviser',
-    '400 level course adviser', '500 level course adviser',
-    '500 level course adviser(2)', 'Secretary'
+    'Head of Department',
+    'Exam officer',
+    '100 level course adviser',
+    '200 level course adviser',
+    '300 level course adviser',
+    '400 level course adviser',
+    '500 level course adviser',
+    '500 level course adviser(2)',
+    'Secretary'
 ]
 loading_popup = LoadPopup()
 

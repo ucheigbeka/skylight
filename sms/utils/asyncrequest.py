@@ -2,8 +2,8 @@
 AsyncRequest
 ============
 
-Class for making ascynchronous request to the api server. The
-method arguement definies the type of http request to make
+Class for making asynchronous request to the api server. The
+method argument defines the type of http request to make
 
     method = 'GET' - for querying the database
     method = 'POST' - for adding new items to the database
@@ -24,8 +24,8 @@ logged_in = True
 
 
 class AsyncRequest(Thread):
-    def __init__(self, url, on_success=None, on_failure=None, headers=[],
-                 params=None, data=None, method='GET', **kwargs):
+    def __init__(self, url, on_success=None, on_failure=None, data=None,
+                 params=None, headers=None, method='GET', **kwargs):
         super(AsyncRequest, self).__init__(**kwargs)
 
         self.url = url
@@ -34,12 +34,13 @@ class AsyncRequest(Thread):
         self.params = params
         self.data = data
         self.method = method
+        self.resp = None
 
         # Reverse comment for this section during PROD
         self.headers = {
-            'Content-type': 'application/json', 'token': get_token()
+            'Content-type': 'application/json',
+            'token': get_token()
         } if not headers else headers
-        # self.headers = {}
 
         self.start()
 
@@ -47,33 +48,26 @@ class AsyncRequest(Thread):
         Window.set_system_cursor('wait')
         # update last_request_timestamp to track activity
         session_timer(self.url, self.params)
+        query_kwargs = {"url": self.url, "method": self.method,
+                        "headers": self.headers}
+        if self.params: query_kwargs["params"] = self.params
+        if self.data: query_kwargs["json"] = self.data
         try:
-            if self.method == 'GET':
-                self.resp = requests.get(
-                    self.url, headers=self.headers, params=self.params)
-            elif self.method == 'POST':
-                self.resp = requests.post(
-                    self.url, headers=self.headers, json=self.data, params=self.params)
-            elif self.method == 'PUT':
-                self.resp = requests.put(
-                    self.url, headers=self.headers, json=self.data, params=self.params)
-            elif self.method == 'PATCH':
-                self.resp = requests.patch(
-                    self.url, headers=self.headers, json=self.data, params=self.params)
-            elif self.method == 'DELETE':
-                self.resp = requests.delete(
-                    self.url, headers=self.headers, params=self.params)
-            else:
-                raise ValueError(
-                    '"method" arguement must be one of "GET", "POST", "PUT" or "DELETE"')
+            self.resp = requests.request(**query_kwargs)
             self.resp.raise_for_status()
         except requests.exceptions.ConnectionError:
             msg = 'Server down'
             ErrorPopup(msg)
             # Restart server
         except requests.exceptions.HTTPError as err:
-            if self.resp.status_code == 440:
-                YesNoPopup(message='Session expired, login again?', on_yes=draw_sign_in_popup, title='Session Timeout')
+            if self.resp.status_code == 405:
+                raise ValueError('"method" argument must be one of '
+                                 '"GET", "POST", "PUT" or "DELETE"')
+            elif self.resp.status_code == 440:
+                YesNoPopup(
+                    message='Session expired, login again?',
+                    on_yes=draw_sign_in_popup, title='Session Timeout'
+                )
             elif callable(self.on_failure):
                 self.on_failure(self.resp)
             else:
@@ -115,9 +109,10 @@ def session_timer(url, params):
                 ErrorPopup('Server down')
         elif url == urlTo('login'):
             logged_in = True
-    # don't update last_request_timestamp if logs is called w/o filters (from main menu)
+    # don't update last_request_timestamp if logs is called w/o filters
+    # (from main menu)
     log_filter_params = ['time', 'operation', 'reverse']
-    if url != urlTo('logs') or any(map(lambda param: param in params, log_filter_params)):
+    if url != urlTo('logs') or any(map(lambda x: x in params, log_filter_params)):
         last_request_timestamp = curr_timestamp
 
 
