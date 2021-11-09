@@ -28,13 +28,13 @@ Builder.load_string('''
                 allow_stretch: True
                 size_hint_x: (box.height * self.image_ratio) / box.width
                 source: root.source
-    ImageButton:
-        # source: root.print_icon_dir
-        source: os.path.join(os.getcwd(), 'sms', 'utils', 'icons', 'icons8-print-32.png')
+    PreviewPagePrintButton:
+        id: print_button_1
         size_hint: None, None
+        text: "OPEN IN PC"
+        height: dp(60)
+        width: dp(140)
         pos_hint: {'right': 1, 'top': 1}
-        width: 50
-        height: int(self.width / self.image_ratio)
         on_press: root.print_pdf()
 ''')
 
@@ -46,8 +46,6 @@ class Preview(Screen):
     sv = ObjectProperty()
     source = StringProperty()
     filepath = StringProperty()
-    print_icon_dir = StringProperty(
-        os.path.join(base_dir, 'icons', 'icons8-print-32.png'))
     cursor_change_event = None
 
     def __init__(self, **kwargs):
