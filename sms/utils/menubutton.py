@@ -78,6 +78,10 @@ class NegativeActionButton(CustomActionButton):
     outline_color = ListProperty([.98, 0, .1, .5])
 
 
+class PreviewPagePrintButton(CustomActionButton):
+    outline_color = ListProperty([.6, .6, .817, .9])
+
+
 class MenuButton(Button, ButtonBase):
     def highlight_btn(self, instance, value):
         pos = self.to_widget(*value)
