@@ -161,10 +161,9 @@ class CourseRegView(BoxLayout):
             course_credit_textinput.text = str(credit)
 
             self.total_credits += credit
-        self.add_field()
 
-        if not self.num_compulsory_courses:
-            self.ids['btn_fill'].disabled = False
+        self.add_field()
+        self.ids['btn_fill'].disabled = False
 
     def on_course_codes(self, instance, value):
         self.course_code_options = self.course_codes[:]
