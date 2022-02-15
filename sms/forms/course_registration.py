@@ -37,7 +37,7 @@ class CourseRegView(BoxLayout):
     course_details = ListProperty()
     max_sememster_credits = NumericProperty(30)
     total_credits = NumericProperty()
-    size_hints = [.35, .5, .15]
+    size_hints = [.24, .5, .15, 0.11]
     credits_left = 0
 
     def __init__(self, **kwargs):
@@ -49,6 +49,7 @@ class CourseRegView(BoxLayout):
 
     def add_field(self, bind_spinner=True):
         if self.credits_left and (self.course_code_options or not bind_spinner):
+            fields_idx = len(self.fields) + 1
             course_code_spinner = Factory.CustomSpinner(
                 disabled=True,
                 size_hint_x=self.size_hints[0])
@@ -62,18 +63,30 @@ class CourseRegView(BoxLayout):
             course_credit_textinput = Factory.CustomTextInput(
                 disabled=True,
                 size_hint_x=self.size_hints[2])
+            delete_btn = Factory.ImageButton(
+                source=os.path.join(form_root, 'resc', 'icons', 'icons8-delete-48.png'),
+                size_hint_x=self.size_hints[3]
+            )
+            delete_btn.bind(on_press=self.delete_btn_callback)
 
             self.grid.add_widget(course_code_spinner)
             self.grid.add_widget(course_title_textinput)
             self.grid.add_widget(course_credit_textinput)
+            self.grid.add_widget(delete_btn)
 
             self.fields.append([
                 course_code_spinner,
                 course_title_textinput,
-                course_credit_textinput
+                course_credit_textinput,
+                delete_btn
             ])
 
-    def remove_field(self):
+    def delete_btn_callback(self, ins):
+        for idx, widgets in enumerate(self.fields):
+            if widgets[-1] == ins:
+                self.remove_field(idx)
+
+    def remove_field(self, field_idx=-1):
         if len(self.fields) - 1 > self.num_compulsory_courses:
             remove_empty_field = True
             if not self.credits_left:
@@ -85,7 +98,7 @@ class CourseRegView(BoxLayout):
                 for wid in empty_field:
                     self.grid.remove_widget(wid)
 
-            widgets = self.fields.pop()
+            widgets = self.fields.pop(field_idx)
             course_code = widgets[0].text
             credit = int(widgets[2].text)
             for wid in widgets:
@@ -155,6 +168,9 @@ class CourseRegView(BoxLayout):
             course_code_spinner = self.fields[-1][0]
             course_title_textinput = self.fields[-1][1]
             course_credit_textinput = self.fields[-1][2]
+            self.grid.remove_widget(self.fields[-1][3])
+            self.fields[-1][3] = Factory.CustomLabel(size_hint_x=self.size_hints[3])
+            self.grid.add_widget(self.fields[-1][3])
 
             course_code_spinner.text = code
             course_title_textinput.text = title if title else ''

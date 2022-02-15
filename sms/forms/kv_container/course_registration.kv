@@ -21,9 +21,11 @@
                 HeaderLabel:
                     text: 'Credit'
                     size_hint_x: root.size_hints[2]
+                Label:
+                    size_hint_x: root.size_hints[3]
             GridLayout:
                 id: grid
-                cols: 3
+                cols: 4
                 size_hint_y: None
                 height: self.minimum_height
                 row_default_height: dp(35)
@@ -40,6 +42,8 @@
                     disabled: True
                     text: str(root.total_credits)
                     size_hint_x: root.size_hints[2]
+                Label:
+                    size_hint_x: root.size_hints[3]
     BoxLayout:
         spacing: dp(10)
         size_hint_y: None
