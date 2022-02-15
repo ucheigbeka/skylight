@@ -18,9 +18,11 @@ class FormTemplate(Screen):
         super(FormTemplate, self).__init__(**kwargs)
         self._setup()
 
-    def validate_inputs(self):
-        for _id in self.ids:
-            if isinstance(self.ids[_id], (TextInput, Spinner)):
+    def validate_inputs(self, include=None, exclude=None):
+        exclude = exclude if exclude else []
+        include = include if include else self.ids
+        for _id in include:
+            if _id not in exclude and isinstance(self.ids[_id], (TextInput, Spinner)):
                 if not self.ids[_id].text:
                     return False
         return True

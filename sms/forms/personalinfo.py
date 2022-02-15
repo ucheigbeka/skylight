@@ -91,15 +91,16 @@ class PersonalInfo(FormTemplate):
 
     def add_update(self):
         method = ['POST', 'PATCH'][self.ids['btn_positive'].text == 'Update']
+        compulsory_fields = ("mat_no", "surname", "fname", "mode_of_entry", "session_admit", "level", "sex", "phone_no",
+                             "email_address")
+        if not self.validate_inputs(include=compulsory_fields):
+            self.show_input_error()
+            return
         data = dict()
         data['mat_no'] = self.ids.mat_no.text
         data['surname'] = self.ids.surname.text.upper()
         data['othernames'] = ' '.join([self.ids.fname.text.capitalize(), self.ids.mname.text.capitalize()]).strip()
-        try:
-            data['mode_of_entry'] = MODES_OF_ENTRY.index(self.ids.mode_of_entry.text) + 1
-        except ValueError:
-            self.show_input_error()
-            return
+        data['mode_of_entry'] = MODES_OF_ENTRY.index(self.ids.mode_of_entry.text) + 1
         data['session_admitted'] = int(self.ids.session_admit.text)
         data['level'] = int(self.ids.level.text)
         data['sex'] = ['M', 'F'][self.ids.sex.text != 'Male']
