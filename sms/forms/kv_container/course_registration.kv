@@ -67,144 +67,153 @@
     BoxLayout:
         orientation: 'vertical'
         padding: dp(10)
-        BoxLayout:
-            size_hint_y: None
-            height: grid.height
-            GridLayout:
-                id: grid
-                cols: 2
-                spacing: [dp(10), dp(5)]
-                size_hint: (.5, None)
+        ScrollView:
+            do_scroll_x: False
+            BoxLayout:
+                size_hint_y: None
                 height: self.minimum_height
-                row_default_height: dp(30)
-                row_force_default: True
-                CustomLabel:
-                    text: 'Session'
-                    halign: 'left'
-                CustomTextInput:
-                    id: reg_session
-                    max_length: 4
-                    input_filter: 'int'
-                    width: dp(100)
-                CustomLabel:
-                    text: 'Mat number'
-                    halign: 'left'
+                orientation: 'vertical'
+                spacing: dp(5)
                 BoxLayout:
-                    spacing: dp(20)
-                    CustomTextInput:
-                        id: mat_no
-                        width: dp(125)
-                        max_length: 10
-                        disabled: root.disable_entries
-                        on_text_validate: root.search()
-                    ImageButton:
-                        size_hint_x: None
-                        width: dp(50)
-                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
-                        on_press: root.search()
-                    ImageButton:
-                        size_hint_x: None
-                        width: dp(50)
-                        source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
-                        on_press: root.clear_fields()
-                CustomLabel:
-                    text: 'Level'
-                    halign: 'left'
-                CustomSpinner:
-                    id: reg_level
-                    disabled: root.is_old_course_reg
-                CustomLabel:
-                    text: 'Surname'
-                    halign: 'left'
-                CustomTextInput:
-                    id: surname
-                    disabled: True
-                CustomLabel:
-                    text: 'Othernames'
-                    halign: 'left'
-                CustomTextInput:
-                    id: othernames
-                    disabled: True
-                CustomLabel:
-                    text: 'Phone number'
-                    halign: 'left'
-                CustomTextInput:
-                    id: phone_no
-                    max_length: 11
-                    disabled: True
-                CustomLabel:
-                    text: 'Current level'
-                    halign: 'left'
-                CustomTextInput:
-                    id: cur_level
-                    input_filter: 'int'
-                    width: dp(100)
-                    disabled: True
-                CustomLabel:
-                    text: 'Fees status'
-                    halign: 'left'
-                CustomSpinner:
-                    id: fees_stat
-                    values: ['Unpaid', 'Paid']
-                    disabled: root.is_old_course_reg
-                CustomLabel:
-                    text: 'Last Session Summary'
-                    halign: 'left'
-                CustomTextInput:
-                    id: prev_summary
-                    disabled: True
-                    size_hint_x: 1
+                    size_hint_y: None
+                    height: grid.height
+                    GridLayout:
+                        id: grid
+                        cols: 2
+                        spacing: [dp(10), dp(5)]
+                        size_hint: (.5, None)
+                        height: self.minimum_height
+                        row_default_height: dp(30)
+                        row_force_default: True
+                        CustomLabel:
+                            text: 'Session'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: reg_session
+                            max_length: 4
+                            input_filter: 'int'
+                            width: dp(100)
+                        CustomLabel:
+                            text: 'Mat number'
+                            halign: 'left'
+                        BoxLayout:
+                            spacing: dp(20)
+                            CustomTextInput:
+                                id: mat_no
+                                width: dp(125)
+                                max_length: 10
+                                disabled: root.disable_entries
+                                on_text_validate: root.search()
+                            ImageButton:
+                                size_hint_x: None
+                                width: dp(50)
+                                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-search-48.png')
+                                on_press: root.search()
+                            ImageButton:
+                                size_hint_x: None
+                                width: dp(50)
+                                source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-delete-48.png')
+                                on_press: root.clear_fields()
+                        CustomLabel:
+                            text: 'Level'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: reg_level
+                            disabled: root.is_old_course_reg
+                        CustomLabel:
+                            text: 'Surname'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: surname
+                            disabled: True
+                        CustomLabel:
+                            text: 'Othernames'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: othernames
+                            disabled: True
+                        CustomLabel:
+                            text: 'Phone number'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: phone_no
+                            max_length: 11
+                            disabled: True
+                        CustomLabel:
+                            text: 'Current level'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: cur_level
+                            input_filter: 'int'
+                            width: dp(100)
+                            disabled: True
+                        CustomLabel:
+                            text: 'Fees status'
+                            halign: 'left'
+                        CustomSpinner:
+                            id: fees_stat
+                            values: ['Unpaid', 'Paid']
+                            disabled: root.is_old_course_reg
+                        CustomLabel:
+                            text: 'Last Session Summary'
+                            halign: 'left'
+                        CustomTextInput:
+                            id: prev_summary
+                            disabled: True
+                            size_hint_x: 1
 
-            CustomLabel:
-                text: 'Passport'
-                size_hint: (None, None)
-                height: grid.height
-                valign: 'top'
-                halign: 'center'
-                pos_hint: {'top': 1}
-            FloatLayout:
-                size_hint: (.2, None)
-                height: grid.height
-                pos_hint: {'top': 1}
-                Image:
-                    id: passport
-                    size_hint: (None, None)
-                    size: [dp(117), dp(160)]
-                    pos_hint: {'top': 1, 'x': 0}
-                    on_touch_down: pass
-                    source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
-            RelativeLayout:
-                size_hint_x: .3
-                ImageButton:
-                    source: root.print_icon_dir
-                    size_hint: None, None
-                    pos_hint: {'right': 1, 'top': 1}
-                    width: 50
-                    height: int(self.width / self.image_ratio)
-                    on_press: root.generate_course_form()
+                    CustomLabel:
+                        text: 'Passport'
+                        size_hint: (None, None)
+                        height: grid.height
+                        valign: 'top'
+                        halign: 'center'
+                        pos_hint: {'top': 1}
+                    FloatLayout:
+                        size_hint: (.2, None)
+                        height: grid.height
+                        pos_hint: {'top': 1}
+                        Image:
+                            id: passport
+                            size_hint: (None, None)
+                            size: [dp(117), dp(160)]
+                            pos_hint: {'top': 1, 'x': 0}
+                            on_touch_down: pass
+                            source: os.path.join(root.form_root, 'resc', 'icons', 'icons8-edit-profile-480.png')
+                    RelativeLayout:
+                        size_hint_x: .3
+                        ImageButton:
+                            source: root.print_icon_dir
+                            size_hint: None, None
+                            pos_hint: {'right': 1, 'top': 1}
+                            width: 50
+                            height: int(self.width / self.image_ratio)
+                            on_press: root.generate_course_form()
 
-        BoxLayout:
-            spacing: dp(10)
-            BoxLayout:
-                orientation: 'vertical'
-                Label:
-                    text: 'FIRST SEMESTER'
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'middle'
-                    size_hint_y: .1
-                CourseRegView:
-                    id: first_sem_view
-            BoxLayout:
-                orientation: 'vertical'
-                Label:
-                    text: 'SECOND SEMESTER'
-                    text_size: self.size
-                    halign: 'center'
-                    valign: 'middle'
-                    size_hint_y: .1
-                CourseRegView:
-                    id: second_sem_view
+                BoxLayout:
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: max(first_sem_view.height, second_sem_view.height) + dp(25)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'FIRST SEMESTER'
+                            text_size: self.size
+                            halign: 'center'
+                            valign: 'middle'
+                            size_hint_y: .1
+                        CourseRegView:
+                            id: first_sem_view
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            text: 'SECOND SEMESTER'
+                            text_size: self.size
+                            halign: 'center'
+                            valign: 'middle'
+                            size_hint_y: .1
+                        CourseRegView:
+                            id: second_sem_view
         BoxLayout:
             size_hint: (None, .1)
             padding: dp(0), dp(10)
