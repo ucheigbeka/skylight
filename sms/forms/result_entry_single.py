@@ -3,6 +3,7 @@ import typing as t
 from re import findall
 
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 
 from sms import urlTo, get_current_session, get_assigned_level, root
@@ -120,8 +121,10 @@ class ResultEntrySingle(FormTemplate):
         self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
         self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
 
-        self.first_sem_view._data = self.data['first_sem']
-        self.second_sem_view._data = self.data['second_sem']
+        Clock.schedule_once(lambda dt: self.first_sem_view.dv.set_data(self.data['first_sem']))
+        Clock.schedule_once(lambda dt: self.second_sem_view.dv.set_data(self.data['second_sem']))
+        # self.first_sem_view.dv.set_data(self.data['first_sem'])
+        # self.second_sem_view.dv.set_data(self.data['second_sem'])
 
         params = {'level': self.data['level']}
         AsyncRequest(urlTo('category'), params=params, method='GET', on_success=self.populate_category_fields)
@@ -142,8 +145,8 @@ class ResultEntrySingle(FormTemplate):
         super(ResultEntrySingle, self).clear_fields()
 
         self.clear_selection()
-        self.first_sem_view._data = []
-        self.second_sem_view._data = []
+        self.first_sem_view.dv.set_data([])
+        self.second_sem_view.dv.set_data([])
         self.err_msg = ""
 
         self.ids.action.text = self.ids.action.values[0]
