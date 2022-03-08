@@ -71,7 +71,7 @@ jobs:
         shell: cmd
         run: |
           mkdir tmp\dep
-          cd tmp\upx
+          cd tmp\dep
           curl.exe -L --output depends.zip https://www.dependencywalker.com/depends22_x64.zip
           7z.exe x depends.zip
           cd ..\..
