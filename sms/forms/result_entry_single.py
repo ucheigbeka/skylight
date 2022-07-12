@@ -1,9 +1,9 @@
 import os
 import typing as t
 from re import findall
+from time import sleep
 
 from kivy.lang import Builder
-from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 
 from sms import urlTo, get_current_session, get_assigned_level, root
@@ -121,10 +121,12 @@ class ResultEntrySingle(FormTemplate):
         self.ids['level_gpa'].text = '{:.4f}'.format(self.data['level_gpa'])
         self.ids['cgpa'].text = '{:.4f}'.format(self.data['cgpa'])
 
-        Clock.schedule_once(lambda dt: self.first_sem_view.dv.set_data(self.data['first_sem']))
-        Clock.schedule_once(lambda dt: self.second_sem_view.dv.set_data(self.data['second_sem']))
-        # self.first_sem_view.dv.set_data(self.data['first_sem'])
-        # self.second_sem_view.dv.set_data(self.data['second_sem'])
+        self.first_sem_view.dv.set_data(self.data['first_sem'])
+        sleep(1)
+        self.second_sem_view.dv.set_data(self.data['second_sem'])
+        sleep(1)
+        self.first_sem_view.dv.set_data(self.data['first_sem'])
+        sleep(1)
 
         params = {'level': self.data['level']}
         AsyncRequest(urlTo('category'), params=params, method='GET', on_success=self.populate_category_fields)
