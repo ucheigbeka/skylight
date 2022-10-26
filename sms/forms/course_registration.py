@@ -145,7 +145,7 @@ class CourseRegView(BoxLayout):
         self.add_field()
 
     def get_courses_for_reg(self):
-        courses = [code_widget.text for code_widget, _, _ in self.fields if code_widget.text]
+        courses = [code_widget.text for code_widget, _, _, _ in self.fields if code_widget.text]
         return courses
 
     def populate_regular_courses(self):
