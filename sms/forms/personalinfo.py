@@ -92,7 +92,7 @@ class PersonalInfo(FormTemplate):
     def add_update(self):
         method = ['POST', 'PATCH'][self.ids['btn_positive'].text == 'Update']
         compulsory_fields = ("mat_no", "surname", "fname", "mode_of_entry", "session_admit", "level", "sex", "phone_no",
-                             "email_address")
+                             "email")
         if not self.validate_inputs(include=compulsory_fields):
             self.show_input_error()
             return
